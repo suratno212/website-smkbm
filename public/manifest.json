@@ -1,0 +1,101 @@
+{
+  "name": "SIAKAD SMK Bhakti Mulya BNS",
+  "short_name": "SIAKAD SMK",
+  "description": "Sistem Informasi Akademik SMK Bhakti Mulya BNS Lampung",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a237e",
+  "theme_color": "#1a237e",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "id",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/assets/images/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/assets/images/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard Admin",
+      "short_name": "Dashboard",
+      "description": "Akses dashboard admin",
+      "url": "/admin/dashboard",
+      "icons": [
+        {
+          "src": "/assets/images/icons/dashboard-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Kelola Siswa",
+      "short_name": "Siswa",
+      "description": "Kelola data siswa",
+      "url": "/admin/siswa",
+      "icons": [
+        {
+          "src": "/assets/images/icons/students-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Kelola Guru",
+      "short_name": "Guru",
+      "description": "Kelola data guru",
+      "url": "/admin/guru",
+      "icons": [
+        {
+          "src": "/assets/images/icons/teachers-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+} 
