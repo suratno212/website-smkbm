@@ -172,7 +172,7 @@
                                 <thead class="table-dark">
                                     <tr>
                                         <th>No</th>
-                                        <th>NISN</th>
+                                        <th>NIS</th>
                                         <th>Nama Siswa</th>
                                         <th>Hadir</th>
                                         <th>Sakit</th>

@@ -101,7 +101,7 @@
                                     <thead class="table-dark">
                                         <tr>
                                             <th width="5%">No</th>
-                                            <th width="15%">NISN</th>
+                                            <th width="15%">NIS</th>
                                             <th width="30%">Nama Siswa</th>
                                             <th width="20%">Status</th>
                                             <th width="30%">Keterangan</th>

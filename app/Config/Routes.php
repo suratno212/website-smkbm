@@ -299,6 +299,7 @@ $routes->group('guru', ['filter' => 'auth:guru'], function($routes) {
     $routes->get('raport', 'Guru\Raport::index');
     $routes->get('raport/siswa/(:num)', 'Guru\Raport::siswa/$1');
     $routes->get('raport/detail/(:num)', 'Guru\Raport::detail/$1');
+    $routes->get('raport/preview/(:num)', 'Guru\Raport::preview/$1');
     $routes->get('raport/cetak/(:num)', 'Guru\Raport::cetak/$1');
 });
 

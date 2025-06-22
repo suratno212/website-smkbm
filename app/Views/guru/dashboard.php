@@ -91,7 +91,7 @@
                                 <tr>
                                     <th>Ranking</th>
                                     <th>Nama</th>
-                                    <th>NISN</th>
+                                    <th>NIS</th>
                                     <th>Kelas</th>
                                     <th>Jumlah Terlambat</th>
                                 </tr>

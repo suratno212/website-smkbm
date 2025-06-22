@@ -8,7 +8,7 @@
                 <thead>
                     <tr>
                         <th style="width:50px;">No</th>
-                        <th>NISN</th>
+                        <th>NIS</th>
                         <th>Nama</th>
                         <th>Aksi</th>
                     </tr>
@@ -21,6 +21,7 @@
                         <td><?= esc($s['nama']) ?></td>
                         <td>
                             <a href="<?= base_url('guru/raport/detail/'.$s['id']) ?>" class="btn btn-primary btn-sm">Lihat Raport</a>
+                            <a href="<?= base_url('guru/raport/preview/'.$s['id']) ?>" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-eye"></i> Preview</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>

@@ -5,7 +5,7 @@
     <div class="card mb-3">
         <div class="card-body">
             <strong>Nama:</strong> <?= esc($siswa['nama']) ?><br>
-            <strong>NISN:</strong> <?= esc($siswa['nisn']) ?><br>
+            <strong>NIS:</strong> <?= esc($siswa['nisn']) ?><br>
             <strong>Kelas:</strong> <?= esc($kelas['nama_kelas']) ?><br>
         </div>
     </div>
@@ -87,6 +87,7 @@
             </table>
         </div>
     </div>
+    <a href="<?= base_url('guru/raport/preview/'.$siswa['id']) ?>" class="btn btn-info" target="_blank"><i class="fas fa-eye"></i> Preview e-Raport</a>
     <a href="<?= base_url('guru/raport/cetak/'.$siswa['id']) ?>" class="btn btn-danger" target="_blank"><i class="fas fa-file-pdf"></i> Cetak PDF</a>
     <a href="<?= base_url('guru/raport/siswa/'.$kelas['id']) ?>" class="btn btn-secondary">Kembali ke Daftar Siswa</a>
 </div>

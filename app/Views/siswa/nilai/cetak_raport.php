@@ -56,7 +56,7 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
     <?php // ================= IDENTITAS SISWA & WALI KELAS ================= ?>
     <table class="identitas-table" style="width:70%; margin-bottom:10px;">
         <tr><td><b>Nama Siswa</b></td><td>: <?= esc($siswa['nama']) ?></td><td><b>Jurusan</b></td><td>: <?= esc($kelas['nama_jurusan'] ?? '-') ?></td></tr>
-        <tr><td><b>NISN</b></td><td>: <?= esc($siswa['nisn']) ?></td><td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td></tr>
+        <tr><td><b>NIS</b></td><td>: <?= esc($siswa['nisn']) ?></td><td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td></tr>
         <tr><td><b>Nama Sekolah</b></td><td>: SMK Bhakti Mulya BNS</td><td><b>Semester</b></td><td>: <?= esc($semester) ?></td></tr>
         <tr><td><b>Alamat</b></td><td colspan="3">: Gunung Ratu BNS</td></tr>
         <tr><td><b>Wali Kelas</b></td><td>: <?= esc($kelas['nama_wali_kelas'] ?? ($wali_kelas['nama'] ?? '-')) ?></td><td><b>Tahun Ajaran</b></td><td>: <?= esc($tahunAkademik['tahun'] ?? (date('Y').'/'.(date('Y')+1))) ?></td></tr>
