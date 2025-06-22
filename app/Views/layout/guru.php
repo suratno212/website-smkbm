@@ -333,10 +333,6 @@ if (!isset($user)) {
                 <i class="fas fa-chalkboard-teacher"></i>
                 <span>E-Learning</span>
             </a>
-            <a href="<?= base_url('guru/materitugasdrilldown') ?>" class="menu-item <?= strpos(uri_string(), 'guru/materitugasdrilldown') === 0 ? 'active' : '' ?>">
-                <i class="fas fa-layer-group"></i>
-                <span>E-Learning Drilldown</span>
-            </a>
             <a href="<?= base_url('guru/pengumuman') ?>" class="menu-item <?= strpos(uri_string(), 'guru/pengumuman') === 0 ? 'active' : '' ?>">
                 <i class="fas fa-bullhorn"></i>
                 <span>Pengumuman</span>

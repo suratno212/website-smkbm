@@ -185,9 +185,70 @@ class Raport extends BaseController
             'semester' => $semester
         ]);
         $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $dompdf->setOptions($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         $dompdf->stream('e-raport-'.$siswa['nama'].'.pdf');
+    }
+
+    public function generatePDF($siswa_id)
+    {
+        $siswa = $this->siswaModel->find($siswa_id);
+        $tahunAkademikModel = new \App\Models\TahunAkademikModel();
+        $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
+        $semester = $tahunAkademikAktif ? $tahunAkademikAktif['semester'] : 'Ganjil';
+        $kelas = $this->kelasModel
+            ->select('kelas.*, jurusan.nama_jurusan')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id', 'left')
+            ->find($siswa['kelas_id']);
+        $nilai = $this->nilaiModel->where('siswa_id', $siswa_id)->where('semester', $semester)->findAll();
+        $mapel = $this->mapelModel->findAll();
+        $absensi = $this->absensiModel->where('siswa_id', $siswa_id)->findAll();
+        $ekskul = $this->ekskulSiswaModel
+            ->select('ekstrakurikuler_siswa.*, ekstrakurikuler.nama_ekstrakurikuler')
+            ->join('ekstrakurikuler', 'ekstrakurikuler.id = ekstrakurikuler_siswa.ekstrakurikuler_id')
+            ->where('siswa_id', $siswa_id)
+            ->findAll();
+        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_id']);
+        $ranking = 0;
+        $ranks = $this->nilaiModel->getRankingKelas($kelas['id'], $semester);
+        foreach ($ranks as $i => $r) {
+            if ($r['id'] == $siswa_id) {
+                $ranking = $i + 1;
+                break;
+            }
+        }
+        if ($ranking == 1) {
+            $catatan = 'Selamat atas pencapaian luar biasa yang telah diraih. Pertahankan semangat belajar dan teruslah menjadi inspirasi bagi teman-teman di kelas. Semoga prestasimu semakin gemilang di masa depan.';
+        } elseif ($ranking >= 2 && $ranking <= 10) {
+            $catatan = 'Hasil belajar yang baik, terus tingkatkan semangat dan konsistensi dalam belajar. Dengan kerja keras dan disiplin, kamu bisa meraih hasil yang lebih tinggi lagi. Pertahankan prestasi ini!';
+        } else {
+            $catatan = 'Terus semangat dalam belajar. Jadikan semester ini sebagai motivasi untuk memperbaiki dan meningkatkan prestasi di masa mendatang.';
+        }
+        $html = view('guru/raport/pdf', [
+            'siswa' => $siswa,
+            'kelas' => $kelas,
+            'nilai' => $nilai,
+            'mapel' => $mapel,
+            'absensi' => $absensi,
+            'ekskul' => $ekskul,
+            'wali_kelas' => $wali_kelas,
+            'ranking' => $ranking,
+            'catatan' => $catatan,
+            'semester' => $semester,
+            'tahunAkademik' => $tahunAkademikAktif
+        ]);
+        $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $dompdf->setOptions($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        // Output PDF ke browser tanpa auto download
+        $dompdf->stream('e-raport-'.$siswa['nama'].'-'.$semester.'.pdf', ['Attachment' => false]);
     }
 } 

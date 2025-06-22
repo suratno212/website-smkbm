@@ -393,6 +393,9 @@ class Nilai extends BaseController
 
         // Generate PDF
         $dompdf = new Dompdf();
+        $options = $dompdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $dompdf->setOptions($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();

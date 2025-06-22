@@ -1,9 +1,10 @@
 <?php helper('url'); ?>
 <?php
+// Ganti logo sekolah dan yayasan dengan gambar PNG/JPG dari internet bebas (Unsplash)
+$logoSekolah = 'https://scontent.ftkg1-1.fna.fbcdn.net/v/t39.30808-6/509840812_1187690260039281_1073171614447097024_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeELHT_qcCFUizj2_Gv-UylyRICmpduDlhNEgKal24OWE8lEftBwlgJrXUmryuTxLa8vOFAAFWMm-AQwLCxJAB08&_nc_ohc=E7Rt4Clt5-AQ7kNvwF_oEif&_nc_oc=Adn8YlBSdH-1lUcuJN82UEUDknvShpKmJ2n2osbrNDr_jK8O2fdUvQcVw1jmh_oI5W4&_nc_zt=23&_nc_ht=scontent.ftkg1-1.fna&_nc_gid=YvVQShVIj5qBU677HOXEXQ&oh=00_AfPtzPGat860lHSCGpcxILZeNtudSsUi7x68oP8R5XNT3A&oe=685DC721';
+$logoYayasan = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/640px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png';
 // Deteksi jika sedang dicetak Dompdf (CLI atau HTTP_USER_AGENT mengandung Dompdf)
 $isDompdf = (php_sapi_name() === 'cli' || (isset($_SERVER['HTTP_USER_AGENT']) && stripos($_SERVER['HTTP_USER_AGENT'], 'dompdf') !== false));
-$logoSekolah = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo.png') : base_url('assets/images/logo.png');
-$logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yayasan.png') : base_url('assets/images/logo_yayasan.png');
 ?>
 <!DOCTYPE html>
 <html>

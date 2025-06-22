@@ -1,9 +1,9 @@
 <?php helper('url'); ?>
 <?php
-// Deteksi jika sedang dicetak Dompdf (CLI atau HTTP_USER_AGENT mengandung Dompdf)
+// Ganti logo sekolah dan yayasan dengan gambar yang sama seperti siswa
+$logoSekolah = 'https://scontent.ftkg1-1.fna.fbcdn.net/v/t39.30808-6/509840812_1187690260039281_1073171614447097024_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeELHT_qcCFUizj2_Gv-UylyRICmpduDlhNEgKal24OWE8lEftBwlgJrXUmryuTxLa8vOFAAFWMm-AQwLCxJAB08&_nc_ohc=E7Rt4Clt5-AQ7kNvwF_oEif&_nc_oc=Adn8YlBSdH-1lUcuJN82UEUDknvShpKmJ2n2osbrNDr_jK8O2fdUvQcVw1jmh_oI5W4&_nc_zt=23&_nc_ht=scontent.ftkg1-1.fna&_nc_gid=YvVQShVIj5qBU677HOXEXQ&oh=00_AfPtzPGat860lHSCGpcxILZeNtudSsUi7x68oP8R5XNT3A&oe=685DC721';
+$logoYayasan = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/640px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png';
 $isDompdf = (php_sapi_name() === 'cli' || (isset($_SERVER['HTTP_USER_AGENT']) && stripos($_SERVER['HTTP_USER_AGENT'], 'dompdf') !== false));
-$logoSekolah = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo.png') : base_url('assets/images/logo.png');
-$logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yayasan.png') : base_url('assets/images/logo_yayasan.png');
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +26,6 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
     </style>
 </head>
 <body>
-    <?php // ================= HEADER KOP SEKOLAH & YAYASAN ================= ?>
     <table class="header-table">
         <tr>
             <td style="width:80px; text-align:left;">
@@ -53,17 +52,15 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
         <div style="font-size:10px; color:#888;">Path logo yayasan: <?= $logoYayasan ?></div>
     <?php endif; ?>
 
-    <?php // ================= IDENTITAS SISWA & WALI KELAS ================= ?>
     <table class="identitas-table" style="width:70%; margin-bottom:10px;">
         <tr><td><b>Nama Siswa</b></td><td>: <?= esc($siswa['nama']) ?></td><td><b>Jurusan</b></td><td>: <?= esc($kelas['nama_jurusan'] ?? '-') ?></td></tr>
         <tr><td><b>NIS</b></td><td>: <?= esc($siswa['nisn']) ?></td><td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td></tr>
         <tr><td><b>Nama Sekolah</b></td><td>: SMK Bhakti Mulya BNS</td><td><b>Semester</b></td><td>: <?= esc($semester) ?></td></tr>
         <tr><td><b>Alamat</b></td><td colspan="3">: Gunung Ratu BNS</td></tr>
-        <tr><td><b>Wali Kelas</b></td><td>: <?= esc($wali_kelas['nama'] ?? '-') ?></td><td><b>Tahun Ajaran</b></td><td>: <?= date('Y') . '/' . (date('Y')+1) ?></td></tr>
-        <tr><td><b>NIP/NUPTK Wali Kelas</b></td><td>: <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?></td><td><b>Peringkat</b></td><td>: <?= $ranking ?></td></tr>
+        <tr><td><b>Wali Kelas</b></td><td>: <?= esc($kelas['nama_wali_kelas'] ?? ($wali_kelas['nama'] ?? '-')) ?></td><td><b>Tahun Ajaran</b></td><td>: <?= esc($tahunAkademik['tahun'] ?? (date('Y').'/'.(date('Y')+1))) ?></td></tr>
+        <tr><td><b>NIP/NUPTK Wali Kelas</b></td><td>: <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?></td><td><b>Peringkat</b></td><td>: <?= $ranking ?? '-' ?></td></tr>
     </table>
 
-    <?php // ================= TABEL NILAI AKADEMIK ================= ?>
     <div class="section-title">Nilai Akademik</div>
     <table>
         <thead>
@@ -103,7 +100,6 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
         </tr>
     </table>
 
-    <?php // ================= TABEL EKSTRAKURIKULER ================= ?>
     <div class="section-title">Kegiatan Ekstrakurikuler</div>
     <table>
         <thead>
@@ -126,7 +122,6 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
         </tbody>
     </table>
 
-    <?php // ================= TABEL ABSENSI ================= ?>
     <div class="section-title">Absensi</div>
     <table>
         <thead>
@@ -147,14 +142,12 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
         </tbody>
     </table>
 
-    <?php // ================= CATATAN WALI KELAS OTOMATIS ================= ?>
     <div class="section-title">Catatan Wali Kelas</div>
     <div class="catatan-box">
-        <?= $catatan ?>
+        <?= $catatan ?? '' ?>
     </div>
     <br><br>
 
-    <?php // ================= TANDA TANGAN & PENGESAHAN ================= ?>
     <table style="width:100%; border:none;">
         <tr>
             <td colspan="3" style="border:none; text-align:right; padding-right:40px;">
@@ -170,7 +163,7 @@ $logoYayasan = $isDompdf ? str_replace('\\', '/', FCPATH.'assets/images/logo_yay
         <tr><td colspan="3" style="border:none; height:40px;"></td></tr>
         <tr>
             <td style="border:none; text-align:center; line-height:1.2;">
-                <?= esc($wali_kelas['nama'] ?? '-') ?><br>
+                <?= esc($wali_kelas['nama'] ?? ($kelas['nama_wali_kelas'] ?? '-')) ?><br>
                 ____________________<br>
                 <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?>
             </td>
