@@ -56,7 +56,7 @@ composer.lock
 
 # Node modules (if using any frontend build tools)
 node_modules/
-
+# teknokrat
 # Build artifacts
 /dist/
 /build/
