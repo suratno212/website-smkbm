@@ -272,7 +272,7 @@
 
                         <!-- Sambutan Kepala Sekolah -->
                         <div class="kepsek-profile">
-                            <img src="<?= base_url('assets/images/kepsek.jpg') ?>" alt="Kepala Sekolah">
+                            <img src="<?= base_url('assets/images/foto.png') ?>" alt="Kepala Sekolah">
                             <div class="kepsek-info">
                                 <h4>Joni Haryanto, S.T</h4>
                                 <p>Kepala SMK Bhakti Mulya BNS Lampung</p>
@@ -337,7 +337,7 @@
                         <div class="agenda-list">
                             <div class="agenda-item">
                                 <div class="agenda-image">
-                                    <img src="<?= base_url('assets/images/agenda/workshop.jpg') ?>" alt="Workshop">
+                                    <img src="<?= base_url('assets/images/foto.png') ?>" alt="Workshop">
                                 </div>
                                 <div class="agenda-content">
                                     <div class="date">20 Mar 2024</div>
@@ -351,7 +351,7 @@
                             </div>
                             <div class="agenda-item">
                                 <div class="agenda-image">
-                                    <img src="<?= base_url('assets/images/agenda/kunjungan.jpg') ?>" alt="Kunjungan Industri">
+                                    <img src="<?= base_url('assets/images/foto.png') ?>" alt="Kunjungan Industri">
                                 </div>
                                 <div class="agenda-content">
                                     <div class="date">25 Mar 2024</div>
@@ -374,21 +374,21 @@
                     <div class="content-body">
                         <div class="infografis-grid">
                             <div class="infografis-item">
-                                <img src="<?= base_url('assets/images/infografis/statistik-siswa.jpg') ?>" alt="Statistik Siswa">
+                                <img src="<?= base_url('assets/images/foto.png') ?>" alt="Statistik Siswa">
                                 <div class="infografis-overlay">
                                     <h4>Statistik Siswa</h4>
                                     <p>Data jumlah siswa per jurusan tahun 2024</p>
                                 </div>
                             </div>
                             <div class="infografis-item">
-                                <img src="<?= base_url('assets/images/infografis/prestasi.jpg') ?>" alt="Prestasi">
+                                <img src="<?= base_url('assets/images/foto.png') ?>" alt="Prestasi">
                                 <div class="infografis-overlay">
                                     <h4>Prestasi</h4>
                                     <p>Prestasi akademik dan non-akademik</p>
                                 </div>
                             </div>
                             <div class="infografis-item">
-                                <img src="<?= base_url('assets/images/infografis/fasilitas.jpg') ?>" alt="Fasilitas">
+                                <img src="<?= base_url('assets/images/foto.png') ?>" alt="Fasilitas">
                                 <div class="infografis-overlay">
                                     <h4>Fasilitas</h4>
                                     <p>Fasilitas pembelajaran dan sarana prasarana</p>
@@ -447,7 +447,7 @@
             <div class="berita-grid">
                 <div class="berita-item">
                     <div class="berita-image">
-                        <img src="<?= base_url('assets/images/berita/berita1.jpg') ?>" alt="Berita 1">
+                        <img src="<?= base_url('assets/images/foto.png') ?>" alt="Berita 1">
                     </div>
                     <div class="berita-content">
                         <div class="date">20 Mar 2024</div>
