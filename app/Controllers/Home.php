@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\PengumumanModel;
+use App\Models\JurusanModel;
 
 class Home extends BaseController
 {
@@ -15,6 +16,7 @@ class Home extends BaseController
 
     public function index()
     {
+        $jurusanModel = new JurusanModel();
         $data = [
             'title' => 'SMK Bhakti Mulya BNS Lampung - Beranda',
             'menu' => [
@@ -33,7 +35,8 @@ class Home extends BaseController
                     ['url' => '#ppdb', 'text' => 'PPDB']
                 ]
             ]),
-            'pengumuman' => $this->pengumumanModel->getActiveAnnouncements()
+            'pengumuman' => $this->pengumumanModel->getActiveAnnouncements(),
+            'jurusan_list' => $jurusanModel->findAll()
         ];
         
         return view('home', $data);

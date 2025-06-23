@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\Admin;
+namespace App\Controllers\KepalaSekolah;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
@@ -16,8 +16,8 @@ class Profile extends BaseController
     {
         $user_id = session()->get('user_id');
         $user = $this->userModel->find($user_id);
-        return view('admin/profile/index', [
-            'title' => 'Edit Profile',
+        return view('kepalasekolah/profile/index', [
+            'title' => 'Profil Kepala Sekolah',
             'user' => $user,
         ]);
     }
@@ -51,6 +51,6 @@ class Profile extends BaseController
         session()->set('email', $userBaru['email']);
         session()->set('foto', $userBaru['foto'] ?? null);
         session()->setFlashdata('success', 'Profil berhasil diperbarui.');
-        return redirect()->to(base_url('admin/profile'));
+        return redirect()->to(base_url('kepalasekolah/profile'));
     }
 } 

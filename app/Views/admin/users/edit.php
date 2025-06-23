@@ -66,6 +66,7 @@
                                         <option value="admin" <?= old('role', isset($user['role']) ? $user['role'] : '') == 'admin' ? 'selected' : '' ?>>Admin</option>
                                         <option value="guru" <?= old('role', isset($user['role']) ? $user['role'] : '') == 'guru' ? 'selected' : '' ?>>Guru</option>
                                         <option value="siswa" <?= old('role', isset($user['role']) ? $user['role'] : '') == 'siswa' ? 'selected' : '' ?>>Siswa</option>
+                                        <option value="kepala_sekolah" <?= old('role', isset($user['role']) ? $user['role'] : '') == 'kepala_sekolah' ? 'selected' : '' ?>>Kepala Sekolah</option>
                                     </select>
                                     <?php if (session('errors.role')) : ?>
                                         <div class="invalid-feedback">

@@ -42,7 +42,7 @@ class Users extends BaseController
             'username' => 'required|min_length[3]|is_unique[users.username]',
             'email' => 'required|valid_email|is_unique[users.email]',
             'password' => 'required|min_length[6]',
-            'role' => 'required|in_list[admin,guru,siswa]',
+            'role' => 'required|in_list[admin,guru,siswa,kepala_sekolah]',
             'foto' => 'uploaded[foto]|max_size[foto,1024]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]'
         ];
 
@@ -89,7 +89,7 @@ class Users extends BaseController
         $rules = [
             'username' => "required|min_length[3]",
             'email' => "required|valid_email",
-            'role' => 'required|in_list[admin,guru,siswa]'
+            'role' => 'required|in_list[admin,guru,siswa,kepala_sekolah]'
         ];
 
         if ($this->request->getPost('password')) {

@@ -74,14 +74,24 @@
                                 <?php if (!empty($spmb)) : ?>
                                     <?php $i = 1; ?>
                                     <?php foreach ($spmb as $p) : ?>
+                                        <?php
+                                            // Cek apakah user sudah ada
+                                            $userModel = new \App\Models\UserModel();
+                                            $userSiswa = $userModel->where('username', $p['no_pendaftaran'])->first();
+                                        ?>
                                         <tr>
                                             <td><?= $i++; ?></td>
                                             <td><?= $p['no_pendaftaran']; ?></td>
                                             <td><?= $p['nama_lengkap']; ?></td>
                                             <td><?= $p['jurusan_pilihan']; ?></td>
                                             <td>
-                                                <span class="badge badge-<?= $p['status_pendaftaran'] == 'Menunggu' ? 'warning' : ($p['status_pendaftaran'] == 'Diterima' ? 'success' : ($p['status_pendaftaran'] == 'Diterima Bersyarat' ? 'info' : 'danger')) ?>">
-                                                    <?= $p['status_pendaftaran']; ?>
+                                                <span class="badge badge-<?=
+                                                    $p['status_pendaftaran'] == 'Menunggu' ? 'warning' :
+                                                    ($p['status_pendaftaran'] == 'Diterima' ? 'success' :
+                                                    ($p['status_pendaftaran'] == 'Diterima Bersyarat' ? 'info' :
+                                                    ($p['status_pendaftaran'] == 'Sudah Jadi Siswa' ? 'primary' : 'danger')))
+                                                ?>">
+                                                    <?= $p['status_pendaftaran'] == 'Sudah Jadi Siswa' ? 'Sudah Jadi Siswa' : $p['status_pendaftaran']; ?>
                                                 </span>
                                             </td>
                                             <td><?= date('d/m/Y H:i', strtotime($p['created_at'])); ?></td>
@@ -96,6 +106,12 @@
                                                     <a href="<?= base_url('admin/spmb/tolak/' . $p['id']); ?>" class="btn btn-danger btn-sm">
                                                         <i class="fas fa-times"></i>
                                                     </a>
+                                                <?php elseif ($p['status_pendaftaran'] == 'Diterima' && !$userSiswa) : ?>
+                                                    <a href="<?= base_url('admin/spmb/jadikanSiswa/' . $p['id']); ?>" class="btn btn-primary btn-sm" onclick="return confirm('Jadikan pendaftar ini sebagai siswa?')">
+                                                        <i class="fas fa-user-plus"></i> Jadikan Siswa
+                                                    </a>
+                                                <?php elseif ($p['status_pendaftaran'] == 'Sudah Jadi Siswa' || $userSiswa) : ?>
+                                                    <span class="badge badge-success">Sudah Jadi Siswa</span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>

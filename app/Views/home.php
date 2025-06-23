@@ -1068,6 +1068,10 @@
                             <input type="text" id="nama_lengkap" name="nama_lengkap" required>
                         </div>
                         <div class="form-group">
+                            <label for="nisn">NISN</label>
+                            <input type="text" id="nisn" name="nisn" required>
+                        </div>
+                        <div class="form-group">
                             <label for="jenis_kelamin">Jenis Kelamin</label>
                             <select id="jenis_kelamin" name="jenis_kelamin" required>
                                 <option value="">Pilih Jenis Kelamin</option>
@@ -1123,9 +1127,9 @@
                             <label for="jurusan_pilihan">Pilihan Jurusan</label>
                             <select id="jurusan_pilihan" name="jurusan_pilihan" required>
                                 <option value="">Pilih Jurusan</option>
-                                <option value="TKJ">Teknik Komputer dan Jaringan (TKJ)</option>
-                                <option value="RPL">Rekayasa Perangkat Lunak (RPL)</option>
-                                <option value="MM">Multimedia (MM)</option>
+                                <?php foreach ($jurusan_list as $j) : ?>
+                                    <option value="<?= $j['nama_jurusan'] ?>"><?= $j['nama_jurusan'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <button type="submit" class="submit-btn">Daftar Sekarang</button>

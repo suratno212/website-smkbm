@@ -8,7 +8,7 @@ class MapelModel extends Model
 {
     protected $table = 'mapel';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_mapel'];
+    protected $allowedFields = ['nama_mapel', 'kelompok'];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';

@@ -6,7 +6,7 @@ class SpmbModel extends Model
     protected $table = 'spmb';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'no_pendaftaran', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'asal_sekolah', 'nama_ortu', 'no_hp_ortu', 'email', 'no_hp', 'jurusan_pilihan', 'status_pendaftaran', 'catatan', 'created_at', 'updated_at'
+        'no_pendaftaran', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'asal_sekolah', 'nama_ortu', 'no_hp_ortu', 'email', 'no_hp', 'jurusan_pilihan', 'nisn', 'status_pendaftaran', 'catatan', 'created_at', 'updated_at'
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

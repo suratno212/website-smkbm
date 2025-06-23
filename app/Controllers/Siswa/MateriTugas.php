@@ -8,6 +8,7 @@ use App\Models\PengumpulanTugasModel;
 use App\Models\SiswaModel;
 use App\Models\MapelModel;
 use App\Models\KelasModel;
+use App\Models\UserModel;
 
 class MateriTugas extends BaseController
 {
@@ -17,6 +18,7 @@ class MateriTugas extends BaseController
     protected $siswaModel;
     protected $mapelModel;
     protected $kelasModel;
+    protected $userModel;
 
     public function __construct()
     {
@@ -26,11 +28,13 @@ class MateriTugas extends BaseController
         $this->siswaModel = new SiswaModel();
         $this->mapelModel = new MapelModel();
         $this->kelasModel = new KelasModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -55,6 +59,7 @@ class MateriTugas extends BaseController
 
         return view('siswa/materi_tugas/index', [
             'title' => 'E-Learning',
+            'user' => $user,
             'materi' => $materi,
             'tugas' => $tugas,
             'siswa' => $siswa
@@ -64,6 +69,7 @@ class MateriTugas extends BaseController
     public function materi()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -79,6 +85,7 @@ class MateriTugas extends BaseController
 
         return view('siswa/materi_tugas/materi', [
             'title' => 'Materi Pembelajaran',
+            'user' => $user,
             'materi' => $materi,
             'siswa' => $siswa
         ]);
@@ -87,6 +94,7 @@ class MateriTugas extends BaseController
     public function tugas()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -112,6 +120,7 @@ class MateriTugas extends BaseController
 
         return view('siswa/materi_tugas/tugas', [
             'title' => 'Tugas',
+            'user' => $user,
             'tugas' => $tugas,
             'siswa' => $siswa
         ]);
@@ -120,6 +129,7 @@ class MateriTugas extends BaseController
     public function detailTugas($tugas_id)
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -144,6 +154,7 @@ class MateriTugas extends BaseController
 
         return view('siswa/materi_tugas/detail_tugas', [
             'title' => 'Detail Tugas',
+            'user' => $user,
             'tugas' => $tugas,
             'siswa' => $siswa,
             'pengumpulan' => $pengumpulan
@@ -153,6 +164,7 @@ class MateriTugas extends BaseController
     public function uploadTugas($tugas_id)
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -222,6 +234,7 @@ class MateriTugas extends BaseController
 
         return view('siswa/materi_tugas/upload_tugas', [
             'title' => 'Upload Tugas',
+            'user' => $user,
             'tugas' => $tugas,
             'siswa' => $siswa
         ]);

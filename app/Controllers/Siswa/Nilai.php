@@ -11,6 +11,7 @@ use App\Models\AbsensiModel;
 use App\Models\EkstrakurikulerSiswaModel;
 use App\Models\EkstrakurikulerModel;
 use App\Models\GuruModel;
+use App\Models\UserModel;
 use Dompdf\Dompdf;
 
 class Nilai extends BaseController
@@ -24,6 +25,7 @@ class Nilai extends BaseController
     protected $ekskulSiswaModel;
     protected $ekskulModel;
     protected $guruModel;
+    protected $userModel;
 
     public function __construct()
     {
@@ -36,11 +38,13 @@ class Nilai extends BaseController
         $this->ekskulSiswaModel = new EkstrakurikulerSiswaModel();
         $this->ekskulModel = new EkstrakurikulerModel();
         $this->guruModel = new GuruModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -82,6 +86,7 @@ class Nilai extends BaseController
 
         return view('siswa/nilai/index', [
             'title' => 'Nilai Akademik',
+            'user' => $user,
             'siswa' => $siswa,
             'kelas' => $kelas,
             'nilai' => $nilai,
@@ -96,6 +101,7 @@ class Nilai extends BaseController
     public function detail($mapel_id)
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -136,6 +142,7 @@ class Nilai extends BaseController
 
         return view('siswa/nilai/detail', [
             'title' => 'Detail Nilai',
+            'user' => $user,
             'siswa' => $siswa,
             'kelas' => $kelas,
             'nilai' => $nilai,
@@ -148,6 +155,7 @@ class Nilai extends BaseController
     public function raport()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -204,6 +212,7 @@ class Nilai extends BaseController
 
         return view('siswa/nilai/raport', [
             'title' => 'e-Raport',
+            'user' => $user,
             'siswa' => $siswa,
             'kelas' => $kelas,
             'nilai' => $nilai,
@@ -225,6 +234,7 @@ class Nilai extends BaseController
     public function cetakRaport()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -292,6 +302,7 @@ class Nilai extends BaseController
 
         return view('siswa/nilai/cetak_raport', [
             'title' => 'Cetak e-Raport',
+            'user' => $user,
             'siswa' => $siswa,
             'kelas' => $kelas,
             'nilai' => $nilai,
@@ -310,6 +321,7 @@ class Nilai extends BaseController
     public function generatePDF()
     {
         $siswa_id = session('user_id');
+        $user = $this->userModel->find($siswa_id);
         $siswa = $this->siswaModel->where('user_id', $siswa_id)->first();
         
         if (!$siswa) {
@@ -377,6 +389,7 @@ class Nilai extends BaseController
 
         // Generate HTML untuk PDF menggunakan view cetak_raport yang sudah ada
         $html = view('siswa/nilai/cetak_raport', [
+            'user' => $user,
             'siswa' => $siswa,
             'kelas' => $kelas,
             'nilai' => $nilai,

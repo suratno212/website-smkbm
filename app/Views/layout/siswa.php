@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?> - SIAKAD SMK Bhakti Mulya BNS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -77,6 +76,23 @@
         .sidebar-menu {
             padding: 20px 0;
             transition: all 0.3s ease;
+            overflow-y: auto;
+            max-height: calc(100vh - 160px);
+            scrollbar-width: thin;           /* Firefox */
+            scrollbar-color: #888 #222;      /* Firefox */
+        }
+        .sidebar-menu::-webkit-scrollbar {
+            width: 8px;
+            background: transparent;
+        }
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .sidebar-menu:hover::-webkit-scrollbar-thumb {
+            opacity: 1;
         }
 
         .sidebar.collapsed .sidebar-menu {
@@ -327,10 +343,6 @@
                 <i class="fas fa-bullhorn"></i>
                 <span>Pengumuman</span>
             </a>
-            <a href="<?= base_url('auth/logout') ?>" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
         </div>
     </div>
 
@@ -346,7 +358,8 @@
                     <small class="text-muted">SIAKAD SMK Bhakti Mulya BNS</small>
                 </div>
             </div>
-            <div class="user-info">
+            <div class="user-info dropdown">
+                <a href="#" class="d-flex align-items-center dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none; color:inherit;">
                 <?php if (isset($user['foto']) && $user['foto']) : ?>
                     <img src="<?= base_url('uploads/profile/' . $user['foto']) ?>" alt="User" class="profile-image">
                 <?php else : ?>
@@ -354,8 +367,13 @@
                 <?php endif; ?>
                 <div>
                     <h6 class="mb-0"><?= $user['username'] ?? 'Siswa' ?></h6>
-                    <small class="text-muted"><?= ucfirst($user['role'] ?? 'siswa') ?></small>
+                        <small class="text-muted">Siswa</small>
                 </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="<?= base_url('siswa/profile') ?>"><i class="fas fa-user-edit me-2"></i>Profil</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('auth/logout') ?>"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
             </div>
         </div>
 
@@ -363,7 +381,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Sidebar Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {

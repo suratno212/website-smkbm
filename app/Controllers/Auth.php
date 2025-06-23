@@ -33,6 +33,8 @@ class Auth extends BaseController
                     return redirect()->to(base_url('guru/dashboard'));
                 case 'siswa':
                     return redirect()->to(base_url('siswa/dashboard'));
+                case 'kepala_sekolah':
+                    return redirect()->to(base_url('kepalasekolah'));
                 default:
                     log_message('error', 'Invalid role in session: ' . $role);
                     $this->session->destroy();
@@ -93,6 +95,8 @@ class Auth extends BaseController
                         return redirect()->to(base_url('guru/dashboard'));
                     case 'siswa':
                         return redirect()->to(base_url('siswa/dashboard'));
+                    case 'kepala_sekolah':
+                        return redirect()->to(base_url('kepalasekolah'));
                     default:
                         $this->session->destroy();
                         return redirect()->to(base_url('auth'))->with('error', 'Role tidak valid');

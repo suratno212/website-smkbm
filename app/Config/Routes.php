@@ -189,6 +189,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function($routes) {
     $routes->get('spmb/bersyarat/(:num)', 'Admin\Spmb::bersyarat/$1');
     $routes->post('spmb/delete/(:num)', 'Admin\Spmb::delete/$1');
     $routes->get('spmb/print', 'Admin\Spmb::print');
+    $routes->get('spmb/jadikanSiswa/(:num)', 'Admin\Spmb::jadikanSiswa/$1');
 
     // Kelas Routes
     $routes->get('kelas', 'Admin\Kelas::index');
@@ -301,6 +302,10 @@ $routes->group('guru', ['filter' => 'auth:guru'], function($routes) {
     $routes->get('raport/detail/(:num)', 'Guru\Raport::detail/$1');
     $routes->get('raport/preview/(:num)', 'Guru\Raport::preview/$1');
     $routes->get('raport/cetak/(:num)', 'Guru\Raport::cetak/$1');
+
+    // Guru Profile
+    $routes->get('profile', 'Guru\Profile::index');
+    $routes->post('profile/update', 'Guru\Profile::update');
 });
 
 // Siswa Routes
@@ -358,10 +363,26 @@ $routes->group('siswa', ['filter' => 'auth:siswa'], function($routes) {
     $routes->post('materitugas/uploadTugas/(:num)', 'Siswa\MateriTugas::uploadTugas/$1');
     $routes->get('materitugas/downloadMateri/(:num)', 'Siswa\MateriTugas::downloadMateri/$1');
     $routes->get('materitugas/downloadTugas/(:num)', 'Siswa\MateriTugas::downloadTugas/$1');
+
+    // Siswa Profile
+    $routes->get('profile', 'Siswa\Profile::index');
+    $routes->post('profile/update', 'Siswa\Profile::update');
 });
 
 // Test Route tanpa filter
 $routes->get('test-no-filter', 'Siswa\Test::index');
+
+// Kepala Sekolah Routes
+$routes->group('kepalasekolah', ['filter' => 'kepalasekolah'], function($routes) {
+    $routes->get('/', 'KepalaSekolah\Dashboard::index');
+    $routes->get('dashboard', 'KepalaSekolah\Dashboard::index');
+    $routes->get('rekap-nilai', 'KepalaSekolah\RekapNilai::index');
+    $routes->get('rekap-absensi', 'KepalaSekolah\RekapAbsensi::index');
+    $routes->get('raport', 'KepalaSekolah\Raport::index');
+    $routes->get('statistik', 'KepalaSekolah\Statistik::index');
+    $routes->get('profile', 'KepalaSekolah\Profile::index');
+    $routes->post('profile/update', 'KepalaSekolah\Profile::update');
+});
 
 /*
  * --------------------------------------------------------------------

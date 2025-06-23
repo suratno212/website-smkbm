@@ -39,6 +39,7 @@
                             <?php endif; ?>
 
                             <form action="<?= base_url('admin/profile/update') ?>" method="post" enctype="multipart/form-data">
+                                <?= csrf_field() ?>
                                 <div class="form-group">
                                     <label for="username">Username</label>
                                     <input type="text" name="username" id="username" class="form-control <?= session('errors.username') ? 'is-invalid' : '' ?>" value="<?= old('username', $user['username']) ?>" required>

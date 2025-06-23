@@ -139,20 +139,136 @@
                             <p class="text-muted">Belum ada siswa yang terdaftar di kelas ini.</p>
                         </div>
                     <?php else : ?>
+                        <?php
+                        // Kelompok mapel per jurusan
+                        $jurusan = strtolower($kelas['nama_jurusan'] ?? '');
+                        $kelompokMapel = [];
+                        if (strpos($jurusan, 'tkj') !== false) {
+                            $kelompokMapel = [
+                                'A' => [
+                                    'label' => 'A. Muatan Nasional',
+                                    'sub' => [
+                                        'Pendidikan Agama dan Budi Pekerti',
+                                        'Pendidikan Pancasila dan Kewarganegaraan',
+                                        'Bahasa Indonesia',
+                                        'Matematika',
+                                        'Sejarah Indonesia',
+                                        'Bahasa Inggris dan Bahasa Asing Lainnya',
+                                    ]
+                                ],
+                                'B' => [
+                                    'label' => 'B. Muatan Kewilayahan',
+                                    'sub' => [
+                                        'Seni Budaya',
+                                        'Pendidikan Jasmani, Olahraga dan Kesehatan',
+                                    ]
+                                ],
+                                'C1' => [
+                                    'label' => 'C1. Dasar Bidang Keahlian',
+                                    'sub' => [
+                                        'Simulasi dan Komunikasi Digital',
+                                        'Fisika',
+                                        'Kimia',
+                                    ]
+                                ],
+                                'C2' => [
+                                    'label' => 'C2. Dasar Program Keahlian',
+                                    'sub' => [
+                                        'Sistem Komputer',
+                                        'Komputer dan Jaringan Dasar',
+                                        'Pemrograman Dasar',
+                                        'Dasar Desain Grafis',
+                                    ]
+                                ],
+                                'C3' => [
+                                    'label' => 'C3. Kompetensi Keahlian',
+                                    'sub' => [
+                                        'Teknologi Jaringan Berbasis Luas (WAN)',
+                                        'Administrasi Infrastruktur Jaringan',
+                                        'Administrasi Sistem Jaringan',
+                                        'Teknologi Layanan Jaringan',
+                                        'Produk Kreatif dan Kewirausahaan',
+                                    ]
+                                ],
+                            ];
+                        } elseif (strpos($jurusan, 'tbsm') !== false) {
+                            $kelompokMapel = [
+                                'A' => [
+                                    'label' => 'A. Muatan Nasional',
+                                    'sub' => [
+                                        'Pendidikan Agama dan Budi Pekerti',
+                                        'Pendidikan Pancasila dan Kewarganegaraan',
+                                        'Bahasa Indonesia',
+                                        'Matematika',
+                                        'Sejarah Indonesia',
+                                        'Bahasa Inggris dan Bahasa Asing Lainnya',
+                                    ]
+                                ],
+                                'B' => [
+                                    'label' => 'B. Muatan Kewilayahan',
+                                    'sub' => [
+                                        'Seni Budaya',
+                                        'Pendidikan Jasmani, Olahraga dan Kesehatan',
+                                    ]
+                                ],
+                                'C1' => [
+                                    'label' => 'C1. Dasar Bidang Keahlian',
+                                    'sub' => [
+                                        'Simulasi dan Komunikasi Digital',
+                                        'Fisika',
+                                        'Kimia',
+                                    ]
+                                ],
+                                'C2' => [
+                                    'label' => 'C2. Dasar Program Keahlian',
+                                    'sub' => [
+                                        'Gambar Teknik Otomotif',
+                                        'Teknologi Dasar Otomotif',
+                                        'Pekerjaan Dasar Teknik Otomotif',
+                                    ]
+                                ],
+                                'C3' => [
+                                    'label' => 'C3. Kompetensi Keahlian',
+                                    'sub' => [
+                                        'Pemeliharaan Mesin Sepeda Motor',
+                                        'Pemeliharaan Sasis Sepeda Motor',
+                                        'Pemeliharaan Kelistrikan Sepeda Motor',
+                                        'Pengelolaan Bengkel Sepeda Motor',
+                                        'Produk Kreatif dan Kewirausahaan',
+                                    ]
+                                ],
+                            ];
+                        }
+                        // Index mapel berdasarkan kelompok
+                        $mapelByKelompok = [];
+                        foreach ($mapelList as $m) {
+                            $mapelByKelompok[$m['kelompok']][] = $m;
+                        }
+                        ?>
                         <div class="table-responsive">
                             <table class="table table-hover" id="nilaiTable">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th width="5%">No</th>
-                                        <th width="15%">NIS</th>
-                                        <th width="20%">Nama Siswa</th>
-                                        <?php foreach ($mapelList as $mapel) : ?>
-                                            <th class="text-center" data-mapel="<?= $mapel['id'] ?>">
-                                                <?= $mapel['nama_mapel'] ?>
-                                            </th>
+                                        <th>No</th>
+                                        <th>NIS</th>
+                                        <th>Nama Siswa</th>
+                                        <?php foreach ($kelompokMapel as $kode => $kelompok): ?>
+                                            <th colspan="<?= count($kelompok['sub']) ?>" class="text-center"> <?= $kelompok['label'] ?> </th>
                                         <?php endforeach; ?>
-                                        <th width="10%" class="text-center">Rata-rata</th>
-                                        <th width="10%" class="text-center">Ranking</th>
+                                        <th class="text-center">Rata-rata</th>
+                                        <th class="text-center">Ranking</th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <?php foreach ($kelompokMapel as $kode => $kelompok): ?>
+                                            <?php foreach ($kelompok['sub'] as $namaMapel): ?>
+                                                <th class="text-center" style="font-size:11px;"> <?= $namaMapel ?> </th>
+                                            <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                        <th></th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -164,10 +280,8 @@
                                         $nilaiSiswa = [];
                                     ?>
                                         <tr data-siswa="<?= $siswa['id'] ?>">
-                                            <td class="align-middle"><?= $index + 1 ?></td>
-                                            <td class="align-middle">
-                                                <strong><?= $siswa['nisn'] ?></strong>
-                                            </td>
+                                        <td class="align-middle"> <?= $index + 1 ?> </td>
+                                        <td class="align-middle"> <strong><?= $siswa['nisn'] ?></strong> </td>
                                             <td class="align-middle">
                                                 <div class="d-flex align-items-center">
                                                     <div class="bg-primary rounded-circle p-2 me-2">
@@ -176,54 +290,35 @@
                                                     <div>
                                                         <strong><?= $siswa['nama'] ?></strong>
                                                         <br>
-                                                        <small class="text-muted"><?= $siswa['nama_kelas'] ?></small>
+                                                    <small class="text-muted"> <?= $siswa['nama_kelas'] ?> </small>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <?php foreach ($mapelList as $mapel) : ?>
+                                        <?php foreach ($kelompokMapel as $kode => $kelompok): ?>
+                                            <?php foreach ($kelompok['sub'] as $namaMapel): ?>
                                                 <?php 
-                                                $nilai = $nilaiData[$siswa['id']][$mapel['id']] ?? null;
+                                                $mapelObj = null;
+                                                foreach (($mapelByKelompok[$kode] ?? []) as $m) {
+                                                    if (trim(strtolower($m['nama_mapel'])) == trim(strtolower($namaMapel))) {
+                                                        $mapelObj = $m;
+                                                        break;
+                                                    }
+                                                }
+                                                $nilai = $mapelObj ? ($nilaiData[$siswa['id']][$mapelObj['id']] ?? null) : null;
                                                 $nilaiAkhir = $nilai ? $nilai['akhir'] : 0;
-                                                $nilaiSiswa[$mapel['id']] = $nilaiAkhir;
-                                                
+                                                $nilaiSiswa[$kode][$namaMapel] = $nilaiAkhir;
                                                 if ($nilaiAkhir > 0) {
                                                     $totalNilai += $nilaiAkhir;
                                                     $countNilai++;
                                                 }
                                                 ?>
                                                 <td class="text-center align-middle">
-                                                    <?php if ($nilaiAkhir > 0) : ?>
-                                                        <span class="badge <?= getNilaiBadgeClass($nilaiAkhir) ?> fs-6">
-                                                            <?= number_format($nilaiAkhir, 2) ?>
-                                                        </span>
-                                                    <?php else : ?>
-                                                        <span class="text-muted">-</span>
-                                                    <?php endif; ?>
+                                                    <?= $nilaiAkhir > 0 ? number_format($nilaiAkhir, 2) : '-' ?>
                                                 </td>
                                             <?php endforeach; ?>
-                                            <?php 
-                                            $rataRata = $countNilai > 0 ? ($totalNilai / $countNilai) : 0;
-                                            $rankingData[] = [
-                                                'siswa_id' => $siswa['id'],
-                                                'nama' => $siswa['nama'],
-                                                'rata_rata' => $rataRata,
-                                                'count_nilai' => $countNilai
-                                            ];
-                                            ?>
-                                            <td class="text-center align-middle">
-                                                <?php if ($rataRata > 0) : ?>
-                                                    <span class="badge <?= getNilaiBadgeClass($rataRata) ?> fs-6">
-                                                        <?= number_format($rataRata, 2) ?>
-                                                    </span>
-                                                <?php else : ?>
-                                                    <span class="text-muted">-</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <span class="badge bg-secondary fs-6 ranking-badge" data-siswa="<?= $siswa['id'] ?>">
-                                                    -
-                                                </span>
-                                            </td>
+                                        <?php endforeach; ?>
+                                        <td class="text-center align-middle"> <?= $countNilai ? number_format($totalNilai/$countNilai,2) : '-' ?> </td>
+                                        <td class="text-center align-middle"> <?= $ranking[$siswa['id']] ?? '-' ?> </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

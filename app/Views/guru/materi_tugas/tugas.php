@@ -31,6 +31,20 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="filterKelompok" class="form-label">Filter Kelompok Mapel</label>
+            <select id="filterKelompok" class="form-select">
+                <option value="">Semua Kelompok</option>
+                <option value="A">A. Muatan Nasional</option>
+                <option value="B">B. Muatan Kewilayahan</option>
+                <option value="C1">C1. Dasar Bidang Keahlian</option>
+                <option value="C2">C2. Dasar Program Keahlian</option>
+                <option value="C3">C3. Kompetensi Keahlian</option>
+            </select>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="modern-card">
@@ -71,7 +85,13 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tugasTableBody">
+                                    <?php
+                                    // Urutkan tugas berdasarkan kelompok mapel
+                                    usort($tugas, function($a, $b) {
+                                        return strcmp($a['kelompok'] ?? '', $b['kelompok'] ?? '');
+                                    });
+                                    ?>
                                     <?php foreach ($tugas as $index => $t): ?>
                                     <tr>
                                         <td><?= $index + 1 ?></td>
@@ -85,7 +105,7 @@
                                                 <?php endif; ?>
                                             </div>
                                         </td>
-                                        <td><span class="badge bg-primary"><?= $t['nama_mapel'] ?? 'N/A' ?></span></td>
+                                        <td><span class="badge bg-primary"> <?= $t['nama_mapel'] ?? 'N/A' ?><?php if (!empty($t['kelompok'])): ?> <span class="badge bg-secondary ms-1">[<?= $t['kelompok'] ?>]</span><?php endif; ?></span></td>
                                         <td><span class="badge bg-info"><?= $t['nama_kelas'] ?? 'N/A' ?></span></td>
                                         <td>
                                             <div class="deadline-info">
@@ -324,4 +344,19 @@
     }
 }
 </style>
+
+<script>
+document.getElementById('filterKelompok').addEventListener('change', function() {
+    var val = this.value;
+    var rows = document.querySelectorAll('#tugasTableBody tr');
+    rows.forEach(function(row) {
+        var kelompok = row.querySelector('td span.badge.bg-secondary');
+        if (!val || (kelompok && kelompok.textContent.replace(/\[|\]/g, '') === val)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
 <?= $this->endSection() ?> 

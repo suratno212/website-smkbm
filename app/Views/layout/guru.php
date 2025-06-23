@@ -77,6 +77,23 @@
         .sidebar-menu {
             padding: 20px 0;
             transition: all 0.3s ease;
+            overflow-y: auto;
+            max-height: calc(100vh - 160px);
+            scrollbar-width: thin;           /* Firefox */
+            scrollbar-color: #888 #222;      /* Firefox */
+        }
+        .sidebar-menu::-webkit-scrollbar {
+            width: 8px;
+            background: transparent;
+        }
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .sidebar-menu:hover::-webkit-scrollbar-thumb {
+            opacity: 1;
         }
 
         .sidebar.collapsed .sidebar-menu {
@@ -337,10 +354,6 @@ if (!isset($user)) {
                 <i class="fas fa-bullhorn"></i>
                 <span>Pengumuman</span>
             </a>
-            <a href="<?= base_url('auth/logout') ?>" class="menu-item">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
         </div>
     </div>
 
@@ -356,7 +369,8 @@ if (!isset($user)) {
                     <small class="text-muted">SIAKAD SMK Bhakti Mulya BNS</small>
                 </div>
             </div>
-            <div class="user-info">
+            <div class="user-info dropdown">
+                <a href="#" class="d-flex align-items-center dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration:none; color:inherit;">
                 <?php if (isset($user['foto']) && $user['foto']) : ?>
                     <img src="<?= base_url('uploads/profile/' . $user['foto']) ?>" alt="User" class="profile-image">
                 <?php else : ?>
@@ -364,8 +378,13 @@ if (!isset($user)) {
                 <?php endif; ?>
                 <div>
                     <h6 class="mb-0"><?= $user['username'] ?? 'Guru' ?></h6>
-                    <small class="text-muted"><?= ucfirst($user['role'] ?? 'guru') ?></small>
+                        <small class="text-muted">Guru</small>
                 </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="<?= base_url('guru/profile') ?>"><i class="fas fa-user-edit me-2"></i>Profil</a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('auth/logout') ?>"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
             </div>
         </div>
 

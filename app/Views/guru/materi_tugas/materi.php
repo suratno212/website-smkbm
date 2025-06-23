@@ -31,6 +31,20 @@
         </div>
     </div>
 
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="filterKelompok" class="form-label">Filter Kelompok Mapel</label>
+            <select id="filterKelompok" class="form-select">
+                <option value="">Semua Kelompok</option>
+                <option value="A">A. Muatan Nasional</option>
+                <option value="B">B. Muatan Kewilayahan</option>
+                <option value="C1">C1. Dasar Bidang Keahlian</option>
+                <option value="C2">C2. Dasar Program Keahlian</option>
+                <option value="C3">C3. Kompetensi Keahlian</option>
+            </select>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="modern-card">
@@ -70,7 +84,13 @@
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="materiTableBody">
+                                    <?php
+                                    // Urutkan materi berdasarkan kelompok mapel
+                                    usort($materi, function($a, $b) {
+                                        return strcmp($a['kelompok'] ?? '', $b['kelompok'] ?? '');
+                                    });
+                                    ?>
                                     <?php foreach ($materi as $index => $m): ?>
                                     <tr>
                                         <td><?= $index + 1 ?></td>
@@ -87,7 +107,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><span class="badge bg-primary"><?= $m['nama_mapel'] ?? 'N/A' ?></span></td>
+                                        <td><span class="badge bg-primary"><?= $m['nama_mapel'] ?? 'N/A' ?><?php if (!empty($m['kelompok'])): ?> <span class="badge bg-secondary ms-1">[<?= $m['kelompok'] ?>]</span><?php endif; ?></span></td>
                                         <td><span class="badge bg-info"><?= $m['nama_kelas'] ?? 'N/A' ?></span></td>
                                         <td>
                                             <span class="text-truncate d-inline-block" style="max-width: 200px;" 
@@ -300,4 +320,18 @@
     }
 }
 </style>
+<script>
+document.getElementById('filterKelompok').addEventListener('change', function() {
+    var val = this.value;
+    var rows = document.querySelectorAll('#materiTableBody tr');
+    rows.forEach(function(row) {
+        var kelompok = row.querySelector('td span.badge.bg-secondary');
+        if (!val || (kelompok && kelompok.textContent.replace(/\[|\]/g, '') === val)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
 <?= $this->endSection() ?> 

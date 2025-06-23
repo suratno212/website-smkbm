@@ -5,16 +5,19 @@ namespace App\Controllers\Siswa;
 use App\Controllers\BaseController;
 use App\Models\AbsensiModel;
 use App\Models\SiswaModel;
+use App\Models\UserModel;
 
 class Absensi extends BaseController
 {
     protected $absensiModel;
     protected $siswaModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->absensiModel = new AbsensiModel();
         $this->siswaModel = new SiswaModel();
+        $this->userModel = new UserModel();
     }
 
     // Halaman utama absensi
@@ -25,11 +28,13 @@ class Absensi extends BaseController
         }
         
         $user_id = session()->get('user_id');
+        $user = $this->userModel->find($user_id);
         $siswa = $this->siswaModel->where('user_id', $user_id)->first();
         
         if (!$siswa) {
             return view('siswa/absensi/index', [
                 'title' => 'Absensi Siswa',
+                'user' => $user,
                 'siswa' => null,
                 'absen_today' => null,
                 'error_message' => 'Data siswa tidak ditemukan. Silakan hubungi admin.'
@@ -41,6 +46,7 @@ class Absensi extends BaseController
         
         return view('siswa/absensi/index', [
             'title' => 'Absensi Siswa',
+            'user' => $user,
             'siswa' => $siswa,
             'absen_today' => $absen_today,
             'error_message' => null
@@ -54,10 +60,12 @@ class Absensi extends BaseController
             return redirect()->to(base_url('auth'));
         }
         $user_id = session()->get('user_id');
+        $user = $this->userModel->find($user_id);
         $siswa = $this->siswaModel->where('user_id', $user_id)->first();
         if (!$siswa) {
             return view('siswa/absensi/form', [
                 'title' => 'Isi Absensi',
+                'user' => $user,
                 'siswa' => null,
                 'absen_today' => null,
                 'error_message' => 'Data siswa tidak ditemukan. Silakan hubungi admin.'
@@ -67,6 +75,7 @@ class Absensi extends BaseController
         $absen_today = $this->absensiModel->where('siswa_id', $siswa['id'])->where('tanggal', $today)->first();
         return view('siswa/absensi/form', [
             'title' => 'Isi Absensi',
+            'user' => $user,
             'siswa' => $siswa,
             'absen_today' => $absen_today,
             'error_message' => null
@@ -129,10 +138,12 @@ class Absensi extends BaseController
             return redirect()->to(base_url('auth'));
         }
         $user_id = session()->get('user_id');
+        $user = $this->userModel->find($user_id);
         $siswa = $this->siswaModel->where('user_id', $user_id)->first();
         $riwayat = $this->absensiModel->where('siswa_id', $siswa['id'])->orderBy('tanggal', 'DESC')->findAll();
         return view('siswa/absensi/riwayat', [
             'title' => 'Riwayat Absensi',
+            'user' => $user,
             'siswa' => $siswa,
             'riwayat' => $riwayat
         ]);

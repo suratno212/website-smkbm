@@ -56,6 +56,7 @@
                                         <option value="admin" <?= old('role') == 'admin' ? 'selected' : '' ?>>Admin</option>
                                         <option value="guru" <?= old('role') == 'guru' ? 'selected' : '' ?>>Guru</option>
                                         <option value="siswa" <?= old('role') == 'siswa' ? 'selected' : '' ?>>Siswa</option>
+                                        <option value="kepala_sekolah" <?= old('role') == 'kepala_sekolah' ? 'selected' : '' ?>>Kepala Sekolah</option>
                                     </select>
                                     <?php if (session('errors.role')) : ?>
                                         <div class="invalid-feedback">

@@ -36,6 +36,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'auth'          => AuthFilter::class,
+        'kepalasekolah' => AuthFilter::class,
     ];
 
     /**
@@ -106,5 +107,11 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'kepalasekolah' => [
+            'before' => [
+                'kepalasekolah/*',
+            ],
+        ],
+    ];
 }

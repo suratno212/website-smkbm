@@ -26,7 +26,8 @@ class Spmb extends BaseController
             'no_hp_ortu' => 'required|numeric',
             'email' => 'required|valid_email',
             'no_hp' => 'required|numeric',
-            'jurusan_pilihan' => 'required'
+            'jurusan_pilihan' => 'required',
+            'nisn' => 'required|is_unique[spmb.nisn]',
         ];
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -46,6 +47,7 @@ class Spmb extends BaseController
             'email' => $this->request->getPost('email'),
             'no_hp' => $this->request->getPost('no_hp'),
             'jurusan_pilihan' => $this->request->getPost('jurusan_pilihan'),
+            'nisn' => $this->request->getPost('nisn'),
             'status_pendaftaran' => 'Menunggu'
         ];
         $this->spmbModel->insert($data);
