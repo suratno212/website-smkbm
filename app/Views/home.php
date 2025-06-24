@@ -68,28 +68,6 @@
         </div>
     </div>
 
-    <!-- PPDB Popup -->
-    <div id="ppdbPopup" class="popup-overlay">
-        <div class="popup-content">
-            <div class="popup-body">
-                <button class="close-popup">&times;</button>
-                <img src="<?= base_url('assets/images/ppdb/popup.jpg') ?>" alt="PPDB 2024" class="popup-image">
-                <div class="popup-info">
-                    <h4>Tahun Ajaran 2024/2025</h4>
-                    <p>Pendaftaran: 1 Januari - 30 Juni 2024</p>
-                    <div class="popup-buttons">
-                        <a href="https://instagram.com/smkbmbns" target="_blank" class="instagram-btn">
-                            <i class="fab fa-instagram"></i> Lihat Instagram
-                        </a>
-                        <button class="dont-show-btn" id="dontShowAgain">
-                            <i class="fas fa-times"></i> Jangan Tampilkan Lagi
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <?= $navbar ?>
 
     <!-- Hero Section -->
@@ -1032,109 +1010,6 @@
                 <button id="showMoreBtn" class="show-more-btn">
                     <i class="fas fa-chevron-down"></i> Tampilkan Lainnya
                 </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- PPDB Section -->
-    <section id="ppdb" class="ppdb">
-        <div class="container">
-            <div class="section-title">
-                <h2>Pendaftaran Peserta Didik Baru</h2>
-                <p>Tahun Ajaran 2024/2025</p>
-            </div>
-            <div class="ppdb-content">
-                <div class="ppdb-info">
-                    <h3>Persyaratan Pendaftaran</h3>
-                    <ul>
-                        <li>Lulusan SMP/MTs atau sederajat</li>
-                        <li>Usia maksimal 21 tahun</li>
-                        <li>Membawa fotokopi ijazah dan SKHUN</li>
-                        <li>Membawa fotokopi KTP orang tua</li>
-                        <li>Membawa pas foto 3x4 (3 lembar)</li>
-                    </ul>
-                    <div class="ppdb-contact">
-                        <h4>Informasi Pendaftaran</h4>
-                        <p><i class="fas fa-phone"></i> (0721) 123456</p>
-                        <p><i class="fas fa-envelope"></i> ppdb@smkbmbns.sch.id</p>
-                    </div>
-                </div>
-                <div class="ppdb-form">
-                    <h3>Formulir Pendaftaran Online</h3>
-                    <form action="<?= base_url('spmb/daftar') ?>" method="POST">
-                        <?= csrf_field() ?>
-                        <div class="form-group">
-                            <label for="nama_lengkap">Nama Lengkap</label>
-                            <input type="text" id="nama_lengkap" name="nama_lengkap" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nisn">NISN</label>
-                            <input type="text" id="nisn" name="nisn" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="jenis_kelamin">Jenis Kelamin</label>
-                            <select id="jenis_kelamin" name="jenis_kelamin" required>
-                                <option value="">Pilih Jenis Kelamin</option>
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="tempat_lahir">Tempat Lahir</label>
-                            <input type="text" id="tempat_lahir" name="tempat_lahir" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tanggal_lahir">Tanggal Lahir</label>
-                            <input type="date" id="tanggal_lahir" name="tanggal_lahir" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="agama">Agama</label>
-                            <select id="agama" name="agama" required>
-                                <option value="">Pilih Agama</option>
-                                <option value="Islam">Islam</option>
-                                <option value="Kristen">Kristen</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                                <option value="Konghucu">Konghucu</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="alamat">Alamat</label>
-                            <textarea id="alamat" name="alamat" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="asal_sekolah">Asal Sekolah</label>
-                            <input type="text" id="asal_sekolah" name="asal_sekolah" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nama_ortu">Nama Orang Tua</label>
-                            <input type="text" id="nama_ortu" name="nama_ortu" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="no_hp_ortu">No. HP Orang Tua</label>
-                            <input type="tel" id="no_hp_ortu" name="no_hp_ortu" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="no_hp">No. HP</label>
-                            <input type="tel" id="no_hp" name="no_hp" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="jurusan_pilihan">Pilihan Jurusan</label>
-                            <select id="jurusan_pilihan" name="jurusan_pilihan" required>
-                                <option value="">Pilih Jurusan</option>
-                                <?php foreach ($jurusan_list as $j) : ?>
-                                    <option value="<?= $j['nama_jurusan'] ?>"><?= $j['nama_jurusan'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <button type="submit" class="submit-btn">Daftar Sekarang</button>
-                    </form>
-                </div>
             </div>
         </div>
     </section>

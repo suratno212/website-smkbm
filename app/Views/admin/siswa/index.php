@@ -111,6 +111,7 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form action="<?= base_url('admin/siswa/delete/' . $s['id']); ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                <?= csrf_field() ?>
                                                 <button type="submit" class="btn btn-danger btn-sm">
                                                     <i class="fas fa-trash"></i>
                                                 </button>

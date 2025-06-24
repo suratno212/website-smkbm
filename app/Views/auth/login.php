@@ -13,12 +13,17 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary-color), #283593);
+            background: #fff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Pattern dot grid biru muda transparan, elegan */
+            background-image:
+                url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="%230B3D9122"/></svg>');
+            background-size: 24px 24px;
+            background-repeat: repeat;
         }
 
         .login-container {

@@ -24,7 +24,7 @@ class Home extends BaseController
                 ['url' => '#jurusan', 'text' => 'Jurusan'],
                 ['url' => '#galeri', 'text' => 'Galeri'],
                 ['url' => '#pegawai', 'text' => 'Pegawai'],
-                ['url' => '#ppdb', 'text' => 'PPDB']
+                ['url' => base_url('spmb/daftar'), 'text' => 'SPMB']
             ],
             'navbar' => view('navbar', [
                 'menu' => [
@@ -32,7 +32,7 @@ class Home extends BaseController
                     ['url' => '#jurusan', 'text' => 'Jurusan'],
                     ['url' => '#galeri', 'text' => 'Galeri'],
                     ['url' => '#pegawai', 'text' => 'Pegawai'],
-                    ['url' => '#ppdb', 'text' => 'PPDB']
+                    ['url' => base_url('spmb/daftar'), 'text' => 'SPMB']
                 ]
             ]),
             'pengumuman' => $this->pengumumanModel->getActiveAnnouncements(),

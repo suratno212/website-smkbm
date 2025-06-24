@@ -8,7 +8,7 @@ class KelasModel extends Model
 {
     protected $table = 'kelas';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_kelas', 'tingkat', 'jurusan_id', 'wali_kelas_id'];
+    protected $allowedFields = ['nama_kelas', 'tingkat', 'jurusan_id', 'wali_kelas_id', 'kuota'];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';

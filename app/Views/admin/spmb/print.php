@@ -24,7 +24,24 @@
         <hr>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0">Laporan Rekapitulasi SPMB</h4>
-            <button class="btn btn-primary no-print" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button>
+            <div class="no-print d-flex gap-2 align-items-center">
+                <form method="get" class="d-inline-block me-2" id="form-order">
+                    <label for="sort" class="me-1">Urutkan Berdasarkan:</label>
+                    <select name="sort" id="sort" class="form-select form-select-sm d-inline-block w-auto" onchange="document.getElementById('form-order').submit()">
+                        <option value="created_at" <?= ($sort === 'created_at') ? 'selected' : '' ?>>Tanggal Daftar</option>
+                        <option value="no_pendaftaran" <?= ($sort === 'no_pendaftaran') ? 'selected' : '' ?>>No. Pendaftaran</option>
+                        <option value="kelas" <?= ($sort === 'kelas') ? 'selected' : '' ?>>Kelas</option>
+                        <option value="jenis_kelamin" <?= ($sort === 'jenis_kelamin') ? 'selected' : '' ?>>Jenis Kelamin</option>
+                        <option value="agama" <?= ($sort === 'agama') ? 'selected' : '' ?>>Agama</option>
+                        <option value="status" <?= ($sort === 'status') ? 'selected' : '' ?>>Status</option>
+                    </select>
+                    <select name="order" id="order" class="form-select form-select-sm d-inline-block w-auto ms-1" onchange="document.getElementById('form-order').submit()">
+                        <option value="ASC" <?= ($order === 'ASC') ? 'selected' : '' ?>>A-Z / Terlama</option>
+                        <option value="DESC" <?= ($order === 'DESC') ? 'selected' : '' ?>>Z-A / Terbaru</option>
+                    </select>
+                </form>
+                <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button>
+            </div>
         </div>
         <table class="table table-bordered table-striped">
             <thead>
@@ -45,7 +62,7 @@
                             <td><?= $i++; ?></td>
                             <td><?= $p['no_pendaftaran']; ?></td>
                             <td><?= $p['nama_lengkap']; ?></td>
-                            <td><?= $p['jurusan_pilihan']; ?></td>
+                            <td><?= $p['nama_jurusan'] ?? '-'; ?></td>
                             <td><?= $p['status_pendaftaran']; ?></td>
                             <td><?= date('d/m/Y H:i', strtotime($p['created_at'])); ?></td>
                         </tr>

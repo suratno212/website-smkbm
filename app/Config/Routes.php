@@ -50,6 +50,7 @@ $routes->get('auth/logout', 'Auth::logout');
 
 // SPMB Routes (Public)
 $routes->get('spmb', 'Spmb::index');
+$routes->get('spmb/daftar', 'Spmb::daftarForm');
 $routes->post('spmb/daftar', 'Spmb::daftar');
 $routes->get('spmb/sukses', 'Spmb::sukses');
 $routes->get('spmb/cek-status', 'Spmb::cekStatus');
@@ -190,6 +191,7 @@ $routes->group('admin', ['filter' => 'auth:admin'], function($routes) {
     $routes->post('spmb/delete/(:num)', 'Admin\Spmb::delete/$1');
     $routes->get('spmb/print', 'Admin\Spmb::print');
     $routes->get('spmb/jadikanSiswa/(:num)', 'Admin\Spmb::jadikanSiswa/$1');
+    $routes->post('spmb/mass_jadikan_siswa', 'Admin\Spmb::mass_jadikan_siswa');
 
     // Kelas Routes
     $routes->get('kelas', 'Admin\Kelas::index');
@@ -222,6 +224,8 @@ $routes->group('admin', ['filter' => 'auth:admin'], function($routes) {
     $routes->get('absensi/cetak-rekap-siswa', 'Admin\Absensi::cetakRekapSiswa');
     $routes->get('absensi/rekap-guru', 'Admin\Absensi::rekapGuru');
     $routes->get('absensi/cetak-rekap-guru', 'Admin\Absensi::cetakRekapGuru');
+
+    $routes->post('spmb/mass_delete', 'Admin\Spmb::mass_delete');
 });
 
 // Guru Routes

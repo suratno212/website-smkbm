@@ -72,7 +72,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
+            // 'auth', // Pastikan baris ini tetap dikomentari agar route publik tidak terproteksi login
             'csrf',
             // 'invalidchars',
         ],

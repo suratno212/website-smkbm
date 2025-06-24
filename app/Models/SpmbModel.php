@@ -6,7 +6,9 @@ class SpmbModel extends Model
     protected $table = 'spmb';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'no_pendaftaran', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'alamat', 'asal_sekolah', 'nama_ortu', 'no_hp_ortu', 'email', 'no_hp', 'jurusan_pilihan', 'nisn', 'status_pendaftaran', 'catatan', 'created_at', 'updated_at'
+        'no_pendaftaran', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir',
+        'agama_id', 'alamat', 'asal_sekolah', 'nama_ortu', 'no_hp_ortu', 'email', 'no_hp',
+        'jurusan_id', 'nisn', 'status_pendaftaran', 'catatan', 'created_at', 'updated_at'
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
@@ -34,22 +36,24 @@ class SpmbModel extends Model
     // Get SPMB dengan filter
     public function getSpmbWithFilter($filters = [])
     {
-        $builder = $this->select('*');
+        $builder = $this->select('spmb.*, agama.nama_agama, jurusan.nama_jurusan')
+            ->join('agama', 'agama.id = spmb.agama_id', 'left')
+            ->join('jurusan', 'jurusan.id = spmb.jurusan_id', 'left');
 
         if (!empty($filters['nama'])) {
-            $builder->like('nama_lengkap', $filters['nama']);
+            $builder->like('spmb.nama_lengkap', $filters['nama']);
         }
         if (!empty($filters['no_pendaftaran'])) {
-            $builder->like('no_pendaftaran', $filters['no_pendaftaran']);
+            $builder->like('spmb.no_pendaftaran', $filters['no_pendaftaran']);
         }
         if (!empty($filters['status'])) {
-            $builder->where('status_pendaftaran', $filters['status']);
+            $builder->where('spmb.status_pendaftaran', $filters['status']);
         }
         if (!empty($filters['jurusan'])) {
-            $builder->where('jurusan_pilihan', $filters['jurusan']);
+            $builder->where('spmb.jurusan_id', $filters['jurusan']);
         }
 
-        return $builder->orderBy('created_at', 'DESC')->findAll();
+        return $builder->orderBy('spmb.created_at', 'DESC')->findAll();
     }
 
     // Get statistik SPMB
