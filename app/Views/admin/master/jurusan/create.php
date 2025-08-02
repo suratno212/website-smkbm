@@ -24,6 +24,10 @@
                     <form action="<?= base_url('admin/master/jurusan/store') ?>" method="post">
                         <?= csrf_field() ?>
                         <div class="form-group">
+                            <label for="kd_jurusan">Kode Jurusan</label>
+                            <input type="text" class="form-control" id="kd_jurusan" name="kd_jurusan" value="<?= old('kd_jurusan') ?>" required>
+                        </div>
+                        <div class="form-group">
                             <label for="nama_jurusan">Nama Jurusan</label>
                             <input type="text" class="form-control" id="nama_jurusan" name="nama_jurusan" value="<?= old('nama_jurusan') ?>" required>
                         </div>
@@ -37,4 +41,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

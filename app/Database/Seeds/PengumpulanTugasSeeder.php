@@ -1,42 +1,52 @@
 <?php
+
 namespace App\Database\Seeds;
+
 use CodeIgniter\Database\Seeder;
+
 class PengumpulanTugasSeeder extends Seeder
 {
     public function run()
     {
         $data = [
             [
-                'tugas_id' => 1,
-                'siswa_id' => 1,
-                'file_tugas' => 'test_file_1.txt',
-                'status' => 'Dikumpulkan',
-                'nilai' => 85,
-                'catatan' => 'Bagus, tapi bisa lebih baik',
+                'kd_pengumpulan' => 'PGM001',
+                'kd_tugas' => 'TGS003',
+                'nis' => '2024001',
+                'file_tugas' => 'tugas_matematika_2024001.pdf',
+                'status' => 'dikumpulkan',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'tugas_id' => 1,
-                'siswa_id' => 7,
-                'file_tugas' => 'test_file_2.txt',
-                'status' => 'Dikumpulkan',
-                'nilai' => 90,
-                'catatan' => 'Sangat bagus!',
+                'kd_pengumpulan' => 'PGM002',
+                'kd_tugas' => 'TGS003',
+                'nis' => '2024002',
+                'file_tugas' => 'tugas_matematika_2024002.pdf',
+                'status' => 'dikumpulkan',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'tugas_id' => 2,
-                'siswa_id' => 1,
-                'file_tugas' => 'test_file_1.txt',
-                'status' => 'Terlambat',
-                'nilai' => 75,
-                'catatan' => 'Terlambat mengumpulkan',
-                'created_at' => date('Y-m-d H:i:s', strtotime('+1 day')),
+                'kd_pengumpulan' => 'PGM003',
+                'kd_tugas' => 'TGS004',
+                'nis' => '2024001',
+                'file_tugas' => 'tugas_bahasa_indonesia_2024001.pdf',
+                'status' => 'dikumpulkan',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ],
+            [
+                'kd_pengumpulan' => 'PGM004',
+                'kd_tugas' => 'TGS004',
+                'nis' => '2024002',
+                'file_tugas' => 'tugas_bahasa_indonesia_2024002.pdf',
+                'status' => 'dikumpulkan',
+                'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]
         ];
+
         $this->db->table('pengumpulan_tugas')->insertBatch($data);
     }
 } 

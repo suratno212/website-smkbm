@@ -27,8 +27,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="nip_nuptk">NIP/NUPTK</label>
-                                    <input type="text" class="form-control" id="nip_nuptk" name="nip_nuptk" value="<?= $filters['nip_nuptk'] ?? '' ?>" placeholder="Cari NIP/NUPTK...">
+                                    <label for="nik_nip">NIK/NIP</label>
+                                    <input type="text" class="form-control" id="nik_nip" name="nik_nip" value="<?= $filters['nik_nip'] ?? '' ?>" placeholder="Cari NIK/NIP...">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -39,11 +39,11 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="mapel_id">Mata Pelajaran</label>
-                                    <select class="form-control" id="mapel_id" name="mapel_id">
+                                    <label for="kd_mapel">Mata Pelajaran</label>
+                                    <select class="form-control" id="kd_mapel" name="kd_mapel">
                                         <option value="">Semua Mapel</option>
                                         <?php foreach ($mapel as $m) : ?>
-                                            <option value="<?= $m['id'] ?>" <?= ($filters['mapel_id'] ?? '') == $m['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $m['kd_mapel'] ?>" <?= ($filters['kd_mapel'] ?? '') == $m['kd_mapel'] ? 'selected' : '' ?>>
                                                 <?= $m['nama_mapel'] ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -68,7 +68,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>NIP/NUPTK</th>
+                                    <th>NIK/NIP</th>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Agama</th>
@@ -85,20 +85,20 @@
                                 <?php foreach ($guru as $g) : ?>
                                     <tr>
                                         <td><?= $i++; ?></td>
-                                        <td><?= $g['nip_nuptk']; ?></td>
+                                        <td><?= $g['nik_nip']; ?></td>
                                         <td><?= $g['nama']; ?></td>
                                         <td><?= $g['jenis_kelamin']; ?></td>
-                                        <td><?= $g['agama']; ?></td>
+                                        <td><?= $g['nama_agama'] ?? '-'; ?></td>
                                         <td><?= $g['tempat_lahir']; ?></td>
                                         <td><?= date('d-m-Y', strtotime($g['tanggal_lahir'])); ?></td>
                                         <td><?= $g['nama_mapel']; ?></td>
                                         <td><?= $g['alamat']; ?></td>
                                         <td><?= $g['no_hp']; ?></td>
                                         <td>
-                                            <a href="<?= base_url('admin/guru/edit/' . $g['id']); ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('admin/guru/edit/' . $g['nik_nip']); ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="<?= base_url('admin/guru/delete/' . $g['id']); ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                            <form action="<?= base_url('admin/guru/delete/' . $g['nik_nip']); ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                                 <?= csrf_field() ?>
                                                 <button type="submit" class="btn btn-danger btn-sm">
                                                     <i class="fas fa-trash"></i>

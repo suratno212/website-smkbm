@@ -30,7 +30,7 @@
                             </h4>
                         </div>
                         <div class="flex-shrink-0">
-                            <a href="<?= base_url('siswa/materitugas/detailTugas/' . $tugas['id']) ?>" class="btn btn-secondary btn-sm">
+                            <a href="<?= base_url('siswa/materitugas/detailTugas/' . $tugas['kd_tugas']) ?>" class="btn btn-secondary btn-sm">
                                 <i class="fas fa-arrow-left me-1"></i> Kembali
                             </a>
                         </div>
@@ -49,8 +49,8 @@
                                 <strong>Guru:</strong> <?= esc($tugas['nama_guru']) ?>
                             </div>
                             <div class="col-md-6">
-                                <strong>Deadline:</strong> 
-                                <?php 
+                                <strong>Deadline:</strong>
+                                <?php
                                 $deadline = new DateTime($tugas['deadline']);
                                 $now = new DateTime();
                                 $isOverdue = $deadline < $now;
@@ -74,17 +74,17 @@
                     </div>
 
                     <?php if ($tugas['file']): ?>
-                    <!-- Lampiran Tugas -->
-                    <div class="mb-4">
-                        <h5><i class="fas fa-paperclip text-primary me-2"></i>Lampiran Tugas</h5>
-                        <div class="p-3 bg-light rounded">
-                            <a href="<?= base_url('siswa/materitugas/downloadTugas/' . $tugas['id']) ?>" 
-                               class="btn btn-outline-primary">
-                                <i class="fas fa-download me-1"></i>
-                                Download Lampiran
-                            </a>
+                        <!-- Lampiran Tugas -->
+                        <div class="mb-4">
+                            <h5><i class="fas fa-paperclip text-primary me-2"></i>Lampiran Tugas</h5>
+                            <div class="p-3 bg-light rounded">
+                                <a href="<?= base_url('siswa/materitugas/downloadTugas/' . $tugas['kd_tugas']) ?>"
+                                    class="btn btn-outline-primary">
+                                    <i class="fas fa-download me-1"></i>
+                                    Download Lampiran
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     <?php endif; ?>
 
                     <hr>
@@ -96,10 +96,28 @@
                         </div>
                     <?php else: ?>
                         <!-- Form Upload -->
-                        <form action="<?= base_url('siswa/materitugas/uploadTugas/' . $tugas['id']) ?>" 
-                              method="post" enctype="multipart/form-data" id="uploadForm">
+                        <form action="<?= base_url('siswa/materitugas/uploadTugas/' . $tugas['kd_tugas']) ?>"
+                            method="post" enctype="multipart/form-data" id="uploadForm">
                             <?= csrf_field() ?>
-                            
+
+                            <!-- Debug info -->
+                            <?php if (session('errors')): ?>
+                                <div class="alert alert-danger">
+                                    <h6>Validation Errors:</h6>
+                                    <ul>
+                                        <?php foreach (session('errors') as $error): ?>
+                                            <li><?= $error ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (session('error')): ?>
+                                <div class="alert alert-danger">
+                                    <?= session('error') ?>
+                                </div>
+                            <?php endif; ?>
+
                             <div class="mb-3">
                                 <label class="form-label">File Tugas <span class="text-danger">*</span></label>
                                 <input type="file" name="file_tugas" class="form-control" id="fileInput" required>
@@ -111,8 +129,8 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Catatan (Opsional)</label>
-                                <textarea name="catatan" class="form-control" rows="3" 
-                                          placeholder="Tambahkan catatan atau keterangan tambahan untuk tugas Anda..."></textarea>
+                                <textarea name="catatan" class="form-control" rows="3"
+                                    placeholder="Tambahkan catatan atau keterangan tambahan untuk tugas Anda..."></textarea>
                             </div>
 
                             <div class="alert alert-warning">
@@ -131,8 +149,8 @@
                                     <i class="fas fa-upload me-2"></i>
                                     Upload Tugas
                                 </button>
-                                <a href="<?= base_url('siswa/materitugas/detailTugas/' . $tugas['id']) ?>" 
-                                   class="btn btn-secondary">
+                                <a href="<?= base_url('siswa/materitugas/detailTugas/' . $tugas['kd_tugas']) ?>"
+                                    class="btn btn-secondary">
                                     <i class="fas fa-times me-2"></i>
                                     Batal
                                 </a>
@@ -146,50 +164,54 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('fileInput');
-    const submitBtn = document.getElementById('submitBtn');
-    const uploadForm = document.getElementById('uploadForm');
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const uploadForm = document.getElementById('uploadForm');
 
-    // Validasi file saat dipilih
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            // Validasi ukuran file (10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('Ukuran file terlalu besar! Maksimal 10MB.');
-                this.value = '';
+        // Validasi file saat dipilih
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                // Validasi ukuran file (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('Ukuran file terlalu besar! Maksimal 10MB.');
+                    this.value = '';
+                    return;
+                }
+
+                // Validasi tipe file
+                const allowedTypes = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'rar'];
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+
+                if (!allowedTypes.includes(fileExtension)) {
+                    alert('Tipe file tidak diizinkan! Format yang diizinkan: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, ZIP, RAR');
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+
+        // Konfirmasi sebelum submit
+        uploadForm.addEventListener('submit', function(e) {
+            if (!fileInput.files[0]) {
+                alert('Pilih file terlebih dahulu!');
+                e.preventDefault();
                 return;
             }
 
-            // Validasi tipe file
-            const allowedTypes = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'zip', 'rar'];
-            const fileExtension = file.name.split('.').pop().toLowerCase();
-            
-            if (!allowedTypes.includes(fileExtension)) {
-                alert('Tipe file tidak diizinkan! Format yang diizinkan: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, ZIP, RAR');
-                this.value = '';
-                return;
-            }
-        }
-    });
+            // Log form submission for debugging
+            console.log('Form submitting...');
+            console.log('File:', fileInput.files[0]);
+            console.log('Form action:', uploadForm.action);
+            console.log('Form method:', uploadForm.method);
 
-    // Konfirmasi sebelum submit
-    uploadForm.addEventListener('submit', function(e) {
-        if (!fileInput.files[0]) {
-            alert('Pilih file terlebih dahulu!');
-            e.preventDefault();
-            return;
-        }
-
-        const confirmed = confirm('Apakah Anda yakin ingin mengupload tugas ini? File yang sudah diupload tidak dapat diubah.');
-        if (!confirmed) {
-            e.preventDefault();
-        } else {
+            // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
-        }
+
+            // Allow form to submit normally
+        });
     });
-});
 </script>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

@@ -14,16 +14,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no=1; foreach($siswa as $s): ?>
-                    <tr>
-                        <td><?= $no++ ?></td>
-                        <td><?= esc($s['nisn']) ?></td>
-                        <td><?= esc($s['nama']) ?></td>
-                        <td>
-                            <a href="<?= base_url('guru/raport/detail/'.$s['id']) ?>" class="btn btn-primary btn-sm">Lihat Raport</a>
-                            <a href="<?= base_url('guru/raport/preview/'.$s['id']) ?>" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-eye"></i> Preview</a>
-                        </td>
-                    </tr>
+                    <?php $no = 1;
+                    foreach ($siswa as $s): ?>
+                        <tr>
+                            <td><?= $no++ ?></td>
+                            <td><?= esc($s['nis']) ?></td>
+                            <td><?= esc($s['nama']) ?></td>
+                            <td>
+                                <a href="<?= base_url('guru/raport/detail/' . $s['nis']) ?>" class="btn btn-primary btn-sm">Lihat Raport</a>
+                                <a href="<?= base_url('guru/raport/preview/' . $s['nis']) ?>" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-eye"></i> Preview</a>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -31,4 +32,4 @@
     </div>
     <a href="<?= base_url('guru/raport') ?>" class="btn btn-secondary mt-3">Kembali ke Pilih Kelas</a>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

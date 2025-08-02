@@ -8,82 +8,80 @@ class KelasSeeder extends Seeder
 {
     public function run()
     {
-        // Hapus semua data kelas sebelum insert baru
+        $this->db->query('SET FOREIGN_KEY_CHECKS=0;');
         $this->db->table('kelas')->truncate();
-        $this->db->query("ALTER TABLE kelas AUTO_INCREMENT = 1");
-
-        // Data kelas
-        $kelasData = [
+        $this->db->query('SET FOREIGN_KEY_CHECKS=1;');
+        $data = [
             [
+                'kd_kelas' => 'X-TKJ-1',
                 'nama_kelas' => 'X TKJ 1',
                 'tingkat' => 'X',
-                'jurusan_id' => 1, // TKJ
+                'kd_jurusan' => 'TKJ', // TKJ
+                'wali_kelas_nik_nip' => '198501012010012001',
+                'kuota' => 36,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
             [
+                'kd_kelas' => 'X-TKJ-2',
                 'nama_kelas' => 'X TKJ 2',
                 'tingkat' => 'X',
-                'jurusan_id' => 1, // TKJ
+                'kd_jurusan' => 'TKJ', // TKJ
+                'wali_kelas_nik_nip' => '198501012010012002',
+                'kuota' => 36,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
             [
+                'kd_kelas' => 'X-RPL-1',
                 'nama_kelas' => 'X RPL 1',
                 'tingkat' => 'X',
-                'jurusan_id' => 2, // RPL
+                'kd_jurusan' => 'RPL', // RPL
+                'wali_kelas_nik_nip' => '198501012010012003',
+                'kuota' => 36,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
             [
+                'kd_kelas' => 'X-MM-1',
                 'nama_kelas' => 'X MM 1',
                 'tingkat' => 'X',
-                'jurusan_id' => 3, // MM
+                'kd_jurusan' => 'MM', // MM
+                'wali_kelas_nik_nip' => '198501012010012004',
+                'kuota' => 36,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
             [
+                'kd_kelas' => 'XI-TKJ-1',
                 'nama_kelas' => 'XI TKJ 1',
                 'tingkat' => 'XI',
-                'jurusan_id' => 1, // TKJ
+                'kd_jurusan' => 'TKJ', // TKJ
+                'wali_kelas_nik_nip' => '198501012010012005',
+                'kuota' => 36,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
             [
+                'kd_kelas' => 'XI-RPL-1',
                 'nama_kelas' => 'XI RPL 1',
                 'tingkat' => 'XI',
-                'jurusan_id' => 2, // RPL
+                'kd_jurusan' => 'RPL', // RPL
+                'wali_kelas_nik_nip' => '198501012010012006',
+                'kuota' => 36,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ]
         ];
 
-        // Insert data kelas
-        $this->db->table('kelas')->insertBatch($kelasData);
+        $this->db->table('kelas')->insertBatch($data);
 
-        // Data wali kelas
-        $waliKelasData = [
-            [
-                'guru_id' => 1, // Ahmad Supriadi
-                'kelas_id' => 1,
-                'tahun_akademik_id' => 1
-            ],
-            [
-                'guru_id' => 2, // Siti Nurhaliza
-                'kelas_id' => 2,
-                'tahun_akademik_id' => 1
-            ],
-            [
-                'guru_id' => 3, // Budi Santoso
-                'kelas_id' => 3,
-                'tahun_akademik_id' => 1
-            ],
-            [
-                'guru_id' => 4, // Rina Marlina
-                'kelas_id' => 4,
-                'tahun_akademik_id' => 1
-            ],
-            [
-                'guru_id' => 5, // Joko Widodo
-                'kelas_id' => 5,
-                'tahun_akademik_id' => 1
-            ],
-            [
-                'guru_id' => 6, // Sri Wahyuni
-                'kelas_id' => 6,
-                'tahun_akademik_id' => 1
-            ]
-        ];
-
-        // Insert data wali kelas
-        $this->db->table('wali_kelas')->insertBatch($waliKelasData);
+        // Update wali kelas untuk kelas yang sudah ada
+        $this->db->table('kelas')->where('kd_kelas', 'X-TKJ-1')->update(['wali_kelas_nik_nip' => '198501012010012001']);
+        $this->db->table('kelas')->where('kd_kelas', 'X-TKJ-2')->update(['wali_kelas_nik_nip' => '198501012010012002']);
+        $this->db->table('kelas')->where('kd_kelas', 'X-RPL-1')->update(['wali_kelas_nik_nip' => '198501012010012003']);
+        $this->db->table('kelas')->where('kd_kelas', 'X-MM-1')->update(['wali_kelas_nik_nip' => '198501012010012004']);
+        $this->db->table('kelas')->where('kd_kelas', 'XI-TKJ-1')->update(['wali_kelas_nik_nip' => '198501012010012005']);
+        $this->db->table('kelas')->where('kd_kelas', 'XI-RPL-1')->update(['wali_kelas_nik_nip' => '198501012010012006']);
     }
 } 

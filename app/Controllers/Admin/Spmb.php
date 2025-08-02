@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Controllers\Admin;
+
 use App\Controllers\BaseController;
 use App\Models\SpmbModel;
 use App\Models\JurusanModel;
 use App\Models\UserModel;
 use App\Models\SiswaModel;
 use App\Models\KelasModel;
+
 class Spmb extends BaseController
 {
     protected $spmbModel;
@@ -40,7 +43,7 @@ class Spmb extends BaseController
         $pendaftar = $this->spmbModel
             ->select('spmb.*, agama.nama_agama, jurusan.nama_jurusan')
             ->join('agama', 'agama.id = spmb.agama_id', 'left')
-            ->join('jurusan', 'jurusan.id = spmb.jurusan_id', 'left')
+            ->join('jurusan', 'jurusan.kd_jurusan = spmb.kd_jurusan', 'left')
             ->where('spmb.id', $id)
             ->first();
         $data = [
@@ -116,9 +119,9 @@ class Spmb extends BaseController
         $builder = $this->spmbModel
             ->select('spmb.*, agama.nama_agama, jurusan.nama_jurusan')
             ->join('agama', 'agama.id = spmb.agama_id', 'left')
-            ->join('jurusan', 'jurusan.id = spmb.jurusan_id', 'left');
+            ->join('jurusan', 'jurusan.kd_jurusan = spmb.jurusan_pilihan', 'left');
         if ($jurusan) {
-            $builder->where('spmb.jurusan_id', $jurusan);
+            $builder->where('spmb.jurusan_pilihan', $jurusan);
         }
         if ($jenis_kelamin) {
             $builder->where('spmb.jenis_kelamin', $jenis_kelamin);
@@ -175,14 +178,14 @@ class Spmb extends BaseController
             'email' => $spmb['email'],
             'role' => 'siswa',
         ], true);
-        $jurusan = $this->jurusanModel->where('id', $spmb['jurusan_id'])->first();
+        $jurusan = $this->jurusanModel->where('kd_jurusan', $spmb['kd_jurusan'])->first();
         log_message('debug', 'Cek jurusan: ' . json_encode($jurusan));
         if (!$jurusan) {
             log_message('debug', 'Jurusan tidak ditemukan');
             return redirect()->to(base_url('admin/spmb'))->with('error', 'Jurusan tidak ditemukan. Pastikan data jurusan sudah benar.');
         }
         // Cari kelas jurusan yang belum penuh kuota
-        $kelasList = $kelasModel->where('jurusan_id', $jurusan['id'])->findAll();
+        $kelasList = $kelasModel->where('kd_jurusan', $jurusan['kd_jurusan'])->findAll();
         $kelasTerpilih = null;
         foreach ($kelasList as $k) {
             $jumlahSiswa = $siswaModel->where('kelas_id', $k['id'])->countAllResults();
@@ -197,7 +200,7 @@ class Spmb extends BaseController
         }
         $siswaModel->insert([
             'user_id' => $userId,
-            'nisn' => $spmb['nisn'],
+            'nis' => $spmb['nis'],
             'nama' => $spmb['nama_lengkap'],
             'tanggal_lahir' => $spmb['tanggal_lahir'],
             'jenis_kelamin' => $spmb['jenis_kelamin'],
@@ -249,9 +252,9 @@ class Spmb extends BaseController
                     'email' => $spmb['email'],
                     'role' => 'siswa',
                 ], true);
-                $jurusanId = $spmb['jurusan_id'];
+                $kdJurusan = $spmb['kd_jurusan'];
                 // Cari kelas jurusan yang belum penuh kuota
-                $kelasList = $kelasModel->where('jurusan_id', $jurusanId)->findAll();
+                $kelasList = $kelasModel->where('kd_jurusan', $kdJurusan)->findAll();
                 $kelasTerpilih = null;
                 foreach ($kelasList as $k) {
                     $jumlahSiswa = $siswaModel->where('kelas_id', $k['id'])->countAllResults();
@@ -267,7 +270,7 @@ class Spmb extends BaseController
                 }
                 $siswaModel->insert([
                     'user_id' => $userId,
-                    'nisn' => $spmb['nisn'],
+                    'nis' => $spmb['nis'],
                     'nama' => $spmb['nama_lengkap'],
                     'tanggal_lahir' => $spmb['tanggal_lahir'],
                     'jenis_kelamin' => $spmb['jenis_kelamin'],
@@ -281,7 +284,7 @@ class Spmb extends BaseController
                 $success++;
             }
             if ($success > 0) {
-                session()->setFlashdata('success', $success.' pendaftar berhasil dijadikan siswa.');
+                session()->setFlashdata('success', $success . ' pendaftar berhasil dijadikan siswa.');
             }
             if (!empty($errors)) {
                 session()->setFlashdata('error', implode('<br>', $errors));
@@ -291,4 +294,4 @@ class Spmb extends BaseController
         }
         return redirect()->to(base_url('admin/spmb'));
     }
-} 
+}

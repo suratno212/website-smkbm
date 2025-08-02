@@ -31,7 +31,7 @@
                                     <select name="tahun_akademik_id" id="tahun_akademik_id" class="form-control <?= session('errors.tahun_akademik_id') ? 'is-invalid' : '' ?>" required>
                                         <option value="">Pilih Tahun Akademik</option>
                                         <?php foreach ($tahun_akademik as $ta) : ?>
-                                            <option value="<?= $ta['id'] ?>" <?= old('tahun_akademik_id') == $ta['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $ta['kd_tahun_akademik'] ?>" <?= old('tahun_akademik_id') == $ta['kd_tahun_akademik'] ? 'selected' : '' ?>>
                                                 <?= $ta['tahun'] ?> - Semester <?= $ta['semester'] ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -44,52 +44,52 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="kelas_id">Kelas</label>
-                                    <select name="kelas_id" id="kelas_id" class="form-control <?= session('errors.kelas_id') ? 'is-invalid' : '' ?>" required>
+                                    <label for="kd_kelas">Kelas</label>
+                                    <select name="kd_kelas" id="kd_kelas" class="form-control <?= session('errors.kd_kelas') ? 'is-invalid' : '' ?>" required>
                                         <option value="">Pilih Kelas</option>
                                         <?php foreach ($kelas as $k) : ?>
-                                            <option value="<?= $k['id'] ?>" <?= old('kelas_id') == $k['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $k['kd_kelas'] ?>" data-jurusan="<?= $k['jurusan_id'] ?? '' ?>">
                                                 <?= $k['nama_kelas'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <?php if (session('errors.kelas_id')) : ?>
+                                    <?php if (session('errors.kd_kelas')) : ?>
                                         <div class="invalid-feedback">
-                                            <?= session('errors.kelas_id') ?>
+                                            <?= session('errors.kd_kelas') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="mapel_id">Mata Pelajaran</label>
-                                    <select name="mapel_id" id="mapel_id" class="form-control <?= session('errors.mapel_id') ? 'is-invalid' : '' ?>" required>
+                                    <label for="kd_mapel">Mata Pelajaran</label>
+                                    <select name="kd_mapel" id="kd_mapel" class="form-control <?= session('errors.kd_mapel') ? 'is-invalid' : '' ?>" required>
                                         <option value="">Pilih Mata Pelajaran</option>
                                         <?php foreach ($mapel as $m) : ?>
-                                            <option value="<?= $m['id'] ?>" <?= old('mapel_id') == $m['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $m['kd_mapel'] ?>" data-jurusan="<?= $m['jurusan_id'] ?? '' ?>">
                                                 <?= $m['nama_mapel'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <?php if (session('errors.mapel_id')) : ?>
+                                    <?php if (session('errors.kd_mapel')) : ?>
                                         <div class="invalid-feedback">
-                                            <?= session('errors.mapel_id') ?>
+                                            <?= session('errors.kd_mapel') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="guru_id">Guru</label>
-                                    <select name="guru_id" id="guru_id" class="form-control <?= session('errors.guru_id') ? 'is-invalid' : '' ?>" required>
+                                    <label for="nik_nip">Guru</label>
+                                    <select name="nik_nip" id="nik_nip" class="form-control <?= session('errors.nik_nip') ? 'is-invalid' : '' ?>" required>
                                         <option value="">Pilih Guru</option>
                                         <?php foreach ($guru as $g) : ?>
-                                            <option value="<?= $g['id'] ?>" <?= old('guru_id') == $g['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $g['nik_nip'] ?>" <?= old('nik_nip') == $g['nik_nip'] ? 'selected' : '' ?>>
                                                 <?= $g['nama'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <?php if (session('errors.guru_id')) : ?>
+                                    <?php if (session('errors.nik_nip')) : ?>
                                         <div class="invalid-feedback">
-                                            <?= session('errors.guru_id') ?>
+                                            <?= session('errors.nik_nip') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -158,10 +158,10 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Mata Pelajaran</label>
-                                <select name="mapel_id" class="form-control" required>
+                                <select name="kd_mapel" class="form-control" required>
                                     <option value="">Pilih Mapel</option>
                                     <?php foreach ($mapel as $m): ?>
-                                        <option value="<?= $m['id'] ?>"><?= esc($m['nama_mapel']) ?></option>
+                                        <option value="<?= $m['kd_mapel'] ?>"><?= esc($m['nama_mapel']) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -195,4 +195,19 @@
         </div>
     </section>
 </div>
-<?= $this->endSection() ?> 
+<script>
+    document.getElementById('kd_kelas').addEventListener('change', function() {
+        var jurusanId = this.options[this.selectedIndex].getAttribute('data-jurusan');
+        var mapelSelect = document.getElementById('kd_mapel');
+        for (var i = 0; i < mapelSelect.options.length; i++) {
+            var opt = mapelSelect.options[i];
+            if (!opt.value || !opt.getAttribute('data-jurusan') || opt.getAttribute('data-jurusan') == jurusanId) {
+                opt.style.display = '';
+            } else {
+                opt.style.display = 'none';
+            }
+        }
+        mapelSelect.value = '';
+    });
+</script>
+<?= $this->endSection() ?>

@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
 
@@ -57,6 +58,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Loading Screen -->
     <div id="loading-screen">
@@ -73,40 +75,43 @@
     <!-- Hero Section -->
     <section class="hero">
         <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner" role="listbox">
+            <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="<?= base_url('assets/images/hero/hero1.png') ?>" class="d-block w-100" alt="SMK Bhakti Mulya">
-                    <div class="carousel-caption">
-                        <h2>Penerimaan Peserta Didik Baru</h2>
-                        <p>Tahun Ajaran 2024/2025</p>
-                        <p>Pendaftaran: 1 Januari - 30 Juni 2024</p>
+                    <div class="hero-bg" style="background-image: url('<?= base_url('assets/images/hero/hero1.png') ?>');"></div>
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center">
+                        <h2 class="hero-title">Penerimaan Peserta Didik Baru</h2>
+                        <p class="hero-subtitle">Tahun Ajaran 2024/2025<br>Pendaftaran: 1 Januari - 30 Juni 2024</p>
                         <a href="#ppdb" class="hero-btn">Daftar Sekarang</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="<?= base_url('assets/images/hero/hero2.jpg') ?>" class="d-block w-100" alt="Fasilitas Sekolah">
-                    <div class="carousel-caption">
-                        <h2>Fasilitas Modern</h2>
-                        <p>Laboratorium dan Workshop Terlengkap</p>
-                        <p>Untuk Meningkatkan Kompetensi Siswa</p>
+                    <div class="hero-bg" style="background-image: url('<?= base_url('assets/images/hero/hero2.jpg') ?>');"></div>
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center">
+                        <h2 class="hero-title">Fasilitas Modern</h2>
+                        <p class="hero-subtitle">Laboratorium dan Workshop Terlengkap<br>Untuk Meningkatkan Kompetensi Siswa</p>
                         <a href="#profil" class="hero-btn">Lihat Fasilitas</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="<?= base_url('assets/images/hero/hero3.jpg') ?>" class="d-block w-100" alt="Kegiatan Sekolah">
-                    <div class="carousel-caption">
-                        <h2>Kegiatan Pembelajaran</h2>
-                        <p>Belajar dengan Metode Modern</p>
-                        <p>Didukung Tenaga Pengajar Profesional</p>
+                    <div class="hero-bg" style="background-image: url('<?= base_url('assets/images/hero/hero3.jpg') ?>');"></div>
+                    <div class="hero-overlay"></div>
+                    <div class="hero-content text-center">
+                        <h2 class="hero-title">Kegiatan Pembelajaran</h2>
+                        <p class="hero-subtitle">Belajar dengan Metode Modern<br>Didukung Tenaga Pengajar Profesional</p>
                         <a href="#jurusan" class="hero-btn">Lihat Jurusan</a>
                     </div>
                 </div>
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </section>
 
@@ -276,31 +281,31 @@
                                 </div>
                             <?php else : ?>
                                 <?php foreach (array_slice($pengumuman, 0, 6) as $p) : ?>
-                            <div class="pengumuman-item">
-                                <div class="pengumuman-image">
+                                    <div class="pengumuman-item">
+                                        <div class="pengumuman-image">
                                             <?php if ($p['file'] && pathinfo($p['file'], PATHINFO_EXTENSION) == 'jpg' || pathinfo($p['file'], PATHINFO_EXTENSION) == 'png' || pathinfo($p['file'], PATHINFO_EXTENSION) == 'jpeg') : ?>
                                                 <img src="<?= base_url('uploads/pengumuman/' . $p['file']) ?>" alt="<?= $p['judul'] ?>">
                                             <?php else : ?>
                                                 <img src="<?= base_url('assets/images/pengumuman/default.jpg') ?>" alt="<?= $p['judul'] ?>">
                                             <?php endif; ?>
-                                </div>
-                                <div class="pengumuman-content">
+                                        </div>
+                                        <div class="pengumuman-content">
                                             <div class="date"><?= date('d M Y', strtotime($p['created_at'])) ?></div>
                                             <div class="badge badge-<?= $p['jenis'] == 'Jadwal Ujian' ? 'danger' : ($p['jenis'] == 'Kegiatan' ? 'warning' : 'info') ?> mb-2">
                                                 <?= $p['jenis'] ?>
-                                </div>
+                                            </div>
                                             <h4><?= $p['judul'] ?></h4>
                                             <p><?= $p['isi'] ? (strlen($p['isi']) > 100 ? substr($p['isi'], 0, 100) . '...' : $p['isi']) : 'Tidak ada deskripsi' ?></p>
                                             <div class="pengumuman-actions">
                                                 <?php if ($p['file']) : ?>
-                                                    <a href="<?= base_url('download-pengumuman/' . $p['id']) ?>" class="btn btn-sm btn-primary">
+                                                    <a href="<?= base_url('download-pengumuman/' . $p['kd_pengumuman']) ?>" class="btn btn-sm btn-primary">
                                                         <i class="fas fa-download"></i> Download
                                                     </a>
                                                 <?php endif; ?>
                                                 <a href="<?= base_url('pengumuman') ?>" class="read-more">Lihat Semua Pengumuman</a>
-                            </div>
-                                </div>
-                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
@@ -384,11 +389,11 @@
                         <div class="video-grid">
                             <div class="video-item">
                                 <div class="video-container">
-                                    <iframe width="100%" height="315" 
-                                        src="https://www.youtube.com/embed/jvZ-r2R-des" 
-                                        title="Video Profil Sekolah" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    <iframe width="100%" height="315"
+                                        src="https://www.youtube.com/embed/jvZ-r2R-des"
+                                        title="Video Profil Sekolah"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowfullscreen>
                                     </iframe>
                                 </div>
@@ -397,11 +402,11 @@
                             </div>
                             <div class="video-item">
                                 <div class="video-container">
-                                    <iframe width="100%" height="315" 
-                                        src="https://www.youtube.com/embed/yBtlX-ZAwqQ" 
-                                        title="Kegiatan Sekolah" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    <iframe width="100%" height="315"
+                                        src="https://www.youtube.com/embed/yBtlX-ZAwqQ"
+                                        title="Kegiatan Sekolah"
+                                        frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowfullscreen>
                                     </iframe>
                                 </div>
@@ -489,7 +494,7 @@
                                 <p><?= $p['isi'] ? (strlen($p['isi']) > 120 ? substr($p['isi'], 0, 120) . '...' : $p['isi']) : 'Tidak ada deskripsi' ?></p>
                                 <div class="pengumuman-actions">
                                     <?php if ($p['file']) : ?>
-                                        <a href="<?= base_url('download-pengumuman/' . $p['id']) ?>" class="btn-download">
+                                        <a href="<?= base_url('download-pengumuman/' . $p['kd_pengumuman']) ?>" class="btn-download">
                                             <i class="fas fa-download"></i> Download
                                         </a>
                                     <?php endif; ?>
@@ -745,7 +750,7 @@
             <div class="pegawai-grid">
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai1.jpg') ?>" alt="Solatun Khoiriyah">
+                        <img src="<?= base_url('assets/images/pegawai/solatun_hoiriyah.png') ?>" alt="Solatun Khoiriyah">
                     </div>
                     <div class="pegawai-info">
                         <h3>Solatun Khoiriyah, S.Pd</h3>
@@ -758,7 +763,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai2.jpg') ?>" alt="Melia Damayanti">
+                        <img src="<?= base_url('assets/images/pegawai/melia_damayanti.png') ?>" alt="Melia Damayanti">
                     </div>
                     <div class="pegawai-info">
                         <h3>Melia Damayanti, S.Pd</h3>
@@ -771,7 +776,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai3.jpg') ?>" alt="Peppi Sutriyani">
+                        <img src="<?= base_url('assets/images/pegawai/peppi_sutriyani.png') ?>" alt="Peppi Sutriyani">
                     </div>
                     <div class="pegawai-info">
                         <h3>Peppi Sutriyani, S.Sos</h3>
@@ -786,7 +791,7 @@
             <div class="pegawai-grid-more" style="display: none;">
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai4.jpg') ?>" alt="Sugianto">
+                        <img src="<?= base_url('assets/images/pegawai/sugianto.png') ?>" alt="Sugianto">
                     </div>
                     <div class="pegawai-info">
                         <h3>Sugianto, S.Pd</h3>
@@ -799,7 +804,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai5.jpg') ?>" alt="Rizky Amalia">
+                        <img src="<?= base_url('assets/images/pegawai/rizky_amalia.png') ?>" alt="Rizky Amalia">
                     </div>
                     <div class="pegawai-info">
                         <h3>Rizky Amalia, S.E</h3>
@@ -812,7 +817,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai6.jpg') ?>" alt="Munawar">
+                        <img src="<?= base_url('assets/images/pegawai/munawar.png') ?>" alt="Munawar">
                     </div>
                     <div class="pegawai-info">
                         <h3>Munawar, S.Pd</h3>
@@ -825,7 +830,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai7.jpg') ?>" alt="Septi Dwiyani">
+                        <img src="<?= base_url('assets/images/pegawai/septi_dwiyani.png') ?>" alt="Septi Dwiyani">
                     </div>
                     <div class="pegawai-info">
                         <h3>Septi Dwiyani, S.Pd</h3>
@@ -838,7 +843,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai8.jpg') ?>" alt="Siti Munawaroh">
+                        <img src="<?= base_url('assets/images/pegawai/siti_munawaroh.png') ?>" alt="Siti Munawaroh">
                     </div>
                     <div class="pegawai-info">
                         <h3>Siti Munawaroh, S.Pd</h3>
@@ -851,7 +856,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai9.jpg') ?>" alt="Widi Saputra">
+                        <img src="<?= base_url('assets/images/pegawai/widi_saputra.png') ?>" alt="Widi Saputra">
                     </div>
                     <div class="pegawai-info">
                         <h3>Widi Saputra, S.Pd</h3>
@@ -864,7 +869,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai10.jpg') ?>" alt="Melisa Sulmi">
+                        <img src="<?= base_url('assets/images/pegawai/melisa_sulmi.png') ?>" alt="Melisa Sulmi">
                     </div>
                     <div class="pegawai-info">
                         <h3>Melisa Sulmi, S.Pd</h3>
@@ -877,7 +882,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai11.jpg') ?>" alt="Kartini">
+                        <img src="<?= base_url('assets/images/pegawai/kartini.png') ?>" alt="Kartini">
                     </div>
                     <div class="pegawai-info">
                         <h3>Kartini, S.Pd</h3>
@@ -890,7 +895,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai12.jpg') ?>" alt="Dewi Sartika">
+                        <img src="<?= base_url('assets/images/pegawai/dewi_sartika.png') ?>" alt="Dewi Sartika">
                     </div>
                     <div class="pegawai-info">
                         <h3>Dewi Sartika, S.Pd</h3>
@@ -903,7 +908,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai13.jpg') ?>" alt="Safitri">
+                        <img src="<?= base_url('assets/images/pegawai/safitri.png') ?>" alt="Safitri">
                     </div>
                     <div class="pegawai-info">
                         <h3>Safitri, S.Kom</h3>
@@ -942,7 +947,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai16.jpg') ?>" alt="Rofik Ridho Kurnia">
+                        <img src="<?= base_url('assets/images/pegawai/rofik_ridho_kurnia.png') ?>" alt="Rofik Ridho Kurnia">
                     </div>
                     <div class="pegawai-info">
                         <h3>Rofik Ridho Kurnia, S.Pd</h3>
@@ -968,7 +973,7 @@
                 </div>
                 <div class="pegawai-item">
                     <div class="pegawai-image">
-                        <img src="<?= base_url('assets/images/pegawai/pegawai18.jpg') ?>" alt="Rizki Pungut Saputra">
+                        <img src="<?= base_url('assets/images/pegawai/rizki_pungut_saputra.png') ?>" alt="Rizki Pungut Saputra">
                     </div>
                     <div class="pegawai-info">
                         <h3>Rizki Pungut Saputra, S.Pd</h3>
@@ -1024,11 +1029,11 @@
             <div class="video-grid">
                 <div class="video-item">
                     <div class="video-container">
-                        <iframe width="100%" height="315" 
-                            src="https://www.youtube.com/embed/jvZ-r2R-des" 
-                            title="Video Profil Sekolah" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        <iframe width="100%" height="315"
+                            src="https://www.youtube.com/embed/jvZ-r2R-des"
+                            title="Video Profil Sekolah"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                         </iframe>
                     </div>
@@ -1037,11 +1042,11 @@
                 </div>
                 <div class="video-item">
                     <div class="video-container">
-                        <iframe width="100%" height="315" 
-                            src="https://www.youtube.com/embed/yBtlX-ZAwqQ" 
-                            title="Kegiatan Sekolah" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        <iframe width="100%" height="315"
+                            src="https://www.youtube.com/embed/yBtlX-ZAwqQ"
+                            title="Kegiatan Sekolah"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                         </iframe>
                     </div>
@@ -1066,7 +1071,7 @@
                     </div>
                     <div class="footer-contact">
                         <h4>Kontak Kami</h4>
-                        <p><i class="fas fa-map-marker-alt"></i> Jl. Raya BNS No. 123, Lampung</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Gn. Ratu, Bandar Negeri Suoh, Kabupaten Lampung Barat, Lampung 34872</p>
                         <p><i class="fas fa-phone"></i> (0721) 123456</p>
                         <p><i class="fas fa-envelope"></i> info@smkbmbns.sch.id</p>
                         <div class="social-media">
@@ -1077,13 +1082,13 @@
                     </div>
                 </div>
                 <div class="footer-map">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.268734107045!2d104.27393818444637!3d-5.220413139046498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e479ffb0b36e33b%3A0x9786758675426f34!2sSMK%20Bhakti%20Mulya!5e0!3m2!1sid!2sid!4v1748973564262!5m2!1sid!2sid" 
-                        width="100%" 
-                        height="450" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3973.268734107045!2d104.27393818444637!3d-5.220413139046498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e479ffb0b36e33b%3A0x9786758675426f34!2sSMK%20Bhakti%20Mulya!5e0!3m2!1sid!2sid!4v1748973564262!5m2!1sid!2sid"
+                        width="100%"
+                        height="450"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
@@ -1096,20 +1101,20 @@
 
     <!-- Custom JS -->
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
-    
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Loading Screen Script -->
     <script>
         window.addEventListener('load', function() {
             const loadingScreen = document.getElementById('loading-screen');
-            
+
             // Tunggu 1.5 detik
             setTimeout(() => {
                 loadingScreen.style.opacity = '0';
                 loadingScreen.style.visibility = 'hidden';
-                
+
                 // Hapus loading screen dari DOM setelah fade out
                 setTimeout(() => {
                     loadingScreen.remove();
@@ -1117,7 +1122,7 @@
             }, 1500);
         });
     </script>
-    
+
     <!-- Carousel Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1184,18 +1189,18 @@
                 // Disable button during buffering
                 toggleBtn.disabled = true;
                 toggleBtn.style.opacity = '0.7';
-                
+
                 // Add loading animation to icon
                 const icon = toggleBtn.querySelector('i');
                 icon.style.animation = 'spin 0.5s linear';
-                
+
                 setTimeout(() => {
                     isExpanded = !isExpanded;
                     hiddenItems.style.display = isExpanded ? 'grid' : 'none';
-                    toggleBtn.innerHTML = isExpanded ? 
-                        '<i class="fas fa-chevron-up"></i> Sembunyikan Galeri' : 
+                    toggleBtn.innerHTML = isExpanded ?
+                        '<i class="fas fa-chevron-up"></i> Sembunyikan Galeri' :
                         '<i class="fas fa-chevron-down"></i> Tampilkan Semua Galeri';
-                    
+
                     // Re-enable button after buffering
                     toggleBtn.disabled = false;
                     toggleBtn.style.opacity = '1';
@@ -1208,11 +1213,11 @@
                 item.addEventListener('click', function() {
                     const gallery = this.dataset.gallery;
                     const images = this.querySelectorAll('.galeri-images img');
-                    
+
                     // Collect all images from the gallery
                     currentGallery = Array.from(images);
                     currentIndex = 0;
-                    
+
                     updateLightbox();
                     lightbox.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -1225,7 +1230,7 @@
                 lightboxTitle.textContent = currentImg.dataset.title;
                 lightboxDesc.textContent = currentImg.dataset.desc;
                 lightboxCounter.textContent = `Foto ${currentIndex + 1} dari ${currentGallery.length}`;
-                
+
                 // Update navigation buttons
                 prevBtn.style.display = currentIndex > 0 ? 'flex' : 'none';
                 nextBtn.style.display = currentIndex < currentGallery.length - 1 ? 'flex' : 'none';
@@ -1264,7 +1269,7 @@
             document.addEventListener('keydown', function(e) {
                 if (!lightbox.classList.contains('active')) return;
 
-                switch(e.key) {
+                switch (e.key) {
                     case 'Escape':
                         lightbox.classList.remove('active');
                         document.body.style.overflow = '';
@@ -1287,1061 +1292,1071 @@
     </script>
 
     <style>
-    /* Remove profil section styles */
-    .profil {
-        display: none;
-    }
+        /* Remove profil section styles */
+        .profil {
+            display: none;
+        }
 
-    /* Gallery Grid Layout */
-    .galeri-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-        padding: 20px 0;
-    }
-
-    /* Hidden Gallery Items Layout */
-    .galeri-items-hidden {
-        display: none;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-        margin-top: 25px;
-    }
-
-    .galeri-items-hidden.active {
-        display: grid;
-    }
-
-    /* Show More Container */
-    .show-more-container {
-        text-align: center;
-        margin-top: 30px;
-        margin-bottom: 20px;
-    }
-
-    /* Show More Button Style */
-    .show-more-btn {
-        background: #1a237e;
-        color: white;
-        border: none;
-        padding: 12px 25px;
-        border-radius: 25px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
-    }
-
-    .show-more-btn:hover {
-        background: #283593;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
-    }
-
-    .show-more-btn i {
-        transition: transform 0.3s ease;
-    }
-
-    .show-more-btn:hover i {
-        transform: translateY(2px);
-    }
-
-    .show-more-btn.active i {
-        transform: rotate(180deg);
-    }
-
-    /* Gallery Item Styles */
-    .galeri-item {
-        position: relative;
-        overflow: hidden;
-        border-radius: 15px;
-        cursor: pointer;
-        transition: all 0.4s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        background: #fff;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .galeri-item:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    /* Gallery Images Container */
-    .galeri-images {
-        position: relative;
-        width: 100%;
-        height: 280px;
-        overflow: hidden;
-        border-radius: 15px 15px 0 0;
-    }
-
-    .galeri-images::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 100%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .galeri-item:hover .galeri-images::after {
-        opacity: 1;
-    }
-
-    .galeri-images img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-    }
-
-    .galeri-item:hover .galeri-images img {
-        transform: scale(1.1);
-    }
-
-    /* Gallery Info */
-    .galeri-info {
-        padding: 12px;
-        background: #fff;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .galeri-info h4 {
-        margin: 0 0 8px 0;
-        font-size: 16px;
-        font-weight: 600;
-        color: #1a237e;
-        line-height: 1.3;
-    }
-
-    .galeri-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12px;
-        color: #666;
-        padding-top: 8px;
-        border-top: 1px solid #eee;
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 1200px) {
-        .galeri-grid,
-        .galeri-items-hidden {
+        /* Gallery Grid Layout */
+        .galeri-grid {
+            display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 25px;
+            padding: 20px 0;
         }
-    }
 
-    @media (max-width: 992px) {
-        .galeri-grid,
+        /* Hidden Gallery Items Layout */
         .galeri-items-hidden {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 25px;
         }
 
-        .galeri-images {
-            height: 220px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .galeri-grid,
-        .galeri-items-hidden {
-            grid-template-columns: 1fr;
-            gap: 15px;
+        .galeri-items-hidden.active {
+            display: grid;
         }
 
-        .galeri-images {
-            height: 200px;
-        }
-    }
-
-    /* Lightbox Styles */
-    .lightbox {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 1000;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .lightbox.active {
-        display: flex;
-        opacity: 1;
-    }
-
-    .lightbox-content {
-        position: relative;
-        width: 90%;
-        max-width: 1200px;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .lightbox-image {
-        max-width: 100%;
-        max-height: 80vh;
-        object-fit: contain;
-        margin: 20px 0;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .lightbox-caption {
-        color: white;
-        text-align: center;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        margin-top: 20px;
-        max-width: 800px;
-    }
-
-    .lightbox-caption h3 {
-        margin: 0 0 10px 0;
-        font-size: 24px;
-        font-weight: 600;
-    }
-
-    .lightbox-caption p {
-        margin: 0 0 10px 0;
-        font-size: 16px;
-        line-height: 1.5;
-    }
-
-    .lightbox-counter {
-        font-size: 14px;
-        color: #ccc;
-        margin-top: 10px;
-    }
-
-    .close-lightbox {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        color: white;
-        font-size: 30px;
-        cursor: pointer;
-        z-index: 1001;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 50%;
-        transition: background 0.3s ease;
-    }
-
-    .close-lightbox:hover {
-        background: rgba(0, 0, 0, 0.8);
-    }
-
-    .lightbox-navigation {
-        position: absolute;
-        top: 50%;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        transform: translateY(-50%);
-        padding: 0 20px;
-    }
-
-    .lightbox-prev,
-    .lightbox-next {
-        background: rgba(0, 0, 0, 0.5);
-        color: white;
-        border: none;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        font-size: 20px;
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .lightbox-prev:hover,
-    .lightbox-next:hover {
-        background: rgba(0, 0, 0, 0.8);
-        transform: scale(1.1);
-    }
-
-    /* Loading Animation */
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .show-more-btn:disabled {
-        cursor: not-allowed;
-    }
-
-    /* Jurusan Section Styles */
-    .jurusan {
-        padding: 80px 0;
-        background: #f8f9fa;
-    }
-
-    .jurusan-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 30px;
-        margin-top: 40px;
-    }
-
-    .jurusan-item {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-    }
-
-    .jurusan-item:hover {
-        transform: translateY(-10px);
-    }
-
-    .jurusan-image {
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .jurusan-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .jurusan-item:hover .jurusan-image img {
-        transform: scale(1.1);
-    }
-
-    .jurusan-icon {
-        width: 80px;
-        height: 80px;
-        background: #1a237e;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: -40px auto 20px;
-        position: relative;
-        z-index: 1;
-        box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
-    }
-
-    .jurusan-icon i {
-        font-size: 32px;
-        color: white;
-    }
-
-    .jurusan-item h3 {
-        text-align: center;
-        color: #1a237e;
-        margin: 0 0 15px;
-        padding: 0 20px;
-        font-size: 24px;
-    }
-
-    .jurusan-item p {
-        text-align: center;
-        color: #666;
-        margin: 0 0 20px;
-        padding: 0 20px;
-        line-height: 1.6;
-    }
-
-    .jurusan-details {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        padding: 15px 20px;
-        background: #f8f9fa;
-        border-top: 1px solid #eee;
-    }
-
-    .jurusan-details span {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #666;
-        font-size: 14px;
-    }
-
-    .jurusan-details i {
-        color: #1a237e;
-    }
-
-    @media (max-width: 768px) {
-        .jurusan-grid {
-            grid-template-columns: 1fr;
+        /* Show More Container */
+        .show-more-container {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
         }
 
-        .jurusan-image {
-            height: 200px;
+        /* Show More Button Style */
+        .show-more-btn {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
         }
-    }
 
-    /* Add styles for new profil tab */
-    .profil-sekolah {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-    }
+        .show-more-btn:hover {
+            background: #283593;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
+        }
 
-    .profil-image {
-        position: relative;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        height: 400px;
-    }
+        .show-more-btn i {
+            transition: transform 0.3s ease;
+        }
 
-    .profil-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
+        .show-more-btn:hover i {
+            transform: translateY(2px);
+        }
 
-    .profil-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        padding: 30px 20px;
-    }
+        .show-more-btn.active i {
+            transform: rotate(180deg);
+        }
 
-    .profil-stats {
-        display: flex;
-        justify-content: space-around;
-        color: white;
-    }
-
-    .stat-item {
-        text-align: center;
-    }
-
-    .stat-item i {
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-
-    .stat-number {
-        display: block;
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 5px;
-    }
-
-    .stat-label {
-        font-size: 14px;
-        opacity: 0.9;
-    }
-
-    .profil-description {
-        background: white;
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .profil-description p {
-        color: var(--text-light);
-        line-height: 1.8;
-        margin-bottom: 30px;
-    }
-
-    .timeline {
-        margin-top: 30px;
-        position: relative;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: var(--primary-color);
-    }
-
-    .timeline-item {
-        position: relative;
-        padding-left: 30px;
-        margin-bottom: 30px;
-    }
-
-    .timeline-item::before {
-        content: '';
-        position: absolute;
-        left: -6px;
-        top: 0;
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background: var(--primary-color);
-    }
-
-    .year {
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 5px;
-    }
-
-    .event {
-        color: var(--text-light);
-    }
-
-    @media (max-width: 768px) {
-        .profil-stats {
+        /* Gallery Item Styles */
+        .galeri-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            height: 100%;
+            display: flex;
             flex-direction: column;
-            gap: 20px;
         }
-        
-        .profil-image {
-            height: 300px;
+
+        .galeri-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
-    }
 
-    /* Tab button styles enhancement */
-    .tab-btn {
-        background: var(--white-color);
-        border: 1px solid var(--primary-color);
-        color: var(--primary-color);
-        padding: 12px 25px;
-        border-radius: 30px;
-        transition: all 0.3s ease;
-        margin: 0 5px;
-        box-shadow: 0 2px 10px rgba(27, 42, 120, 0.1);
-        font-weight: 500;
-    }
+        /* Gallery Images Container */
+        .galeri-images {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+        }
 
-    .tab-btn span {
-        color: inherit;
-        transition: color 0.3s ease;
-    }
+        .galeri-images::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-    .tab-btn:hover {
-        background: var(--primary-color);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(27, 42, 120, 0.2);
-    }
+        .galeri-item:hover .galeri-images::after {
+            opacity: 1;
+        }
 
-    .tab-btn:hover span {
-        color: var(--white-color);
-    }
+        .galeri-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
 
-    .tab-btn:hover i {
-        color: #F7D117;
-        transform: scale(1.1);
-    }
+        .galeri-item:hover .galeri-images img {
+            transform: scale(1.1);
+        }
 
-    .tab-btn.active {
-        background: var(--primary-color);
-        border-color: var(--primary-color);
-        box-shadow: 0 4px 15px rgba(27, 42, 120, 0.3);
-    }
+        /* Gallery Info */
+        .galeri-info {
+            padding: 12px;
+            background: #fff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-    .tab-btn.active span {
-        color: var(--white-color);
-    }
+        .galeri-info h4 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a237e;
+            line-height: 1.3;
+        }
 
-    .tab-btn.active i {
-        color: #F7D117;
-    }
+        .galeri-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+        }
 
-    .tab-btn i {
-        margin-right: 8px;
-        transition: all 0.3s ease;
-    }
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
 
-    /* Features section enhancement */
-    .features {
-        background: var(--white-color);
-        padding: 40px 0;
-        position: relative;
-        overflow: hidden;
-    }
+            .galeri-grid,
+            .galeri-items-hidden {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
 
-    .features::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('<?= base_url('assets/images/bg/pattern-light.png') ?>') center/cover;
-        opacity: 0.05;
-    }
+        @media (max-width: 992px) {
 
-    .features .section-title {
-        position: relative;
-        z-index: 1;
-    }
+            .galeri-grid,
+            .galeri-items-hidden {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
 
-    .features .section-title h2 {
-        color: var(--primary-color);
-    }
+            .galeri-images {
+                height: 220px;
+            }
+        }
 
-    .features .section-title p {
-        color: var(--text-light);
-    }
+        @media (max-width: 576px) {
 
-    .features-tabs {
-        position: relative;
-        z-index: 1;
-        margin-top: 30px;
-    }
+            .galeri-grid,
+            .galeri-items-hidden {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
 
-    .tab-buttons {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
+            .galeri-images {
+                height: 200px;
+            }
+        }
 
-    @media (max-width: 768px) {
-        .tab-buttons {
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .tab-btn {
-            width: 100%;
-            max-width: 300px;
-            margin: 5px 0;
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .content-wrapper {
+        .lightbox-caption {
+            color: white;
+            text-align: center;
             padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            margin-top: 20px;
+            max-width: 800px;
         }
-    }
 
-    .social-media {
-        display: flex;
-        gap: 15px;
-        margin-top: 15px;
-    }
+        .lightbox-caption h3 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
 
-    .social-media a {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: var(--primary-color);
-        color: var(--white-color);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        font-size: 18px;
-        text-decoration: none;
-    }
+        .lightbox-caption p {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
 
-    .social-media a i {
-        transition: all 0.3s ease;
-    }
+        .lightbox-counter {
+            font-size: 14px;
+            color: #ccc;
+            margin-top: 10px;
+        }
 
-    .social-media a:hover {
-        background: #FFFFFF;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(27, 42, 120, 0.3);
-        border: 2px solid #1B2A78;
-    }
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
 
-    .social-media a:hover i {
-        color: #1B2A78;
-    }
+        .close-lightbox:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
 
-    /* Pengumuman Section Styles */
-    .pengumuman {
-        padding: 80px 0;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
+        .lightbox-navigation {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 20px;
+        }
 
-    .pengumuman-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 30px;
-        margin-top: 40px;
-    }
+        .lightbox-prev,
+        .lightbox-next {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 20px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .pengumuman-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.4s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
 
-    .pengumuman-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
+        /* Loading Animation */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
 
-    .pengumuman-image {
-        position: relative;
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-    }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-    .pengumuman-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
+        .show-more-btn:disabled {
+            cursor: not-allowed;
+        }
 
-    .pengumuman-card:hover .pengumuman-image img {
-        transform: scale(1.1);
-    }
+        /* Jurusan Section Styles */
+        .jurusan {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
 
-    .pengumuman-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-    }
+        .jurusan-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
 
-    .badge {
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+        .jurusan-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
-    .badge-danger {
-        background: #dc3545;
-        color: white;
-    }
+        .jurusan-item:hover {
+            transform: translateY(-10px);
+        }
 
-    .badge-warning {
-        background: #ffc107;
-        color: #212529;
-    }
+        .jurusan-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
 
-    .badge-info {
-        background: #17a2b8;
-        color: white;
-    }
+        .jurusan-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
 
-    .pengumuman-content {
-        padding: 25px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
+        .jurusan-item:hover .jurusan-image img {
+            transform: scale(1.1);
+        }
 
-    .pengumuman-meta {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 15px;
-        font-size: 14px;
-        color: #666;
-    }
+        .jurusan-icon {
+            width: 80px;
+            height: 80px;
+            background: #1a237e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -40px auto 20px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+        }
 
-    .pengumuman-meta span {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
+        .jurusan-icon i {
+            font-size: 32px;
+            color: white;
+        }
 
-    .pengumuman-meta i {
-        color: var(--primary-color);
-    }
+        .jurusan-item h3 {
+            text-align: center;
+            color: #1a237e;
+            margin: 0 0 15px;
+            padding: 0 20px;
+            font-size: 24px;
+        }
 
-    .pengumuman-content h3 {
-        color: var(--primary-color);
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0 0 15px 0;
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
+        .jurusan-item p {
+            text-align: center;
+            color: #666;
+            margin: 0 0 20px;
+            padding: 0 20px;
+            line-height: 1.6;
+        }
 
-    .pengumuman-content p {
-        color: #666;
-        line-height: 1.6;
-        margin: 0 0 20px 0;
-        flex-grow: 1;
-    }
-
-    .pengumuman-actions {
-        display: flex;
-        gap: 15px;
-        margin-top: auto;
-    }
-
-    .btn-download, .btn-more {
-        padding: 10px 20px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-download {
-        background: var(--primary-color);
-        color: white;
-        border: 2px solid var(--primary-color);
-    }
-
-    .btn-download:hover {
-        background: transparent;
-        color: var(--primary-color);
-        transform: translateY(-2px);
-    }
-
-    .btn-more {
-        background: transparent;
-        color: var(--primary-color);
-        border: 2px solid var(--primary-color);
-    }
-
-    .btn-more:hover {
-        background: var(--primary-color);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .pengumuman-more {
-        text-align: center;
-        margin-top: 40px;
-    }
-
-    .btn-view-all {
-        background: var(--primary-color);
-        color: white;
-        padding: 15px 30px;
-        border-radius: 30px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 5px 15px rgba(27, 42, 120, 0.3);
-    }
-
-    .btn-view-all:hover {
-        background: #283593;
-        color: white;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(27, 42, 120, 0.4);
-    }
-
-    .pengumuman-empty {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 60px 20px;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .empty-icon {
-        width: 80px;
-        height: 80px;
-        background: #f8f9fa;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 20px;
-    }
-
-    .empty-icon i {
-        font-size: 32px;
-        color: #ccc;
-    }
-
-    .pengumuman-empty h3 {
-        color: #666;
-        margin: 0 0 10px 0;
-        font-size: 24px;
-    }
-
-    .pengumuman-empty p {
-        color: #999;
-        margin: 0;
-        font-size: 16px;
-    }
-
-    /* Responsive Design for Pengumuman */
-    @media (max-width: 768px) {
-        .pengumuman-grid {
-            grid-template-columns: 1fr;
+        .jurusan-details {
+            display: flex;
+            justify-content: center;
             gap: 20px;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .jurusan-details span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .jurusan-details i {
+            color: #1a237e;
+        }
+
+        @media (max-width: 768px) {
+            .jurusan-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .jurusan-image {
+                height: 200px;
+            }
+        }
+
+        /* Add styles for new profil tab */
+        .profil-sekolah {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profil-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: 400px;
+        }
+
+        .profil-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .profil-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 30px 20px;
+        }
+
+        .profil-stats {
+            display: flex;
+            justify-content: space-around;
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .profil-description {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .profil-description p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .timeline {
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--primary-color);
+        }
+
+        .year {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .event {
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .profil-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .profil-image {
+                height: 300px;
+            }
+        }
+
+        /* Tab button styles enhancement */
+        .tab-btn {
+            background: var(--white-color);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+            box-shadow: 0 2px 10px rgba(27, 42, 120, 0.1);
+            font-weight: 500;
+        }
+
+        .tab-btn span {
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(27, 42, 120, 0.2);
+        }
+
+        .tab-btn:hover span {
+            color: var(--white-color);
+        }
+
+        .tab-btn:hover i {
+            color: #F7D117;
+            transform: scale(1.1);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(27, 42, 120, 0.3);
+        }
+
+        .tab-btn.active span {
+            color: var(--white-color);
+        }
+
+        .tab-btn.active i {
+            color: #F7D117;
+        }
+
+        .tab-btn i {
+            margin-right: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* Features section enhancement */
+        .features {
+            background: var(--white-color);
+            padding: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('<?= base_url('assets/images/bg/pattern-light.png') ?>') center/cover;
+            opacity: 0.05;
+        }
+
+        .features .section-title {
+            position: relative;
+            z-index: 1;
+        }
+
+        .features .section-title h2 {
+            color: var(--primary-color);
+        }
+
+        .features .section-title p {
+            color: var(--text-light);
+        }
+
+        .features-tabs {
+            position: relative;
+            z-index: 1;
+            margin-top: 30px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-btn {
+                width: 100%;
+                max-width: 300px;
+                margin: 5px 0;
+            }
+
+            .content-wrapper {
+                padding: 20px;
+            }
+        }
+
+        .social-media {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-media a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--white-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .social-media a i {
+            transition: all 0.3s ease;
+        }
+
+        .social-media a:hover {
+            background: #FFFFFF;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(27, 42, 120, 0.3);
+            border: 2px solid #1B2A78;
+        }
+
+        .social-media a:hover i {
+            color: #1B2A78;
+        }
+
+        /* Pengumuman Section Styles */
+        .pengumuman {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .pengumuman-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
         }
 
         .pengumuman-card {
-            margin: 0 10px;
-        }
-
-        .pengumuman-content {
-            padding: 20px;
-        }
-
-        .pengumuman-content h3 {
-            font-size: 18px;
-        }
-
-        .pengumuman-actions {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            height: 100%;
+            display: flex;
             flex-direction: column;
-            gap: 10px;
         }
 
-        .btn-download, .btn-more {
-            justify-content: center;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .pengumuman-meta {
-            flex-direction: column;
-            gap: 10px;
+        .pengumuman-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .pengumuman-image {
-            height: 180px;
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
         }
-    }
+
+        .pengumuman-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .pengumuman-card:hover .pengumuman-image img {
+            transform: scale(1.1);
+        }
+
+        .pengumuman-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .badge-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .pengumuman-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pengumuman-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .pengumuman-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pengumuman-meta i {
+            color: var(--primary-color);
+        }
+
+        .pengumuman-content h3 {
+            color: var(--primary-color);
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .pengumuman-content p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+            flex-grow: 1;
+        }
+
+        .pengumuman-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .btn-download,
+        .btn-more {
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-download {
+            background: var(--primary-color);
+            color: white;
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-download:hover {
+            background: transparent;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-more {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-more:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .pengumuman-more {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .btn-view-all {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(27, 42, 120, 0.3);
+        }
+
+        .btn-view-all:hover {
+            background: #283593;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(27, 42, 120, 0.4);
+        }
+
+        .pengumuman-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .empty-icon i {
+            font-size: 32px;
+            color: #ccc;
+        }
+
+        .pengumuman-empty h3 {
+            color: #666;
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+
+        .pengumuman-empty p {
+            color: #999;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        /* Responsive Design for Pengumuman */
+        @media (max-width: 768px) {
+            .pengumuman-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .pengumuman-card {
+                margin: 0 10px;
+            }
+
+            .pengumuman-content {
+                padding: 20px;
+            }
+
+            .pengumuman-content h3 {
+                font-size: 18px;
+            }
+
+            .pengumuman-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-download,
+            .btn-more {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pengumuman-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .pengumuman-image {
+                height: 180px;
+            }
+        }
     </style>
 
     <script>
-    // Scroll Animation
-    document.addEventListener('DOMContentLoaded', function() {
-        // Function to check if element is in viewport
-        function isInViewport(element) {
-            const rect = element.getBoundingClientRect();
-            return (
-                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
-                rect.bottom >= 0
-            );
-        }
+        // Scroll Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to check if element is in viewport
+            function isInViewport(element) {
+                const rect = element.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.8 &&
+                    rect.bottom >= 0
+                );
+            }
 
-        // Function to handle scroll animation
-        function handleScrollAnimation() {
-            const elements = document.querySelectorAll('.section-title, .profil-image, .profil-info, .jurusan-item, .galeri-item, .pegawai-item');
-            
-            elements.forEach(element => {
-                if (isInViewport(element)) {
-                    element.classList.add('visible');
-                }
+            // Function to handle scroll animation
+            function handleScrollAnimation() {
+                const elements = document.querySelectorAll('.section-title, .profil-image, .profil-info, .jurusan-item, .galeri-item, .pegawai-item');
+
+                elements.forEach(element => {
+                    if (isInViewport(element)) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+
+            // Initial check for elements in viewport
+            handleScrollAnimation();
+
+            // Add scroll event listener
+            window.addEventListener('scroll', handleScrollAnimation);
+
+            // Smooth scroll for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
-        }
 
-        // Initial check for elements in viewport
-        handleScrollAnimation();
-
-        // Add scroll event listener
-        window.addEventListener('scroll', handleScrollAnimation);
-
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+            // Add animation classes to elements
+            document.querySelectorAll('.section-title').forEach(el => el.classList.add('fade-in'));
+            document.querySelectorAll('.profil-image').forEach(el => el.classList.add('slide-in-left'));
+            document.querySelectorAll('.profil-info').forEach(el => el.classList.add('slide-in-right'));
+            document.querySelectorAll('.jurusan-item').forEach(el => el.classList.add('scale-in'));
+            document.querySelectorAll('.galeri-item').forEach(el => el.classList.add('fade-in'));
+            document.querySelectorAll('.pegawai-item').forEach(el => el.classList.add('fade-in'));
         });
-
-        // Add animation classes to elements
-        document.querySelectorAll('.section-title').forEach(el => el.classList.add('fade-in'));
-        document.querySelectorAll('.profil-image').forEach(el => el.classList.add('slide-in-left'));
-        document.querySelectorAll('.profil-info').forEach(el => el.classList.add('slide-in-right'));
-        document.querySelectorAll('.jurusan-item').forEach(el => el.classList.add('scale-in'));
-        document.querySelectorAll('.galeri-item').forEach(el => el.classList.add('fade-in'));
-        document.querySelectorAll('.pegawai-item').forEach(el => el.classList.add('fade-in'));
-    });
     </script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Tab switching functionality
-        const tabButtons = document.querySelectorAll('.features-tabs .tab-btn');
-        const tabPanes = document.querySelectorAll('.tab-contents .tab-pane');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.features-tabs .tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-contents .tab-pane');
 
-        tabButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default anchor behavior
-                
-                // Remove active class from all buttons and panes
-                tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabPanes.forEach(pane => pane.classList.remove('active'));
-                
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Show corresponding tab pane
-                const tabId = this.getAttribute('data-tab');
-                const targetPane = document.getElementById(tabId);
-                if (targetPane) {
-                    targetPane.classList.add('active');
-                }
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default anchor behavior
+
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    // Show corresponding tab pane
+                    const tabId = this.getAttribute('data-tab');
+                    const targetPane = document.getElementById(tabId);
+                    if (targetPane) {
+                        targetPane.classList.add('active');
+                    }
+                });
+            });
+
+            // Smooth scroll for other navigation links
+            document.querySelectorAll('a[href^="#"]:not(.tab-btn)').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
         });
-
-        // Smooth scroll for other navigation links
-        document.querySelectorAll('a[href^="#"]:not(.tab-btn)').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    });
     </script>
 
     <!-- Pengumuman Popup -->
@@ -2477,11 +2492,11 @@
                         document.getElementById('popupDate').textContent = data.date;
                         document.getElementById('popupTitle').textContent = data.title;
                         document.getElementById('popupContent').innerHTML = data.content.replace(/\n/g, '<br>');
-                        
+
                         // Update gallery
                         const galleryContainer = document.getElementById('popupGallery');
                         galleryContainer.innerHTML = '';
-                        
+
                         if (data.gallery && data.gallery.length > 0) {
                             data.gallery.forEach(imageUrl => {
                                 const galleryItem = document.createElement('div');
@@ -2490,7 +2505,7 @@
                                 galleryContainer.appendChild(galleryItem);
                             });
                         }
-                        
+
                         pengumumanPopup.style.display = 'flex';
                     }
                 });
@@ -2510,4 +2525,5 @@
         });
     </script>
 </body>
-</html> 
+
+</html>

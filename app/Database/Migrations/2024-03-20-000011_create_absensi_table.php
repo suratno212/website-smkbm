@@ -9,15 +9,13 @@ class CreateAbsensiTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_absensi' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'siswa_id' => [
+            'nis' => [
                 'type'       => 'INT',
-                'constraint' => 11,
+                'constraint' => 20,
                 'unsigned'   => true,
             ],
             'tanggal' => [
@@ -36,8 +34,8 @@ class CreateAbsensiTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('siswa_id', 'siswa', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_absensi', true); // PRIMARY KEY
+        $this->forge->addForeignKey('nis', 'siswa', 'nis', 'CASCADE', 'CASCADE');
         $this->forge->createTable('absensi');
     }
 

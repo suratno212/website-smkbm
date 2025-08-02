@@ -1,0 +1,9 @@
+
+%% Activity Diagram Dashboard Kepala Sekolah
+flowchart TD
+    start([Start]) --> U1["Kepala Sekolah: Login ke sistem"]
+    U1 --> U2["Kepala Sekolah: Masuk ke menu dashboard"]
+    U2 --> S1["Sistem: Menampilkan ringkasan data siswa, guru, absensi, nilai, pengumuman, dsb"]
+    S1 --> end([End])
+    U3["Kepala Sekolah: Data tidak tersedia"] --> S2["Sistem: Menampilkan pesan error"]
+    S2 --> U2

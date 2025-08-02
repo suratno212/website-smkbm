@@ -27,7 +27,7 @@
         <thead class="table-dark">
             <tr>
                 <th>No</th>
-                <th>NISN</th>
+                <th>NIS</th>
                 <th>Nama Siswa</th>
                 <th>Hadir</th>
                 <th>Sakit</th>
@@ -39,7 +39,7 @@
             <?php foreach ($rekap as $i => $r): ?>
             <tr>
                 <td><?= $i+1 ?></td>
-                <td><?= esc($r['nisn']) ?></td>
+                <td><?= esc($r['nis']) ?></td>
                 <td><?= esc($r['nama']) ?></td>
                 <td class="text-success fw-bold"><?= $r['hadir'] ?></td>
                 <td class="text-warning fw-bold"><?= $r['sakit'] ?></td>

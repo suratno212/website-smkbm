@@ -7,13 +7,19 @@ use CodeIgniter\Model;
 class PengumumanModel extends Model
 {
     protected $table            = 'pengumuman';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'kd_pengumuman';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'judul', 'isi', 'jenis', 'file', 'status', 'created_at', 'updated_at'
+        'judul',
+        'isi',
+        'jenis',
+        'file',
+        'status',
+        'created_at',
+        'updated_at'
     ];
 
     // Dates
@@ -51,25 +57,25 @@ class PengumumanModel extends Model
     public function getActiveAnnouncements()
     {
         return $this->where('status', 'Aktif')
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
     }
 
     // Get announcements by type
     public function getByType($jenis)
     {
         return $this->where('jenis', $jenis)
-                    ->where('status', 'Aktif')
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+            ->where('status', 'Aktif')
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
     }
 
     // Get exam schedule announcements
     public function getExamSchedules()
     {
         return $this->where('jenis', 'Jadwal Ujian')
-                    ->where('status', 'Aktif')
-                    ->orderBy('created_at', 'DESC')
-                    ->findAll();
+            ->where('status', 'Aktif')
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
     }
-} 
+}

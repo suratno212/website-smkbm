@@ -3,93 +3,116 @@
 namespace App\Controllers\Guru;
 
 use App\Controllers\BaseController;
-use App\Models\UserModel;
 use App\Models\GuruModel;
-use App\Models\PengumumanModel;
+use App\Models\JadwalModel;
+use App\Models\SiswaModel;
+use App\Models\AbsensiModel;
+use App\Models\TahunAkademikModel;
 
 class Dashboard extends BaseController
 {
-    protected $userModel;
     protected $guruModel;
-    protected $pengumumanModel;
-    protected $db;
+    protected $jadwalModel;
+    protected $siswaModel;
+    protected $absensiModel;
+    protected $tahunAkademikModel;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
         $this->guruModel = new GuruModel();
-        $this->pengumumanModel = new PengumumanModel();
-        $this->db = \Config\Database::connect();
+        $this->jadwalModel = new JadwalModel();
+        $this->siswaModel = new SiswaModel();
+        $this->absensiModel = new AbsensiModel();
+        $this->tahunAkademikModel = new TahunAkademikModel();
     }
 
     public function index()
     {
-        // Cek apakah user sudah login dan rolenya guru
-        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
-            return redirect()->to(base_url('auth'));
+        $nik_nip = session()->get('nik_nip');
+        $guru = $this->guruModel->find($nik_nip);
+        if (!is_array($guru) || !isset($guru['nik_nip'])) {
+            return redirect()->to('auth/logout')->with('error', 'Session atau data guru tidak valid');
         }
 
-        $user_id = session()->get('user_id');
-        $user = $this->userModel->find($user_id);
-        $guru = $this->guruModel->where('user_id', $user_id)->first();
+        // Get current academic year
+        $tahunAkademik = $this->tahunAkademikModel->where('status', 'Aktif')->first();
+        $tahunAkademikId = $tahunAkademik ? $tahunAkademik['kd_tahun_akademik'] : 1;
 
-        // Ambil nama mapel guru
-        if ($guru && $guru['mapel_id']) {
-            $mapel = $this->db->table('mapel')->where('id', $guru['mapel_id'])->get()->getRowArray();
-            $guru['nama_mapel'] = $mapel ? $mapel['nama_mapel'] : 'N/A';
+        // Get classes taught by this guru
+        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.kd_kelas), kelas.nama_kelas')
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->where('jadwal.nik_nip', $nik_nip)
+            ->where('jadwal.tahun_akademik_id', $tahunAkademikId)
+            ->findAll();
+
+        // Get today's schedule
+        $hari = $this->getHariIndonesia(date('N'));
+        $jadwal_hari_ini = $this->jadwalModel->select('jadwal.*, mapel.nama_mapel, kelas.nama_kelas')
+            ->join('mapel', 'mapel.kd_mapel = jadwal.kd_mapel')
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->where('jadwal.nik_nip', $nik_nip)
+            ->where('jadwal.hari', $hari)
+            ->where('jadwal.tahun_akademik_id', $tahunAkademikId)
+            ->orderBy('jadwal.jam_mulai', 'ASC')
+            ->findAll();
+
+        // Get total students taught
+        $total_siswa = 0;
+        foreach ($kelas_diampu as $kelas) {
+            $siswa_count = $this->siswaModel->where('kd_kelas', $kelas['kd_kelas'])->countAllResults();
+            $total_siswa += $siswa_count;
         }
 
-        // Ambil pengumuman terbaru
-        $pengumuman = $this->pengumumanModel->getActiveAnnouncements();
+        // Get attendance summary for current month
+        $absensiGuruModel = new \App\Models\AbsensiGuruModel();
+        $bulan_ini = date('m');
+        $rekap_absensi = $absensiGuruModel->select('
+            COUNT(CASE WHEN status = "Hadir" THEN 1 END) as hadir,
+            COUNT(CASE WHEN status = "Sakit" THEN 1 END) as sakit,
+            COUNT(CASE WHEN status = "Izin" THEN 1 END) as izin,
+            COUNT(CASE WHEN status = "Alpha" THEN 1 END) as alpha
+        ')
+        ->where('nik_nip', $nik_nip)
+        ->where('MONTH(tanggal)', $bulan_ini)
+        ->first();
 
-        // Cek apakah guru adalah wali kelas
-        $kelasModel = new \App\Models\KelasModel();
-        $isWaliKelas = $kelasModel->where('wali_kelas_id', $guru['id'])->countAllResults() > 0;
-        $kelasDiwalikan = $kelasModel->where('wali_kelas_id', $guru['id'])->findAll();
+        // Cek apakah guru adalah wali kelas di tahun akademik aktif
+        $waliKelasModel = new \App\Models\WaliKelasModel();
+        $isWaliKelas = $waliKelasModel->where('nik_nip', $nik_nip)
+            ->where('kd_tahun_akademik', $tahunAkademikId)
+            ->countAllResults() > 0;
 
-        // Ambil notifikasi jika wali kelas
-        $notifikasi = [];
-        if ($isWaliKelas) {
-            $notifikasiModel = new \App\Models\NotifikasiModel();
-            $notifikasi = $notifikasiModel->where('user_id', $user_id)->orderBy('created_at', 'DESC')->findAll(10);
-        }
-
-        // Rekap keterlambatan siswa di kelas yang diwalikan
-        $rekap_terlambat = [];
-        if ($isWaliKelas && !empty($kelasDiwalikan)) {
-            $absensiModel = new \App\Models\AbsensiModel();
-            $siswaModel = new \App\Models\SiswaModel();
-            foreach ($kelasDiwalikan as $kelas) {
-                $siswaKelas = $siswaModel->where('kelas_id', $kelas['id'])->findAll();
-                foreach ($siswaKelas as $siswa) {
-                    $jumlahTerlambat = $absensiModel->where('siswa_id', $siswa['id'])->where('status', 'terlambat')->countAllResults();
-                    if ($jumlahTerlambat > 0) {
-                        $rekap_terlambat[] = [
-                            'nama' => $siswa['nama'],
-                            'nisn' => $siswa['nisn'],
-                            'kelas' => $kelas['nama_kelas'],
-                            'jumlah_terlambat' => $jumlahTerlambat
-                        ];
-                    }
-                }
-            }
-            // Urutkan ranking
-            usort($rekap_terlambat, function($a, $b) {
-                return $b['jumlah_terlambat'] <=> $a['jumlah_terlambat'];
-            });
-        }
+        // Ambil pengumuman aktif
+        $pengumumanModel = new \App\Models\PengumumanModel();
+        $pengumuman = $pengumumanModel->where('status', 'Aktif')->orderBy('created_at', 'DESC')->findAll();
 
         $data = [
             'title' => 'Dashboard Guru',
-            'user' => $user,
             'guru' => $guru,
-            'pengumuman' => $pengumuman,
+            'kelas_diampu' => $kelas_diampu,
+            'jadwal_hari_ini' => $jadwal_hari_ini,
+            'total_siswa' => $total_siswa,
+            'rekap_absensi' => $rekap_absensi,
+            'tahun_akademik' => $tahunAkademik,
             'isWaliKelas' => $isWaliKelas,
-            'kelasDiwalikan' => $kelasDiwalikan,
-            'notifikasi' => $notifikasi,
-            'rekap_terlambat' => $rekap_terlambat
+            'pengumuman' => $pengumuman
         ];
 
         return view('guru/dashboard', $data);
+    }
+
+    private function getHariIndonesia($dayNumber)
+    {
+        $hari = [
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+            7 => 'Minggu'
+        ];
+
+        return $hari[$dayNumber] ?? 'Senin';
     }
 }

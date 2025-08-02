@@ -8,8 +8,8 @@ class EkstrakurikulerModel extends Model
 {
     protected $table = 'ekstrakurikuler';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nama_ekstrakurikuler', 'created_at', 'updated_at'];
+    protected $allowedFields = ['kd_ekstrakurikuler', 'nama_ekstrakurikuler', 'created_at', 'updated_at'];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
-} 
+}

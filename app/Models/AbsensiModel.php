@@ -11,8 +11,7 @@ class AbsensiModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = ['siswa_id', 'tanggal', 'status'];
+    protected $allowedFields    = ['nis', 'tanggal', 'status', 'keterangan', 'nik_nip'];
 
     // Dates
     protected $useTimestamps = true;
@@ -22,63 +21,60 @@ class AbsensiModel extends Model
 
     // Validation
     protected $validationRules      = [
-        'siswa_id' => 'required|integer',
-        'tanggal'  => 'required|valid_date',
-        'status'   => 'required|in_list[Hadir,Sakit,Izin,Alpha]'
+        'nis' => 'required',
+        'tanggal' => 'required|valid_date',
+        'status' => 'required|in_list[H,S,I,A]',
+        'keterangan' => 'permit_empty',
+        'nik_nip' => 'required'
     ];
-    protected $validationMessages   = [
-        'siswa_id' => [
-            'required' => 'ID siswa harus diisi',
-            'integer' => 'ID siswa harus berupa angka'
-        ],
-        'tanggal' => [
-            'required' => 'Tanggal harus diisi',
-            'valid_date' => 'Format tanggal tidak valid'
-        ],
-        'status' => [
-            'required' => 'Status harus diisi',
-            'in_list' => 'Status harus Hadir, Sakit, Izin, atau Alpha'
-        ]
-    ];
+    protected $validationMessages   = [];
     protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
-    public function getAbsensiWithSiswa($filters = [])
+    public function getAbsensiWithRelations($filters = [])
     {
-        $builder = $this->db->table('absensi');
-        $builder->select('absensi.*, siswa.nama as nama_siswa, siswa.nis, kelas.nama_kelas');
-        $builder->join('siswa', 'siswa.id = absensi.siswa_id');
-        $builder->join('kelas', 'kelas.id = siswa.kelas_id');
+        $builder = $this->db->table('absensi')
+            ->select('absensi.*, siswa.nama as nama_siswa, siswa.kd_kelas, kelas.nama_kelas, guru.nama as nama_guru')
+            ->join('siswa', 'siswa.nis = absensi.nis')
+            ->join('kelas', 'kelas.kd_kelas = siswa.kd_kelas')
+            ->join('guru', 'guru.nik_nip = absensi.nik_nip', 'left');
 
-        // Apply filters
         if (!empty($filters['tanggal'])) {
             $builder->where('absensi.tanggal', $filters['tanggal']);
         }
-        if (!empty($filters['kelas_id'])) {
-            $builder->where('siswa.kelas_id', $filters['kelas_id']);
+        if (!empty($filters['kd_kelas'])) {
+            $builder->where('siswa.kd_kelas', $filters['kd_kelas']);
         }
-        if (!empty($filters['status'])) {
-            $builder->where('absensi.status', $filters['status']);
+        if (!empty($filters['nis'])) {
+            $builder->where('absensi.nis', $filters['nis']);
         }
 
-        $builder->orderBy('siswa.nama', 'ASC');
         return $builder->get()->getResultArray();
     }
 
-    public function getRekapAbsensi($kelas_id, $bulan)
+    public function getAbsensiByTanggalKelas($tanggal, $kdKelas)
     {
-        $builder = $this->db->table('siswa');
-        $builder->select('siswa.id, siswa.nama, siswa.nis, 
-                         COUNT(CASE WHEN absensi.status = "Hadir" THEN 1 END) as hadir,
-                         COUNT(CASE WHEN absensi.status = "Sakit" THEN 1 END) as sakit,
-                         COUNT(CASE WHEN absensi.status = "Izin" THEN 1 END) as izin,
-                         COUNT(CASE WHEN absensi.status = "Alpha" THEN 1 END) as alpha,
-                         COUNT(absensi.id) as total');
-        $builder->join('absensi', 'absensi.siswa_id = siswa.id', 'left');
-        $builder->where('siswa.kelas_id', $kelas_id);
-        $builder->like('absensi.tanggal', $bulan);
-        $builder->groupBy('siswa.id, siswa.nama, siswa.nis');
-        $builder->orderBy('siswa.nama', 'ASC');
+        $builder = $this->db->table('absensi')
+            ->select('absensi.*, siswa.nama as nama_siswa')
+            ->join('siswa', 'siswa.nis = absensi.nis')
+            ->where('absensi.tanggal', $tanggal)
+            ->where('siswa.kd_kelas', $kdKelas);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getRekapAbsensi($kdKelas, $bulan)
+    {
+        $builder = $this->db->table('absensi')
+            ->select('absensi.nis, siswa.nama, 
+                     COUNT(CASE WHEN absensi.status = "H" THEN 1 END) as hadir,
+                     COUNT(CASE WHEN absensi.status = "S" THEN 1 END) as sakit,
+                     COUNT(CASE WHEN absensi.status = "I" THEN 1 END) as izin,
+                     COUNT(CASE WHEN absensi.status = "A" THEN 1 END) as alpha')
+            ->join('siswa', 'siswa.nis = absensi.nis')
+            ->where('siswa.kd_kelas', $kdKelas)
+            ->where('MONTH(absensi.tanggal)', $bulan)
+            ->groupBy('absensi.nis, siswa.nama');
 
         return $builder->get()->getResultArray();
     }

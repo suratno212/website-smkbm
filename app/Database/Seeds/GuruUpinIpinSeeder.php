@@ -32,7 +32,7 @@ class GuruUpinIpinSeeder extends Seeder
                 'jenis_kelamin' => 'Laki-laki',
                 'agama' => 'Islam',
                 'tanggal_lahir' => '1995-01-01',
-                'mapel_id' => 1,
+                'kd_mapel' => 1,
                 'alamat' => 'Kampung Durian Runtuh',
                 'no_hp' => '081234567891',
             ],
@@ -43,7 +43,7 @@ class GuruUpinIpinSeeder extends Seeder
                 'jenis_kelamin' => 'Laki-laki',
                 'agama' => 'Islam',
                 'tanggal_lahir' => '1995-01-02',
-                'mapel_id' => 1,
+                'kd_mapel' => 1,
                 'alamat' => 'Kampung Durian Runtuh',
                 'no_hp' => '081234567892',
             ]

@@ -135,7 +135,7 @@
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="<?= base_url('guru/materitugas/detailPengumpulan/' . $t['id']) ?>" 
+                                                <a href="<?= base_url('guru/materitugas/detailPengumpulan/' . $t['kd_tugas']) ?>" 
                                                    class="btn btn-sm btn-outline-primary" title="Review Pengumpulan">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
@@ -145,11 +145,11 @@
                                                         <i class="fas fa-download"></i>
                                                     </a>
                                                 <?php endif; ?>
-                                                <a href="<?= base_url('guru/materitugas/editTugas/' . $t['id']) ?>" 
+                                                <a href="<?= base_url('guru/materitugas/editTugas/' . $t['kd_tugas']) ?>" 
                                                    class="btn btn-sm btn-outline-warning" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="<?= base_url('guru/materitugas/deleteTugas/' . $t['id']) ?>" 
+                                                <a href="<?= base_url('guru/materitugas/deleteTugas/' . $t['kd_tugas']) ?>" 
                                                    class="btn btn-sm btn-outline-danger" 
                                                    onclick="return confirm('Yakin ingin menghapus tugas ini?')" title="Hapus">
                                                     <i class="fas fa-trash"></i>

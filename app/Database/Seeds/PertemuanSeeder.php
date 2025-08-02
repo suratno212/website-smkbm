@@ -14,8 +14,8 @@ class PertemuanSeeder extends Seeder
         foreach ($kelas as $k) {
             foreach ($mapel as $m) {
                 $data[] = [
-                    'kelas_id' => $k['id'],
-                    'mapel_id' => $m['id'],
+                    'kd_kelas' => $k['kd_kelas'],
+                    'kd_mapel' => $m['kd_mapel'],
                     'nama_pertemuan' => 'Pertemuan '.$i,
                     'tanggal' => date('Y-m-d', strtotime("2024-06-".str_pad($i,2,'0',STR_PAD_LEFT))),
                     'topik' => 'Topik ke-'.$i,

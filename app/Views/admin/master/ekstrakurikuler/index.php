@@ -1,33 +1,51 @@
 <?= $this->extend('layout/admin') ?>
+
 <?= $this->section('content') ?>
 <div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Data Ekstrakurikuler</h1>
-    <?php if (session()->getFlashdata('message')): ?>
-        <div class="alert alert-success"> <?= session()->getFlashdata('message') ?> </div>
-    <?php endif; ?>
-    <a href="<?= base_url('admin/master/ekstrakurikuler/create') ?>" class="btn btn-primary mb-3">Tambah Ekstrakurikuler</a>
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th style="width:50px;">No</th>
-                    <th>Nama Ekstrakurikuler</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no=1; foreach($ekstrakurikuler as $e): ?>
-                <tr>
-                    <td style="width:50px;"><?= $no++ ?></td>
-                    <td><?= esc($e['nama_ekstrakurikuler']) ?></td>
-                    <td>
-                        <a href="<?= base_url('admin/master/ekstrakurikuler/edit/'.$e['id']) ?>" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="<?= base_url('admin/master/ekstrakurikuler/delete/'.$e['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Ekstrakurikuler</h3>
+                    <div class="card-tools">
+                        <a href="<?= base_url('admin/master/ekstrakurikuler/create') ?>" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Tambah Ekstrakurikuler
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Ekstrakurikuler</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($ekstrakurikuler)) : ?>
+                                <tr>
+                                    <td colspan="3" class="text-center">Belum ada data.</td>
+                                </tr>
+                            <?php else : ?>
+                                <?php foreach ($ekstrakurikuler as $i => $e) : ?>
+                                    <tr>
+                                        <td><?= $i + 1 ?></td>
+                                        <td><?= $e['nama_ekstrakurikuler'] ?></td>
+                                        <td>
+                                            <a href="<?= base_url('admin/master/ekstrakurikuler/edit/' . $e['kd_ekstrakurikuler']) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                            <form action="<?= base_url('admin/master/ekstrakurikuler/delete/' . $e['kd_ekstrakurikuler']) ?>" method="post" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
+                                                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

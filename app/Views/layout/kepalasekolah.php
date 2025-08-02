@@ -52,7 +52,7 @@ if (!isset($user) || !is_array($user)) {
         .top-bar { background: white; padding: 15px 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         .sidebar-toggle { background: var(--primary-color); color: white; border: none; font-size: 1.2em; border-radius: 5px; padding: 8px 12px; margin-right: 10px; }
         .profile-image { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--secondary-color); margin-right: 10px; }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); width: var(--sidebar-width); padding: 20px; } .sidebar.show { transform: translateX(0); } .sidebar.collapsed { transform: translateX(-100%); } .main-content { margin-left: 0; } .main-content.expanded { margin-left: 0; } .sidebar-header h3, .menu-item span { display: block; } .menu-item { padding: 12px 20px; justify-content: flex-start; text-align: left; } .menu-item i { margin-right: 10px; } }
+        @media (max-width: 768px) { .sidebar { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: 100vw; min-width: 100vw; z-index: 1100; transform: translateX(-100%); padding: 20px; border-radius: 0; box-shadow: 0 0 20px rgba(0,0,0,0.2); transition: transform 0.3s cubic-bezier(.4,2,.6,1), width 0.3s; } .sidebar.show { transform: translateX(0); } .sidebar.collapsed { transform: translateX(-100%); } .main-content, .main-content.expanded { margin-left: 0; } .sidebar-header h3, .menu-item span { display: block; } .menu-item { padding: 12px 20px; justify-content: flex-start; text-align: left; } .menu-item i { margin-right: 10px; } }
         .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; }
         .sidebar-overlay.show { display: block; }
     </style>
@@ -83,6 +83,10 @@ if (!isset($user) || !is_array($user)) {
                 <i class="fas fa-file-alt"></i>
                 <span>Laporan e-Raport</span>
             </a>
+            <a href="<?= base_url('kepalasekolah/laporan-spmb') ?>" class="menu-item <?= strpos(uri_string(), 'kepalasekolah/laporan-spmb') === 0 ? 'active' : '' ?>">
+                <i class="fas fa-file-invoice"></i>
+                <span>Laporan SPMB</span>
+            </a>
             <a href="<?= base_url('kepalasekolah/statistik') ?>" class="menu-item <?= strpos(uri_string(), 'kepalasekolah/statistik') === 0 ? 'active' : '' ?>">
                 <i class="fas fa-chart-pie"></i>
                 <span>Statistik</span>
@@ -109,7 +113,7 @@ if (!isset($user) || !is_array($user)) {
                         <img src="<?= base_url('assets/images/Logo.png') ?>" alt="User" class="profile-image">
                     <?php endif; ?>
                     <div>
-                        <h6 class="mb-0"><?= $user['username'] ?? 'Kepala Sekolah' ?></h6>
+                        <h6 class="mb-0"><?= $user['nama'] ?? $user['username'] ?? 'Kepala Sekolah' ?></h6>
                         <small class="text-muted">Kepala Sekolah</small>
                     </div>
                 </a>
@@ -135,9 +139,6 @@ if (!isset($user) || !is_array($user)) {
                 mainContent.classList.add('expanded');
             }
             sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
                 if (window.innerWidth <= 768) {
                     if (sidebar.classList.contains('show')) {
                         sidebar.classList.remove('show');
@@ -146,6 +147,10 @@ if (!isset($user) || !is_array($user)) {
                         sidebar.classList.add('show');
                         sidebarOverlay.classList.add('show');
                     }
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                    localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
                 }
             });
             sidebarOverlay.addEventListener('click', function() {

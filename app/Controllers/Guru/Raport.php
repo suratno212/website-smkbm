@@ -40,34 +40,34 @@ class Raport extends BaseController
     {
         // Daftar kelas yang diampu guru ini
         $guru_id = session()->get('guru_id');
-        $kelas = $this->kelasModel->where('wali_kelas_id', $guru_id)->findAll();
+        $kelas = $this->kelasModel->where('wali_kelas_nik_nip', $guru_id)->findAll();
         return view('guru/raport/index', [
             'title' => 'e-Raport - Pilih Kelas',
             'kelas' => $kelas
         ]);
     }
 
-    public function siswa($kelas_id)
+    public function siswa($kd_kelas)
     {
-        $siswa = $this->siswaModel->where('kelas_id', $kelas_id)->findAll();
+        $siswa = $this->siswaModel->where('kd_kelas', $kd_kelas)->findAll();
         return view('guru/raport/siswa', [
             'title' => 'e-Raport - Pilih Siswa',
             'siswa' => $siswa,
-            'kelas' => $this->kelasModel->find($kelas_id)
+            'kelas' => $this->kelasModel->find($kd_kelas)
         ]);
     }
 
-    public function detail($siswa_id)
+    public function detail($nis)
     {
-        $siswa = $this->siswaModel->find($siswa_id);
-        $kelas = $this->kelasModel->find($siswa['kelas_id']);
-        $nilai = $this->nilaiModel->where('siswa_id', $siswa_id)->findAll();
+        $siswa = $this->siswaModel->find($nis);
+        $kelas = $this->kelasModel->find($siswa['kd_kelas']);
+        $nilai = $this->nilaiModel->where('nis', $nis)->findAll();
         $mapel = $this->mapelModel->findAll();
-        $absensi = $this->absensiModel->where('siswa_id', $siswa_id)->findAll();
+        $absensi = $this->absensiModel->where('nis', $nis)->findAll();
         $ekskul = $this->ekskulSiswaModel
             ->select('ekstrakurikuler_siswa.*, ekstrakurikuler.nama_ekstrakurikuler')
             ->join('ekstrakurikuler', 'ekstrakurikuler.id = ekstrakurikuler_siswa.ekstrakurikuler_id')
-            ->where('siswa_id', $siswa_id)
+            ->where('nis', $nis)
             ->findAll();
         return view('guru/raport/detail', [
             'title' => 'e-Raport Siswa',
@@ -80,9 +80,9 @@ class Raport extends BaseController
         ]);
     }
 
-    public function preview($siswa_id)
+    public function preview($nis)
     {
-        $siswa = $this->siswaModel->find($siswa_id);
+        $siswa = $this->siswaModel->find($nis);
         // Ambil semester aktif
         $tahunAkademikModel = new \App\Models\TahunAkademikModel();
         $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
@@ -90,22 +90,22 @@ class Raport extends BaseController
         // Ambil kelas beserta nama jurusan
         $kelas = $this->kelasModel
             ->select('kelas.*, jurusan.nama_jurusan')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id', 'left')
-            ->find($siswa['kelas_id']);
-        $nilai = $this->nilaiModel->where('siswa_id', $siswa_id)->where('semester', $semester)->findAll();
+            ->join('jurusan', 'jurusan.kd_jurusan = kelas.kd_jurusan', 'left')
+            ->find($siswa['kd_kelas']);
+        $nilai = $this->nilaiModel->where('nis', $nis)->where('semester', $semester)->findAll();
         $mapel = $this->mapelModel->findAll();
-        $absensi = $this->absensiModel->where('siswa_id', $siswa_id)->findAll();
+        $absensi = $this->absensiModel->where('nis', $nis)->findAll();
         $ekskul = $this->ekskulSiswaModel
             ->select('ekstrakurikuler_siswa.*, ekstrakurikuler.nama_ekstrakurikuler')
             ->join('ekstrakurikuler', 'ekstrakurikuler.id = ekstrakurikuler_siswa.ekstrakurikuler_id')
-            ->where('siswa_id', $siswa_id)
+            ->where('nis', $nis)
             ->findAll();
-        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_id']);
+        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_nik_nip']);
         // Ranking siswa dalam kelas (berdasarkan semester aktif)
         $ranking = 0;
-        $ranks = $this->nilaiModel->getRankingKelas($kelas['id'], $semester);
+        $ranks = $this->nilaiModel->getRankingKelas($kelas['kd_kelas'], $semester);
         foreach ($ranks as $i => $r) {
-            if ($r['id'] == $siswa_id) {
+            if ($r['nis'] == $nis) {
                 $ranking = $i + 1;
                 break;
             }
@@ -118,7 +118,7 @@ class Raport extends BaseController
         } else {
             $catatan = 'Terus semangat dalam belajar. Jadikan semester ini sebagai motivasi untuk memperbaiki dan meningkatkan prestasi di masa mendatang.';
         }
-        
+
         return view('guru/raport/pdf', [
             'siswa' => $siswa,
             'kelas' => $kelas,
@@ -134,9 +134,9 @@ class Raport extends BaseController
         ]);
     }
 
-    public function cetak($siswa_id)
+    public function cetak($nis)
     {
-        $siswa = $this->siswaModel->find($siswa_id);
+        $siswa = $this->siswaModel->find($nis);
         // Ambil semester aktif
         $tahunAkademikModel = new \App\Models\TahunAkademikModel();
         $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
@@ -144,22 +144,22 @@ class Raport extends BaseController
         // Ambil kelas beserta nama jurusan
         $kelas = $this->kelasModel
             ->select('kelas.*, jurusan.nama_jurusan')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id', 'left')
-            ->find($siswa['kelas_id']);
-        $nilai = $this->nilaiModel->where('siswa_id', $siswa_id)->where('semester', $semester)->findAll();
+            ->join('jurusan', 'jurusan.kd_jurusan = kelas.kd_jurusan', 'left')
+            ->find($siswa['kd_kelas']);
+        $nilai = $this->nilaiModel->where('nis', $nis)->where('semester', $semester)->findAll();
         $mapel = $this->mapelModel->findAll();
-        $absensi = $this->absensiModel->where('siswa_id', $siswa_id)->findAll();
+        $absensi = $this->absensiModel->where('nis', $nis)->findAll();
         $ekskul = $this->ekskulSiswaModel
             ->select('ekstrakurikuler_siswa.*, ekstrakurikuler.nama_ekstrakurikuler')
             ->join('ekstrakurikuler', 'ekstrakurikuler.id = ekstrakurikuler_siswa.ekstrakurikuler_id')
-            ->where('siswa_id', $siswa_id)
+            ->where('nis', $nis)
             ->findAll();
-        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_id']);
+        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_nik_nip']);
         // Ranking siswa dalam kelas (berdasarkan semester aktif)
         $ranking = 0;
-        $ranks = $this->nilaiModel->getRankingKelas($kelas['id'], $semester);
+        $ranks = $this->nilaiModel->getRankingKelas($kelas['kd_kelas'], $semester);
         foreach ($ranks as $i => $r) {
-            if ($r['id'] == $siswa_id) {
+            if ($r['nis'] == $nis) {
                 $ranking = $i + 1;
                 break;
             }
@@ -191,32 +191,32 @@ class Raport extends BaseController
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream('e-raport-'.$siswa['nama'].'.pdf');
+        $dompdf->stream('e-raport-' . $siswa['nama'] . '.pdf');
     }
 
-    public function generatePDF($siswa_id)
+    public function generatePDF($nis)
     {
-        $siswa = $this->siswaModel->find($siswa_id);
+        $siswa = $this->siswaModel->find($nis);
         $tahunAkademikModel = new \App\Models\TahunAkademikModel();
         $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
         $semester = $tahunAkademikAktif ? $tahunAkademikAktif['semester'] : 'Ganjil';
         $kelas = $this->kelasModel
             ->select('kelas.*, jurusan.nama_jurusan')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id', 'left')
-            ->find($siswa['kelas_id']);
-        $nilai = $this->nilaiModel->where('siswa_id', $siswa_id)->where('semester', $semester)->findAll();
+            ->join('jurusan', 'jurusan.kd_jurusan = kelas.kd_jurusan', 'left')
+            ->find($siswa['kd_kelas']);
+        $nilai = $this->nilaiModel->where('nis', $nis)->where('semester', $semester)->findAll();
         $mapel = $this->mapelModel->findAll();
-        $absensi = $this->absensiModel->where('siswa_id', $siswa_id)->findAll();
+        $absensi = $this->absensiModel->where('nis', $nis)->findAll();
         $ekskul = $this->ekskulSiswaModel
             ->select('ekstrakurikuler_siswa.*, ekstrakurikuler.nama_ekstrakurikuler')
             ->join('ekstrakurikuler', 'ekstrakurikuler.id = ekstrakurikuler_siswa.ekstrakurikuler_id')
-            ->where('siswa_id', $siswa_id)
+            ->where('nis', $nis)
             ->findAll();
-        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_id']);
+        $wali_kelas = $this->guruModel->find($kelas['wali_kelas_nik_nip']);
         $ranking = 0;
-        $ranks = $this->nilaiModel->getRankingKelas($kelas['id'], $semester);
+        $ranks = $this->nilaiModel->getRankingKelas($kelas['kd_kelas'], $semester);
         foreach ($ranks as $i => $r) {
-            if ($r['id'] == $siswa_id) {
+            if ($r['nis'] == $nis) {
                 $ranking = $i + 1;
                 break;
             }
@@ -249,6 +249,6 @@ class Raport extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         // Output PDF ke browser tanpa auto download
-        $dompdf->stream('e-raport-'.$siswa['nama'].'-'.$semester.'.pdf', ['Attachment' => false]);
+        $dompdf->stream('e-raport-' . $siswa['nama'] . '-' . $semester . '.pdf', ['Attachment' => false]);
     }
-} 
+}

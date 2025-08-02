@@ -21,13 +21,13 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('admin/guru/update/' . $guru['id']) ?>" method="post">
+                    <form action="<?= base_url('admin/guru/update/' . $guru['nik_nip']) ?>" method="post">
                         <?= csrf_field() ?>
                         <div class="form-group">
-                            <label for="nip_nuptk">NIP/NUPTK</label>
-                            <input type="text" class="form-control <?= ($validation->hasError('nip_nuptk')) ? 'is-invalid' : '' ?>" id="nip_nuptk" name="nip_nuptk" value="<?= old('nip_nuptk', $guru['nip_nuptk']) ?>" placeholder="Masukkan NIP/NUPTK">
+                            <label for="nik_nip">NIK/NIP</label>
+                            <input type="text" class="form-control <?= ($validation->hasError('nik_nip')) ? 'is-invalid' : '' ?>" id="nik_nip" name="nik_nip" value="<?= old('nik_nip', $guru['nik_nip']) ?>" placeholder="Masukkan NIK/NIP" readonly>
                             <div class="invalid-feedback">
-                                <?= $validation->getError('nip_nuptk') ?>
+                                <?= $validation->getError('nik_nip') ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -38,29 +38,33 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control <?= ($validation->hasError('email')) ? 'is-invalid' : '' ?>" id="email" name="email" value="<?= old('email', $guru['email']) ?>" placeholder="Masukkan email" required>
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('email') ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="jenis_kelamin">Jenis Kelamin</label>
                             <select class="form-control <?= ($validation->hasError('jenis_kelamin')) ? 'is-invalid' : '' ?>" id="jenis_kelamin" name="jenis_kelamin" required>
                                 <option value="">Pilih Jenis Kelamin</option>
-                                <option value="Laki-laki" <?= old('jenis_kelamin', $guru['jenis_kelamin']) == 'Laki-laki' ? 'selected' : '' ?>>Laki-laki</option>
-                                <option value="Perempuan" <?= old('jenis_kelamin', $guru['jenis_kelamin']) == 'Perempuan' ? 'selected' : '' ?>>Perempuan</option>
+                                <option value="L" <?= old('jenis_kelamin', $guru['jenis_kelamin']) == 'L' ? 'selected' : '' ?>>Laki-laki</option>
+                                <option value="P" <?= old('jenis_kelamin', $guru['jenis_kelamin']) == 'P' ? 'selected' : '' ?>>Perempuan</option>
                             </select>
                             <div class="invalid-feedback">
                                 <?= $validation->getError('jenis_kelamin') ?>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="agama">Agama</label>
-                            <select class="form-control <?= ($validation->hasError('agama')) ? 'is-invalid' : '' ?>" id="agama" name="agama" required>
+                            <label for="agama_id">Agama</label>
+                            <select class="form-control <?= ($validation->hasError('agama_id')) ? 'is-invalid' : '' ?>" id="agama_id" name="agama_id" required>
                                 <option value="">Pilih Agama</option>
-                                <option value="Islam" <?= old('agama', $guru['agama']) == 'Islam' ? 'selected' : '' ?>>Islam</option>
-                                <option value="Kristen" <?= old('agama', $guru['agama']) == 'Kristen' ? 'selected' : '' ?>>Kristen</option>
-                                <option value="Katolik" <?= old('agama', $guru['agama']) == 'Katolik' ? 'selected' : '' ?>>Katolik</option>
-                                <option value="Hindu" <?= old('agama', $guru['agama']) == 'Hindu' ? 'selected' : '' ?>>Hindu</option>
-                                <option value="Buddha" <?= old('agama', $guru['agama']) == 'Buddha' ? 'selected' : '' ?>>Buddha</option>
-                                <option value="Konghucu" <?= old('agama', $guru['agama']) == 'Konghucu' ? 'selected' : '' ?>>Konghucu</option>
+                                <?php foreach ($agama as $a) : ?>
+                                    <option value="<?= $a['id'] ?>" <?= old('agama_id', $guru['agama_id']) == $a['id'] ? 'selected' : '' ?>><?= $a['nama_agama'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                             <div class="invalid-feedback">
-                                <?= $validation->getError('agama') ?>
+                                <?= $validation->getError('agama_id') ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -71,15 +75,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="mapel_id">Mata Pelajaran</label>
-                            <select class="form-control <?= ($validation->hasError('mapel_id')) ? 'is-invalid' : '' ?>" id="mapel_id" name="mapel_id" required>
+                            <label for="kd_mapel">Mata Pelajaran</label>
+                            <select class="form-control <?= ($validation->hasError('kd_mapel')) ? 'is-invalid' : '' ?>" id="kd_mapel" name="kd_mapel" required>
                                 <option value="">Pilih Mata Pelajaran</option>
                                 <?php foreach ($mapel as $m) : ?>
-                                    <option value="<?= $m['id'] ?>" <?= old('mapel_id', $guru['mapel_id']) == $m['id'] ? 'selected' : '' ?>><?= $m['nama_mapel'] ?></option>
+                                    <option value="<?= $m['kd_mapel'] ?>" <?= old('kd_mapel', $guru['kd_mapel']) == $m['kd_mapel'] ? 'selected' : '' ?>><?= $m['nama_mapel'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <div class="invalid-feedback">
-                                <?= $validation->getError('mapel_id') ?>
+                                <?= $validation->getError('kd_mapel') ?>
                             </div>
                         </div>
                         <div class="form-group">

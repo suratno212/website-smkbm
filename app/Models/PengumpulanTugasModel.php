@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -6,20 +7,28 @@ use CodeIgniter\Model;
 class PengumpulanTugasModel extends Model
 {
     protected $table = 'pengumpulan_tugas';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'kd_pengumpulan';
     protected $allowedFields = [
-        'tugas_id', 'siswa_id', 'file_tugas', 'status', 'nilai', 'catatan', 'created_at', 'updated_at'
+        'kd_pengumpulan',
+        'kd_tugas',
+        'nis',
+        'file_tugas',
+        'status',
+        'nilai',
+        'catatan',
+        'created_at',
+        'updated_at'
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
     // Ambil pengumpulan tugas beserta data siswa
-    public function getByTugasId($tugas_id)
+    public function getByKdTugas($kd_tugas)
     {
-        return $this->select('pengumpulan_tugas.*, siswa.nama as nama_siswa, siswa.nisn')
-            ->join('siswa', 'siswa.id = pengumpulan_tugas.siswa_id')
-            ->where('pengumpulan_tugas.tugas_id', $tugas_id)
+        return $this->select('pengumpulan_tugas.*, siswa.nama as nama_siswa, siswa.nis')
+            ->join('siswa', 'siswa.nis = pengumpulan_tugas.nis')
+            ->where('pengumpulan_tugas.kd_tugas', $kd_tugas)
             ->findAll();
     }
-} 
+}

@@ -46,7 +46,7 @@
                                 </tr>
                                 <tr>
                                     <td><strong>NIS:</strong></td>
-                                    <td><?= esc($siswa['nisn']) ?></td>
+                                    <td><?= esc($siswa['nis']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Kelas:</strong></td>

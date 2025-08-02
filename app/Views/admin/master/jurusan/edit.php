@@ -21,8 +21,9 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('admin/master/jurusan/update/' . $jurusan['id']) ?>" method="post">
+                    <form action="<?= base_url('admin/master/jurusan/update/' . $jurusan['kd_jurusan']) ?>" method="post">
                         <?= csrf_field() ?>
+                        <input type="hidden" name="kd_jurusan" value="<?= $jurusan['kd_jurusan'] ?>">
                         <div class="form-group">
                             <label for="nama_jurusan">Nama Jurusan</label>
                             <input type="text" class="form-control" id="nama_jurusan" name="nama_jurusan" value="<?= old('nama_jurusan', $jurusan['nama_jurusan']) ?>" required>
@@ -37,4 +38,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

@@ -64,7 +64,7 @@ class Profile extends BaseController
             $dataUser['foto'] = $newName;
         }
         $this->userModel->update($user_id, $dataUser);
-        $this->guruModel->update($guru['id'], $dataGuru);
+        $this->guruModel->update($guru['nik_nip'], $dataGuru);
         // Update session foto jika ada perubahan
         $userBaru = $this->userModel->find($user_id);
         session()->set('foto', $userBaru['foto']);

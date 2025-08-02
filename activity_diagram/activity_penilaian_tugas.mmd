@@ -1,0 +1,12 @@
+
+%% Activity Diagram Penilaian Tugas
+flowchart TD
+    start([Start]) --> U1["Guru: Masuk ke menu penilaian tugas"]
+    U1 --> S1["Sistem: Menampilkan daftar tugas siswa"]
+    U2["Guru: Pilih tugas siswa"] --> U3["Guru: Isi nilai dan catatan"]
+    U3 --> U4["Guru: Tekan simpan"]
+    U4 --> S2["Sistem: Menyimpan nilai dan catatan"]
+    S1 --> U2
+    S2 --> end([End])
+    U5["Guru: Nilai/catatan tidak diisi"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U3

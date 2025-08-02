@@ -5,62 +5,46 @@ namespace App\Controllers\Guru;
 use App\Controllers\BaseController;
 use App\Models\AbsensiModel;
 use App\Models\SiswaModel;
-use App\Models\KelasModel;
-use App\Models\MapelModel;
 use App\Models\JadwalModel;
+use App\Models\MapelModel;
 use App\Models\GuruModel;
-use App\Models\UserModel;
 
 class Absensi extends BaseController
 {
     protected $absensiModel;
     protected $siswaModel;
-    protected $kelasModel;
-    protected $mapelModel;
     protected $jadwalModel;
+    protected $mapelModel;
     protected $guruModel;
-    protected $userModel;
 
     public function __construct()
     {
         $this->absensiModel = new AbsensiModel();
         $this->siswaModel = new SiswaModel();
-        $this->kelasModel = new KelasModel();
-        $this->mapelModel = new MapelModel();
         $this->jadwalModel = new JadwalModel();
+        $this->mapelModel = new MapelModel();
         $this->guruModel = new GuruModel();
-        $this->userModel = new UserModel();
     }
 
     public function index()
     {
-        // Cek session
-        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
-            return redirect()->to(base_url('auth'));
-        }
+        // Get current guru
+        $guru = $this->guruModel->find(session()->get('nik_nip'));
 
-        $user_id = session()->get('user_id');
-        $guru = $this->guruModel->where('user_id', $user_id)->first();
-        
-        if (!$guru) {
-            return redirect()->to(base_url('guru/dashboard'))->with('error', 'Data guru tidak ditemukan. Pastikan data guru sudah terdaftar dan user_id sesuai.');
-        }
-
-        // Ambil kelas yang diampu oleh guru ini
-        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.id), kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = jadwal.kelas_id')
-            ->where('jadwal.guru_id', $guru['id'])
+        // Get classes taught by this guru
+        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.kd_kelas), kelas.nama_kelas')
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->where('jadwal.nik_nip', $guru['nik_nip'])
             ->findAll();
 
-        // Ambil mapel yang diajar oleh guru ini
-        $mapel_diajar = $this->mapelModel->where('id', $guru['mapel_id'])->first();
+        // Get subject taught by this guru
+        $mapel_diajar = $this->mapelModel->where('kd_mapel', $guru['kd_mapel'])->first();
 
         $data = [
             'title' => 'Absensi Siswa',
             'guru' => $guru,
             'kelas_diampu' => $kelas_diampu,
-            'mapel_diajar' => $mapel_diajar,
-            'user' => $this->userModel->find($user_id)
+            'mapel_diajar' => $mapel_diajar
         ];
 
         return view('guru/absensi/index', $data);
@@ -68,205 +52,121 @@ class Absensi extends BaseController
 
     public function input()
     {
-        // Cek session
-        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
-            return redirect()->to(base_url('auth'));
-        }
+        // Get current guru
+        $guru = $this->guruModel->find(session()->get('nik_nip'));
 
-        $user_id = session()->get('user_id');
-        $guru = $this->guruModel->where('user_id', $user_id)->first();
-        
-        if (!$guru) {
-            return redirect()->to(base_url('guru/dashboard'))->with('error', 'Data guru tidak ditemukan. Pastikan data guru sudah terdaftar dan user_id sesuai.');
-        }
+        $tanggal = $this->request->getGet('tanggal') ?? date('Y-m-d');
+        $kd_kelas = $this->request->getGet('kd_kelas');
 
-        $kelas_id = $this->request->getGet('kelas_id');
-        $tanggal = $this->request->getGet('tanggal') ?: date('Y-m-d');
-
-        // Ambil kelas yang diampu oleh guru ini
-        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.id), kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = jadwal.kelas_id')
-            ->where('jadwal.guru_id', $guru['id'])
+        // Get classes taught by this guru
+        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.kd_kelas), kelas.nama_kelas')
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->where('jadwal.nik_nip', $guru['nik_nip'])
             ->findAll();
 
-        // Ambil mapel yang diajar oleh guru ini
-        $mapel_diajar = $this->mapelModel->where('id', $guru['mapel_id'])->first();
-
-        // Jika kelas dipilih, ambil data siswa
-        $siswa_list = [];
-        if ($kelas_id) {
-            // Pastikan field nisn diambil (bukan nis)
-            $siswa_list = $this->siswaModel->select('id, nisn, nama')->where('kelas_id', $kelas_id)->findAll();
-            
-            // Ambil data absensi yang sudah ada
-            foreach ($siswa_list as &$siswa) {
-                $absensi = $this->absensiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'tanggal' => $tanggal
-                ])->first();
-                
-                $siswa['absensi_status'] = $absensi ? $absensi['status'] : '';
-                $siswa['absensi_id'] = $absensi ? $absensi['id'] : null;
-            }
-        }
+        // Get subject taught by this guru
+        $mapel_diajar = $this->mapelModel->where('kd_mapel', $guru['kd_mapel'])->first();
 
         $data = [
             'title' => 'Input Absensi',
             'guru' => $guru,
+            'tanggal' => $tanggal,
             'kelas_diampu' => $kelas_diampu,
             'mapel_diajar' => $mapel_diajar,
-            'siswa_list' => $siswa_list,
-            'selected_kelas' => $kelas_id,
-            'selected_tanggal' => $tanggal,
-            'user' => $this->userModel->find($user_id)
+            'selected_kelas' => $kd_kelas,
+            'selected_tanggal' => $tanggal
         ];
+
+        if ($kd_kelas) {
+            $siswa_list = $this->siswaModel->select('nis, nama')->where('kd_kelas', $kd_kelas)->findAll();
+            $data['siswa'] = $siswa_list;
+            $data['absensi'] = $this->absensiModel->getAbsensiByTanggalKelas($tanggal, $kd_kelas);
+        }
 
         return view('guru/absensi/input', $data);
     }
 
     public function store()
     {
-        // Cek session
-        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
-            return redirect()->to(base_url('auth'));
-        }
-
-        $user_id = session()->get('user_id');
-        $guru = $this->guruModel->where('user_id', $user_id)->first();
-        
-        if (!$guru) {
-            return redirect()->to(base_url('auth'))->with('error', 'Data guru tidak ditemukan');
-        }
-
-        $siswa_ids = $this->request->getPost('siswa_id');
-        $statuses = $this->request->getPost('status');
         $tanggal = $this->request->getPost('tanggal');
-        $kelas_id = $this->request->getPost('kelas_id');
+        $kd_kelas = $this->request->getPost('kd_kelas');
+        $nik_nip = session()->get('nik_nip');
 
-        if (!$siswa_ids || !$statuses || !$tanggal) {
-            return redirect()->back()->with('error', 'Data tidak lengkap');
-        }
+        // Get all students in the class
+        $siswa_list = $this->siswaModel->select('nis, nama')->where('kd_kelas', $kd_kelas)->findAll();
 
-        $success_count = 0;
-        $error_count = 0;
+        $message = '';
+        $inserted = 0;
+        $updated = 0;
 
-        foreach ($siswa_ids as $index => $siswa_id) {
-            $status = $statuses[$index] ?? 'Hadir';
-            
-            // Cek apakah absensi sudah ada
-            $existing_absensi = $this->absensiModel->where([
-                'siswa_id' => $siswa_id,
-                'tanggal' => $tanggal
-            ])->first();
+        foreach ($siswa_list as $siswa) {
+            $nis = $siswa['nis'];
+            $status = $this->request->getPost("status_$nis");
+            $keterangan = $this->request->getPost("keterangan_$nis");
 
-            $absensi_data = [
-                'siswa_id' => $siswa_id,
-                'tanggal' => $tanggal,
-                'status' => $status
-            ];
+            if ($status) {
+                // Check if attendance already exists
+                $existing = $this->absensiModel->where([
+                    'nis' => $nis,
+                    'tanggal' => $tanggal
+                ])->first();
 
-            if ($existing_absensi) {
-                // Update absensi yang sudah ada
-                if ($this->absensiModel->update($existing_absensi['id'], $absensi_data)) {
-                    $success_count++;
+                $absensiData = [
+                    'nis' => $nis,
+                    'tanggal' => $tanggal,
+                    'status' => $status,
+                    'keterangan' => $keterangan,
+                    'nik_nip' => $nik_nip
+                ];
+
+                if ($existing) {
+                    // Update existing attendance
+                    $this->absensiModel->update($existing['id'], $absensiData);
+                    $updated++;
                 } else {
-                    $error_count++;
-                }
-            } else {
-                // Insert absensi baru
-                if ($this->absensiModel->insert($absensi_data)) {
-                    $success_count++;
-                } else {
-                    $error_count++;
+                    // Insert new attendance
+                    $this->absensiModel->insert($absensiData);
+                    $inserted++;
                 }
             }
         }
 
-        if ($success_count > 0) {
-            $message = "Berhasil menyimpan absensi untuk $success_count siswa";
-            if ($error_count > 0) {
-                $message .= " ($error_count gagal)";
-            }
-            return redirect()->to("guru/absensi/input?kelas_id=$kelas_id&tanggal=$tanggal")->with('success', $message);
+        if ($inserted > 0 || $updated > 0) {
+            $message = "Berhasil menyimpan absensi: $inserted baru, $updated diperbarui";
         } else {
-            return redirect()->back()->with('error', 'Gagal menyimpan absensi');
+            $message = "Tidak ada data absensi yang disimpan";
         }
+
+        return redirect()->to("guru/absensi/input?kd_kelas=$kd_kelas&tanggal=$tanggal")->with('success', $message);
     }
 
     public function rekap()
     {
-        // Cek session
-        if (!session()->get('logged_in') || session()->get('role') !== 'guru') {
-            return redirect()->to(base_url('auth'));
-        }
+        // Get current guru
+        $guru = $this->guruModel->find(session()->get('nik_nip'));
 
-        $user_id = session()->get('user_id');
-        $guru = $this->guruModel->where('user_id', $user_id)->first();
-        
-        if (!$guru) {
-            return redirect()->to(base_url('guru/dashboard'))->with('error', 'Data guru tidak ditemukan. Pastikan data guru sudah terdaftar dan user_id sesuai.');
-        }
+        $kd_kelas = $this->request->getGet('kd_kelas');
+        $bulan = $this->request->getGet('bulan') ?? date('m');
 
-        $kelas_id = $this->request->getGet('kelas_id');
-        $bulan = $this->request->getGet('bulan') ?: date('Y-m');
-
-        // Ambil kelas yang diampu oleh guru ini
-        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.id), kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = jadwal.kelas_id')
-            ->where('jadwal.guru_id', $guru['id'])
+        // Get classes taught by this guru
+        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.kd_kelas), kelas.nama_kelas')
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->where('jadwal.nik_nip', $guru['nik_nip'])
             ->findAll();
-
-        // Jika kelas dipilih, ambil rekap absensi
-        $rekap_absensi = [];
-        if ($kelas_id) {
-            $siswa_list = $this->siswaModel->select('id, nisn, nama')->where('kelas_id', $kelas_id)->findAll();
-            
-            foreach ($siswa_list as $siswa) {
-                // Hitung statistik absensi per bulan
-                $hadir = $this->absensiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'status' => 'Hadir'
-                ])->like('tanggal', $bulan)->countAllResults();
-                
-                $sakit = $this->absensiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'status' => 'Sakit'
-                ])->like('tanggal', $bulan)->countAllResults();
-                
-                $izin = $this->absensiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'status' => 'Izin'
-                ])->like('tanggal', $bulan)->countAllResults();
-                
-                $alpha = $this->absensiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'status' => 'Alpha'
-                ])->like('tanggal', $bulan)->countAllResults();
-                
-                $total = $hadir + $sakit + $izin + $alpha;
-                $persentase = $total > 0 ? round(($hadir / $total) * 100, 2) : 0;
-                
-                $rekap_absensi[] = [
-                    'siswa' => $siswa,
-                    'hadir' => $hadir,
-                    'sakit' => $sakit,
-                    'izin' => $izin,
-                    'alpha' => $alpha,
-                    'total' => $total,
-                    'persentase' => $persentase
-                ];
-            }
-        }
 
         $data = [
             'title' => 'Rekap Absensi',
             'guru' => $guru,
             'kelas_diampu' => $kelas_diampu,
-            'rekap_absensi' => $rekap_absensi,
-            'selected_kelas' => $kelas_id,
-            'selected_bulan' => $bulan,
-            'user' => $this->userModel->find($user_id)
+            'selected_kelas' => $kd_kelas,
+            'selected_bulan' => $bulan
         ];
+
+        if ($kd_kelas) {
+            $siswa_list = $this->siswaModel->select('nis, nama')->where('kd_kelas', $kd_kelas)->findAll();
+            $data['siswa'] = $siswa_list;
+            $data['rekap'] = $this->absensiModel->getRekapAbsensi($kd_kelas, $bulan);
+        }
 
         return view('guru/absensi/rekap', $data);
     }

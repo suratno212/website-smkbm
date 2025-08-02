@@ -174,13 +174,13 @@
                                         <td><?= date('d/m/Y', strtotime($m['created_at'] ?? 'now')) ?></td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="<?= base_url('guru/materitugas/download/' . $m['id']) ?>" class="btn btn-sm btn-outline-primary">
+                                                <a href="<?= base_url('guru/materitugas/download/' . $m['kd_materi']) ?>" class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-download"></i>
                                                 </a>
-                                                <a href="<?= base_url('guru/materitugas/editMateri/' . $m['id']) ?>" class="btn btn-sm btn-outline-warning">
+                                                <a href="<?= base_url('guru/materitugas/editMateri/' . $m['kd_materi']) ?>" class="btn btn-sm btn-outline-warning">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="<?= base_url('guru/materitugas/deleteMateri/' . $m['id']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin ingin menghapus materi ini?')">
+                                                <a href="<?= base_url('guru/materitugas/deleteMateri/' . $m['kd_materi']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin ingin menghapus materi ini?')">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </div>
@@ -236,10 +236,10 @@
                                     </div>
                                 </div>
                                 <div class="task-actions">
-                                    <a href="<?= base_url('guru/materitugas/editTugas/' . $t['id']) ?>" class="btn btn-sm btn-outline-warning">
+                                    <a href="<?= base_url('guru/materitugas/editTugas/' . $t['kd_tugas']) ?>" class="btn btn-sm btn-outline-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="<?= base_url('guru/materitugas/deleteTugas/' . $t['id']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin ingin menghapus tugas ini?')">
+                                    <a href="<?= base_url('guru/materitugas/deleteTugas/' . $t['kd_tugas']) ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Yakin ingin menghapus tugas ini?')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>

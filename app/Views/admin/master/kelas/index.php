@@ -33,11 +33,11 @@
                     <?php endif; ?>
                     <form method="get" class="mb-3 d-flex flex-wrap gap-2 align-items-end">
                         <div class="form-group mr-2">
-                            <label for="jurusan_id">Jurusan</label>
-                            <select name="jurusan_id" id="jurusan_id" class="form-control form-control-sm">
-                                <option value="">Semua Jurusan</option>
+                            <label for="kd_jurusan">Jurusan</label>
+                            <select name="kd_jurusan" id="kd_jurusan" class="form-control form-control-sm">
+                                <option value="">- Pilih Jurusan -</option>
                                 <?php foreach ($jurusan as $j) : ?>
-                                    <option value="<?= $j['id'] ?>" <?= (isset($_GET['jurusan_id']) && $_GET['jurusan_id'] == $j['id']) ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
+                                    <option value="<?= $j['kd_jurusan'] ?>" <?= (isset($_GET['kd_jurusan']) && $_GET['kd_jurusan'] == $j['kd_jurusan']) ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -75,15 +75,15 @@
                                 <?php $i = 1; ?>
                                 <?php foreach ($kelas as $k) : ?>
                                     <tr>
-                                        <td class="col-checkbox d-none"><input type="checkbox" name="ids[]" value="<?= $k['id'] ?>"></td>
+                                        <td class="col-checkbox d-none"><input type="checkbox" name="ids[]" value="<?= $k['kd_kelas'] ?>"></td>
                                         <td><?= $i++ ?></td>
                                         <td><?= $k['nama_kelas'] ?></td>
                                         <td><?= $k['tingkat'] ?></td>
                                         <td><?= $k['nama_jurusan'] ?></td>
                                         <td><?= $k['nama_wali_kelas'] ?></td>
                                         <td>
-                                            <a href="<?= base_url('admin/master/kelas/edit/' . $k['id']) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                            <form action="<?= base_url('admin/master/kelas/delete/' . $k['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
+                                            <a href="<?= base_url('admin/master/kelas/edit/' . $k['kd_kelas']) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                            <form action="<?= base_url('admin/master/kelas/delete/' . $k['kd_kelas']) ?>" method="post" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
                                                 <?= csrf_field() ?>
                                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                             </form>

@@ -50,10 +50,6 @@
                         <i class="fas fa-file-excel"></i>
                         Excel
                     </a>
-                    <a href="<?= base_url('admin/export/siswa/pdf') ?>" class="btn-export btn-pdf">
-                        <i class="fas fa-file-pdf"></i>
-                        PDF
-                    </a>
                 </div>
             </div>
         </div>
@@ -74,10 +70,6 @@
                     <a href="<?= base_url('admin/export/guru/excel') ?>" class="btn-export btn-excel">
                         <i class="fas fa-file-excel"></i>
                         Excel
-                    </a>
-                    <a href="<?= base_url('admin/export/guru/pdf') ?>" class="btn-export btn-pdf">
-                        <i class="fas fa-file-pdf"></i>
-                        PDF
                     </a>
                 </div>
             </div>
@@ -100,10 +92,6 @@
                         <i class="fas fa-file-excel"></i>
                         Excel
                     </a>
-                    <a href="<?= base_url('admin/export/jadwal/pdf') ?>" class="btn-export btn-pdf">
-                        <i class="fas fa-file-pdf"></i>
-                        PDF
-                    </a>
                 </div>
             </div>
         </div>
@@ -125,10 +113,6 @@
                         <i class="fas fa-file-excel"></i>
                         Excel
                     </a>
-                    <a href="<?= base_url('admin/export/absensi/pdf') ?>" class="btn-export btn-pdf">
-                        <i class="fas fa-file-pdf"></i>
-                        PDF
-                    </a>
                 </div>
             </div>
         </div>
@@ -149,10 +133,6 @@
                     <a href="<?= base_url('admin/export/nilai/excel') ?>" class="btn-export btn-excel">
                         <i class="fas fa-file-excel"></i>
                         Excel
-                    </a>
-                    <a href="<?= base_url('admin/export/nilai/pdf') ?>" class="btn-export btn-pdf">
-                        <i class="fas fa-file-pdf"></i>
-                        PDF
                     </a>
                 </div>
             </div>
@@ -229,221 +209,221 @@
 </div>
 
 <style>
-/* Export Styles */
-.export-card {
-    background: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-    height: 100%;
-}
+    /* Export Styles */
+    .export-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
 
-.export-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
+    .export-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
 
-.export-card-special {
-    background: linear-gradient(135deg, #1a237e, #283593);
-    color: white;
-}
+    .export-card-special {
+        background: linear-gradient(135deg, #1a237e, #283593);
+        color: white;
+    }
 
-.export-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.export-icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, #1a237e, #283593);
-    color: white;
-    flex-shrink: 0;
-}
-
-.export-card-special .export-icon {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.export-info h4 {
-    margin: 0 0 0.5rem 0;
-    font-weight: 600;
-}
-
-.export-info p {
-    margin: 0;
-    color: #666;
-    font-size: 0.9rem;
-}
-
-.export-card-special .export-info p {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.export-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-.btn-export {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.btn-excel {
-    background: #217346;
-    color: white;
-}
-
-.btn-excel:hover {
-    background: #1e6b3d;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.btn-pdf {
-    background: #dc3545;
-    color: white;
-}
-
-.btn-pdf:hover {
-    background: #c82333;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.btn-special {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.btn-special:hover {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* Export History */
-.export-history {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.history-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-
-.history-item:hover {
-    background: #e9ecef;
-    transform: translateX(5px);
-}
-
-.history-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    background: #1a237e;
-    color: white;
-}
-
-.history-content {
-    flex: 1;
-}
-
-.history-content h6 {
-    margin: 0 0 0.25rem 0;
-    font-weight: 600;
-}
-
-.history-content p {
-    margin: 0;
-    color: #666;
-    font-size: 0.8rem;
-}
-
-.history-status .badge-success {
-    background: #28a745;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 15px;
-    font-size: 0.8rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
     .export-header {
-        flex-direction: column;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
     }
-    
-    .export-actions {
+
+    .export-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
         justify-content: center;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, #1a237e, #283593);
+        color: white;
+        flex-shrink: 0;
     }
-    
-    .history-item {
+
+    .export-card-special .export-icon {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .export-info h4 {
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+
+    .export-info p {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .export-card-special .export-info p {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .export-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-export {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-excel {
+        background: #217346;
+        color: white;
+    }
+
+    .btn-excel:hover {
+        background: #1e6b3d;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-pdf {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-pdf:hover {
+        background: #c82333;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-special {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-special:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Export History */
+    .export-history {
+        display: flex;
         flex-direction: column;
-        text-align: center;
+        gap: 1rem;
     }
-}
+
+    .history-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .history-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+
+    .history-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        background: #1a237e;
+        color: white;
+    }
+
+    .history-content {
+        flex: 1;
+    }
+
+    .history-content h6 {
+        margin: 0 0 0.25rem 0;
+        font-weight: 600;
+    }
+
+    .history-content p {
+        margin: 0;
+        color: #666;
+        font-size: 0.8rem;
+    }
+
+    .history-status .badge-success {
+        background: #28a745;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .export-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .export-actions {
+            justify-content: center;
+        }
+
+        .history-item {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
 </style>
 
 <script>
-// Update waktu real-time
-function updateTime() {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('id-ID');
-    document.getElementById('current-time').textContent = timeString;
-}
+    // Update waktu real-time
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('id-ID');
+        document.getElementById('current-time').textContent = timeString;
+    }
 
-// Update waktu setiap detik
-setInterval(updateTime, 1000);
-updateTime();
+    // Update waktu setiap detik
+    setInterval(updateTime, 1000);
+    updateTime();
 
-// Add smooth animations on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const elements = document.querySelectorAll('.export-card, .modern-card');
-    
-    elements.forEach((element, index) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            element.style.transition = 'all 0.6s ease';
-            element.style.opacity = '1';
-            element.style.transform = 'translateY(0)';
-        }, index * 100);
+    // Add smooth animations on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const elements = document.querySelectorAll('.export-card, .modern-card');
+
+        elements.forEach((element, index) => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                element.style.transition = 'all 0.6s ease';
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
     });
-});
 </script>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

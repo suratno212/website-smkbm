@@ -60,94 +60,102 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($tugas as $i => $t): ?>
-                                    <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td>
-                                            <span class="badge bg-warning"><?= esc($t['nama_mapel']) ?></span>
-                                        </td>
-                                        <td>
-                                            <strong><?= esc($t['deskripsi']) ?></strong>
-                                            <?php if ($t['file']): ?>
-                                                <br>
-                                                <small class="text-muted">
-                                                    <i class="fas fa-paperclip me-1"></i>
-                                                    Ada lampiran
-                                                </small>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?= esc($t['nama_guru']) ?></td>
-                                        <td>
-                                            <?php 
-                                            $deadline = new DateTime($t['deadline']);
-                                            $now = new DateTime();
-                                            $isOverdue = $deadline < $now;
-                                            ?>
-                                            <span class="<?= $isOverdue ? 'text-danger' : 'text-success' ?>">
-                                                <i class="fas fa-clock me-1"></i>
-                                                <?= $deadline->format('d/m/Y H:i') ?>
-                                            </span>
-                                            <?php if ($isOverdue): ?>
-                                                <br><small class="text-danger">Terlambat</small>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?php
-                                            $statusClass = '';
-                                            $statusText = $t['status_pengumpulan'];
-                                            
-                                            switch ($t['status_pengumpulan']) {
-                                                case 'Dikumpulkan':
-                                                    $statusClass = 'bg-success';
-                                                    break;
-                                                case 'Belum dikumpulkan':
-                                                    if ($isOverdue) {
-                                                        $statusClass = 'bg-danger';
-                                                        $statusText = 'Terlambat';
-                                                    } else {
-                                                        $statusClass = 'bg-warning';
-                                                    }
-                                                    break;
-                                                default:
-                                                    $statusClass = 'bg-secondary';
-                                            }
-                                            ?>
-                                            <span class="badge <?= $statusClass ?>"><?= $statusText ?></span>
-                                        </td>
-                                        <td>
-                                            <?php if ($t['nilai'] !== null): ?>
-                                                <span class="badge bg-info"><?= $t['nilai'] ?></span>
-                                                <?php if ($t['catatan']): ?>
+                                        <tr>
+                                            <td><?= $i + 1 ?></td>
+                                            <td>
+                                                <span class="badge bg-warning"><?= esc($t['nama_mapel']) ?></span>
+                                            </td>
+                                            <td>
+                                                <strong><?= esc($t['deskripsi']) ?></strong>
+                                                <?php if ($t['file']): ?>
                                                     <br>
-                                                    <small class="text-muted" title="<?= esc($t['catatan']) ?>">
-                                                        <i class="fas fa-comment me-1"></i>
-                                                        Ada catatan
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-paperclip me-1"></i>
+                                                        Ada lampiran
                                                     </small>
                                                 <?php endif; ?>
-                                            <?php else: ?>
-                                                <span class="text-muted">-</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="<?= base_url('siswa/materitugas/detailTugas/' . $t['id']) ?>" 
-                                                   class="btn btn-sm btn-outline-info" title="Detail">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <?php if ($t['file']): ?>
-                                                    <a href="<?= base_url('siswa/materitugas/downloadTugas/' . $t['id']) ?>" 
-                                                       class="btn btn-sm btn-outline-primary" title="Download Lampiran">
-                                                        <i class="fas fa-download"></i>
-                                                    </a>
+                                            </td>
+                                            <td><?= esc($t['nama_guru']) ?></td>
+                                            <td>
+                                                <?php
+                                                $deadline = new DateTime($t['deadline']);
+                                                $now = new DateTime();
+                                                $isOverdue = $deadline < $now;
+                                                ?>
+                                                <span class="<?= $isOverdue ? 'text-danger' : 'text-success' ?>">
+                                                    <i class="fas fa-clock me-1"></i>
+                                                    <?= $deadline->format('d/m/Y H:i') ?>
+                                                </span>
+                                                <?php if ($isOverdue): ?>
+                                                    <br><small class="text-danger">Terlambat</small>
                                                 <?php endif; ?>
-                                                <?php if ($t['status_pengumpulan'] === 'Belum dikumpulkan' && !$isOverdue): ?>
-                                                    <a href="<?= base_url('siswa/materitugas/uploadTugas/' . $t['id']) ?>" 
-                                                       class="btn btn-sm btn-outline-success" title="Upload Tugas">
-                                                        <i class="fas fa-upload"></i>
-                                                    </a>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                $statusClass = '';
+                                                $statusText = $t['status_pengumpulan'];
+
+                                                switch ($t['status_pengumpulan']) {
+                                                    case 'dikumpulkan':
+                                                        $statusClass = 'bg-success';
+                                                        $statusText = 'Sudah Dikumpulkan';
+                                                        break;
+                                                    case 'belum_dikumpulkan':
+                                                        if ($isOverdue) {
+                                                            $statusClass = 'bg-danger';
+                                                            $statusText = 'Terlambat';
+                                                        } else {
+                                                            $statusClass = 'bg-warning';
+                                                            $statusText = 'Belum Dikumpulkan';
+                                                        }
+                                                        break;
+                                                    default:
+                                                        if ($isOverdue) {
+                                                            $statusClass = 'bg-danger';
+                                                            $statusText = 'Terlambat';
+                                                        } else {
+                                                            $statusClass = 'bg-warning';
+                                                            $statusText = 'Belum Dikumpulkan';
+                                                        }
+                                                }
+                                                ?>
+                                                <span class="badge <?= $statusClass ?>"><?= $statusText ?></span>
+                                            </td>
+                                            <td>
+                                                <?php if ($t['nilai'] !== null): ?>
+                                                    <span class="badge bg-info"><?= $t['nilai'] ?></span>
+                                                    <?php if ($t['catatan']): ?>
+                                                        <br>
+                                                        <small class="text-muted" title="<?= esc($t['catatan']) ?>">
+                                                            <i class="fas fa-comment me-1"></i>
+                                                            Ada catatan
+                                                        </small>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
                                                 <?php endif; ?>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="<?= base_url('siswa/materitugas/detailTugas/' . $t['kd_tugas']) ?>"
+                                                        class="btn btn-sm btn-outline-info" title="Detail">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <?php if ($t['file']): ?>
+                                                        <a href="<?= base_url('siswa/materitugas/downloadTugas/' . $t['kd_tugas']) ?>"
+                                                            class="btn btn-sm btn-outline-primary" title="Download Lampiran">
+                                                            <i class="fas fa-download"></i>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                    <?php if (($t['status_pengumpulan'] === 'belum_dikumpulkan' || $t['status_pengumpulan'] === 'Belum dikumpulkan') && !$isOverdue): ?>
+                                                        <a href="<?= base_url('siswa/materitugas/uploadTugas/' . $t['kd_tugas']) ?>"
+                                                            class="btn btn-sm btn-outline-success" title="Upload Tugas">
+                                                            <i class="fas fa-upload"></i>
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -186,7 +194,7 @@
                         <div class="flex-grow-1">
                             <p class="text-muted fw-medium">Sudah Dikumpulkan</p>
                             <h4 class="mb-0">
-                                <?php 
+                                <?php
                                 $submitted = 0;
                                 foreach ($tugas as $t) {
                                     if ($t['status_pengumpulan'] === 'Dikumpulkan') {
@@ -215,7 +223,7 @@
                         <div class="flex-grow-1">
                             <p class="text-muted fw-medium">Belum Dikumpulkan</p>
                             <h4 class="mb-0">
-                                <?php 
+                                <?php
                                 $notSubmitted = 0;
                                 foreach ($tugas as $t) {
                                     if ($t['status_pengumpulan'] === 'Belum dikumpulkan') {
@@ -244,7 +252,7 @@
                         <div class="flex-grow-1">
                             <p class="text-muted fw-medium">Terlambat</p>
                             <h4 class="mb-0">
-                                <?php 
+                                <?php
                                 $overdue = 0;
                                 foreach ($tugas as $t) {
                                     $deadline = new DateTime($t['deadline']);
@@ -270,4 +278,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

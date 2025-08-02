@@ -26,11 +26,11 @@
                         <div class="alert alert-danger text-center my-5"><?= $error_message ?></div>
                         <?php return; ?>
                     <?php endif; ?>
-                    <?php if ($absen_today): ?>
+                    <?php if (isset($absensi_hari_ini) && $absensi_hari_ini): ?>
                         <div class="alert alert-info">
                             Anda sudah mengisi absensi hari ini.<br>
-                            <b>Status:</b> <?= ucfirst($absen_today['status']) ?><br>
-                            <b>Keterangan:</b> <?= isset($absen_today['keterangan']) ? ($absen_today['keterangan'] ?: '-') : '-' ?>
+                            <b>Status:</b> <?= $this->getStatusTextHelper($absensi_hari_ini['status']) ?><br>
+                            <b>Keterangan:</b> <?= isset($absensi_hari_ini['keterangan']) ? ($absensi_hari_ini['keterangan'] ?: '-') : '-' ?>
                         </div>
                     <?php else: ?>
                         <form action="<?= base_url('siswa/absensi/simpan') ?>" method="post">
@@ -39,10 +39,10 @@
                                 <label class="form-label">Status Kehadiran</label>
                                 <select name="status" class="form-control" required>
                                     <option value="">-- Pilih Status --</option>
-                                    <option value="hadir">Hadir</option>
-                                    <option value="sakit">Sakit</option>
-                                    <option value="izin">Izin</option>
-                                    <option value="tidak_hadir">Tidak Hadir</option>
+                                    <option value="H">Hadir</option>
+                                    <option value="S">Sakit</option>
+                                    <option value="I">Izin</option>
+                                    <option value="A">Alpha</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -66,4 +66,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

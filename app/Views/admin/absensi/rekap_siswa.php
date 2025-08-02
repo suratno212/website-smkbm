@@ -9,8 +9,9 @@
                     <label class="form-label">Kelas</label>
                     <select name="kelas_id" class="form-select" required>
                         <option value="">Pilih Kelas</option>
+                        <option value="all" <?= $filter_kelas === 'all' ? 'selected' : '' ?>>Semua Kelas</option>
                         <?php foreach ($kelas as $k): ?>
-                            <option value="<?= $k['id'] ?>" <?= $filter_kelas == $k['id'] ? 'selected' : '' ?>><?= esc($k['nama_kelas']) ?></option>
+                            <option value="<?= $k['kd_kelas'] ?>" <?= $filter_kelas == $k['kd_kelas'] ? 'selected' : '' ?>><?= esc($k['nama_kelas']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -39,8 +40,9 @@
                     <thead class="table-dark">
                         <tr>
                             <th>No</th>
-                            <th>NISN</th>
+                            <th>NIS</th>
                             <th>Nama Siswa</th>
+                            <?php if ($filter_kelas === 'all'): ?><th>Kelas</th><?php endif; ?>
                             <th>Hadir</th>
                             <th>Sakit</th>
                             <th>Izin</th>
@@ -51,8 +53,9 @@
                         <?php foreach ($rekap as $i => $r): ?>
                         <tr>
                             <td><?= $i+1 ?></td>
-                            <td><?= esc($r['nisn']) ?></td>
+                            <td><?= esc($r['nis']) ?></td>
                             <td><?= esc($r['nama']) ?></td>
+                            <?php if ($filter_kelas === 'all'): ?><td><?= esc($r['kelas']) ?></td><?php endif; ?>
                             <td class="text-success fw-bold"><?= $r['hadir'] ?></td>
                             <td class="text-warning fw-bold"><?= $r['sakit'] ?></td>
                             <td class="text-info fw-bold"><?= $r['izin'] ?></td>

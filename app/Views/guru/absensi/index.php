@@ -41,7 +41,7 @@
                             <select name="kelas_id" id="kelas_id" class="form-control" required>
                                 <option value="">Pilih Kelas</option>
                                 <?php foreach ($kelas_diampu as $k) : ?>
-                                    <option value="<?= $k['id'] ?>"><?= $k['nama_kelas'] ?></option>
+                                    <option value="<?= $k['kd_kelas'] ?>"><?= $k['nama_kelas'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

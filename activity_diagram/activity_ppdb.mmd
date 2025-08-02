@@ -1,0 +1,11 @@
+
+%% Activity Diagram PPDB/SPMB
+flowchart TD
+    start([Start]) --> U1["Admin: Masuk ke menu PPDB/SPMB"]
+    U1 --> S1["Sistem: Menampilkan daftar pendaftar"]
+    U2["Admin: Pilih verifikasi/seleksi/penetapan"] --> U3["Admin: Simpan hasil seleksi"]
+    U3 --> S2["Sistem: Menyimpan status pendaftaran"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["Admin: Data pendaftar tidak lengkap"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U2

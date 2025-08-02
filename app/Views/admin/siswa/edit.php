@@ -21,11 +21,11 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('admin/siswa/update/' . $siswa['id']) ?>" method="post">
+                    <form action="<?= base_url('admin/siswa/update/' . $siswa['nis']) ?>" method="post">
                         <?= csrf_field() ?>
                         <div class="form-group">
-                            <label for="nisn">NISN</label>
-                            <input type="text" class="form-control" id="nisn" name="nisn" value="<?= old('nisn', $siswa['nisn']) ?>" required>
+                            <label for="nis">NIS</label>
+                            <input type="text" class="form-control" id="nis" name="nis" value="<?= old('nis', $siswa['nis']) ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="nama">Nama Lengkap</label>
@@ -36,22 +36,33 @@
                             <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= old('tanggal_lahir', $siswa['tanggal_lahir']) ?>" required>
                         </div>
                         <div class="form-group">
-                            <label for="kelas_id">Kelas</label>
-                            <select class="form-control" id="kelas_id" name="kelas_id" required>
+                            <label for="jenis_kelamin">Jenis Kelamin</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="jk_l" value="L" <?= old('jenis_kelamin', $siswa['jenis_kelamin'] ?? '') == 'L' ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="jk_l">Laki-laki</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="jk_p" value="P" <?= old('jenis_kelamin', $siswa['jenis_kelamin'] ?? '') == 'P' ? 'checked' : '' ?>>
+                                <label class="form-check-label" for="jk_p">Perempuan</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="kd_kelas">Kelas</label>
+                            <select class="form-control" id="kd_kelas" name="kd_kelas" required>
                                 <option value="">Pilih Kelas</option>
                                 <?php foreach ($kelas as $k) : ?>
-                                    <option value="<?= $k['id'] ?>" <?= old('kelas_id', $siswa['kelas_id']) == $k['id'] ? 'selected' : '' ?>>
+                                    <option value="<?= $k['kd_kelas'] ?>" <?= old('kd_kelas', $siswa['kd_kelas']) == $k['kd_kelas'] ? 'selected' : '' ?>>
                                         <?= $k['nama_kelas'] ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="jurusan_id">Jurusan</label>
-                            <select class="form-control" id="jurusan_id" name="jurusan_id" required>
+                            <label for="kd_jurusan">Jurusan</label>
+                            <select class="form-control" id="kd_jurusan" name="kd_jurusan" required>
                                 <option value="">Pilih Jurusan</option>
                                 <?php foreach ($jurusan as $j) : ?>
-                                    <option value="<?= $j['id'] ?>" <?= old('jurusan_id', $siswa['jurusan_id']) == $j['id'] ? 'selected' : '' ?>>
+                                    <option value="<?= $j['kd_jurusan'] ?>" <?= old('kd_jurusan', $siswa['kd_jurusan']) == $j['kd_jurusan'] ? 'selected' : '' ?>>
                                         <?= $j['nama_jurusan'] ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -77,6 +88,10 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?= old('email', $siswa['email'] ?? '') ?>" required>
+                        </div>
+                        <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                             <a href="<?= base_url('admin/siswa') ?>" class="btn btn-secondary">Kembali</a>
                         </div>
@@ -86,4 +101,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

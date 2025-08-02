@@ -11,7 +11,7 @@
                     <select name="kelas_id" class="form-select" required>
                         <option value="">Pilih Kelas</option>
                         <?php foreach ($kelas as $k): ?>
-                            <option value="<?= $k['id'] ?>" <?= $filter_kelas == $k['id'] ? 'selected' : '' ?>><?= esc($k['nama_kelas']) ?></option>
+                            <option value="<?= $k['kd_kelas'] ?>" <?= $filter_kelas == $k['kd_kelas'] ? 'selected' : '' ?>><?= esc($k['nama_kelas']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

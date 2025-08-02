@@ -9,11 +9,9 @@ class CreateTahunAkademikTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_tahun_akademik' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'tahun' => [
                 'type'       => 'VARCHAR',
@@ -22,6 +20,11 @@ class CreateTahunAkademikTable extends Migration
             'semester' => [
                 'type'       => 'ENUM',
                 'constraint' => ['Ganjil', 'Genap'],
+            ],
+            'status' => [
+                'type' => 'VARCHAR',
+                'constraint' => '20',
+                'default' => 'Aktif',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -32,7 +35,7 @@ class CreateTahunAkademikTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+        $this->forge->addKey('kd_tahun_akademik', true); // PRIMARY KEY
         $this->forge->createTable('tahun_akademik');
     }
 

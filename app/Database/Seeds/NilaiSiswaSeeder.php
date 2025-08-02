@@ -33,7 +33,7 @@ class NilaiSiswaSeeder extends Seeder
         }
         
         // Hapus data nilai yang sudah ada untuk menghindari duplikasi
-        $this->db->table('nilai')->where('tahun_akademik_id', $tahunAkademik->id)->delete();
+        $this->db->table('nilai')->where('kd_tahun_akademik', $tahunAkademik->kd_tahun_akademik)->delete();
         
         // Tambah nilai untuk setiap siswa
         foreach ($siswa as $s) {
@@ -45,9 +45,9 @@ class NilaiSiswaSeeder extends Seeder
                 $akhir = round(($uts * 0.3) + ($uas * 0.4) + ($tugas * 0.3));
                 
                 $this->db->table('nilai')->insert([
-                    'siswa_id' => $s['id'],
-                    'mapel_id' => $m['id'],
-                    'tahun_akademik_id' => $tahunAkademik->id,
+                    'nis' => $s['nis'],
+                    'kd_mapel' => $m['kd_mapel'],
+                    'kd_tahun_akademik' => $tahunAkademik->kd_tahun_akademik,
                     'semester' => $tahunAkademik->semester,
                     'uts' => $uts,
                     'uas' => $uas,

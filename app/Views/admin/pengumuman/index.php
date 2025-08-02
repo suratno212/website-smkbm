@@ -56,7 +56,7 @@
                                         </td>
                                         <td>
                                             <?php if ($p['file']) : ?>
-                                                <a href="<?= base_url('admin/pengumuman/download/' . $p['id']) ?>" class="btn btn-success btn-sm">
+                                                <a href="<?= base_url('admin/pengumuman/download/' . $p['kd_pengumuman']) ?>" class="btn btn-success btn-sm">
                                                     <i class="fas fa-download"></i> Download
                                                 </a>
                                             <?php else : ?>
@@ -70,10 +70,10 @@
                                         </td>
                                         <td><?= date('d/m/Y H:i', strtotime($p['created_at'])) ?></td>
                                         <td>
-                                            <a href="<?= base_url('admin/pengumuman/edit/' . $p['id']) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('admin/pengumuman/edit/' . $p['kd_pengumuman']) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="<?= base_url('admin/pengumuman/delete/' . $p['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                            <form action="<?= base_url('admin/pengumuman/delete/' . $p['kd_pengumuman']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                 <button type="submit" class="btn btn-danger btn-sm">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -89,4 +89,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

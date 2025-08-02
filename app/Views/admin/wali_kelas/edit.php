@@ -25,17 +25,17 @@
                                 <?= csrf_field() ?>
                                 
                                 <div class="form-group">
-                                    <label for="tahun_akademik_id">Tahun Akademik</label>
-                                    <select name="tahun_akademik_id" id="tahun_akademik_id" class="form-control <?= ($validation->hasError('tahun_akademik_id')) ? 'is-invalid' : '' ?>">
+                                    <label for="kd_tahun_akademik">Tahun Akademik</label>
+                                    <select name="kd_tahun_akademik" id="kd_tahun_akademik" class="form-control <?= ($validation->hasError('kd_tahun_akademik')) ? 'is-invalid' : '' ?>">
                                         <option value="">Pilih Tahun Akademik</option>
                                         <?php foreach ($tahun_akademik as $ta) : ?>
-                                            <option value="<?= $ta['id'] ?>" <?= (old('tahun_akademik_id', $wali_kelas['tahun_akademik_id']) == $ta['id']) ? 'selected' : '' ?>>
+                                            <option value="<?= $ta['kd_tahun_akademik'] ?>" <?= (old('kd_tahun_akademik', $wali_kelas['kd_tahun_akademik']) == $ta['kd_tahun_akademik']) ? 'selected' : '' ?>>
                                                 <?= $ta['tahun'] ?> - Semester <?= $ta['semester'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                     <div class="invalid-feedback">
-                                        <?= $validation->getError('tahun_akademik_id') ?>
+                                        <?= $validation->getError('kd_tahun_akademik') ?>
                                     </div>
                                 </div>
 
@@ -55,17 +55,17 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="guru_id">Guru</label>
-                                    <select name="guru_id" id="guru_id" class="form-control <?= ($validation->hasError('guru_id')) ? 'is-invalid' : '' ?>">
+                                    <label for="nik_nip">Guru</label>
+                                    <select name="nik_nip" id="nik_nip" class="form-control <?= ($validation->hasError('nik_nip')) ? 'is-invalid' : '' ?>">
                                         <option value="">Pilih Guru</option>
                                         <?php foreach ($guru as $g) : ?>
-                                            <option value="<?= $g['id'] ?>" <?= (old('guru_id', $wali_kelas['guru_id']) == $g['id']) ? 'selected' : '' ?>>
+                                            <option value="<?= $g['nik_nip'] ?>" <?= (old('nik_nip', $wali_kelas['nik_nip']) == $g['nik_nip']) ? 'selected' : '' ?>>
                                                 <?= $g['nama'] ?> (<?= $g['nama_mapel'] ?>)
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                     <div class="invalid-feedback">
-                                        <?= $validation->getError('guru_id') ?>
+                                        <?= $validation->getError('nik_nip') ?>
                                     </div>
                                 </div>
 

@@ -1,0 +1,11 @@
+
+%% Activity Diagram Kelola Absensi
+flowchart TD
+    start([Start]) --> U1["Guru/Siswa: Masuk ke menu absensi"]
+    U1 --> S1["Sistem: Menampilkan daftar siswa/form absensi"]
+    U2["Guru/Siswa: Mengisi status kehadiran"] --> U3["Guru/Siswa: Tekan simpan"]
+    U3 --> S2["Sistem: Menyimpan data absensi"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["Guru/Siswa: Data absensi tidak lengkap"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U2

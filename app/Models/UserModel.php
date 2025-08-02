@@ -8,7 +8,7 @@ class UserModel extends Model
 {
     protected $table = 'users';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['username', 'password', 'email', 'role', 'foto'];
+    protected $allowedFields = ['username', 'password', 'email', 'role', 'foto', 'nama'];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
@@ -17,7 +17,7 @@ class UserModel extends Model
         'username' => 'required|min_length[3]',
         'email' => 'required|valid_email',
         'password' => 'permit_empty|min_length[6]',
-        'role' => 'required|in_list[admin,guru,siswa,kepala_sekolah]'
+        'role' => 'required|in_list[admin,guru,siswa,kepala_sekolah,calon_siswa]'
     ];
 
     protected $validationMessages = [
@@ -52,4 +52,4 @@ class UserModel extends Model
     {
         return password_verify($password, $hash);
     }
-} 
+}

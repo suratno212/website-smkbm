@@ -41,14 +41,14 @@
                                 <?php $i = 1; ?>
                                 <?php foreach ($mapel as $m) : ?>
                                     <tr>
-                                        <td class="col-checkbox d-none"><input type="checkbox" name="mapel_ids[]" value="<?= $m['id'] ?>"></td>
+                                        <td class="col-checkbox d-none"><input type="checkbox" name="mapel_ids[]" value="<?= $m['kd_mapel'] ?>"></td>
                                         <td><?= $i++ ?></td>
                                         <td><?= $m['nama_mapel'] ?></td>
                                         <td>
-                                            <a href="<?= base_url('admin/master/mapel/edit/' . $m['id']) ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('admin/master/mapel/edit/' . $m['kd_mapel']) ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="<?= base_url('admin/master/mapel/delete/' . $m['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                            <form action="<?= base_url('admin/master/mapel/delete/' . $m['kd_mapel']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                 <?= csrf_field() ?>
                                                 <button type="submit" class="btn btn-danger btn-sm">
                                                     <i class="fas fa-trash"></i>

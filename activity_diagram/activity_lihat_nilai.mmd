@@ -1,0 +1,8 @@
+
+%% Activity Diagram Lihat Nilai
+flowchart TD
+    start([Start]) --> U1["Siswa: Masuk ke menu nilai"]
+    U1 --> S1["Sistem: Menampilkan daftar nilai"]
+    S1 --> end([End])
+    U2["Siswa: Data nilai tidak ditemukan"] --> S2["Sistem: Menampilkan pesan error"]
+    S2 --> U1

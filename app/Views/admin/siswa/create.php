@@ -28,32 +28,40 @@
                             <input type="text" class="form-control" id="nis" name="nis" value="<?= old('nis') ?>" required>
                         </div>
                         <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?= old('email') ?>" required>
+                        </div>
+                        <div class="form-group">
                             <label for="nama">Nama Lengkap</label>
                             <input type="text" class="form-control" id="nama" name="nama" value="<?= old('nama') ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="jenis_kelamin">Jenis Kelamin</label>
+                            <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="L" <?= old('jenis_kelamin') == 'L' ? 'selected' : '' ?>>Laki-laki</option>
+                                <option value="P" <?= old('jenis_kelamin') == 'P' ? 'selected' : '' ?>>Perempuan</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="tanggal_lahir">Tanggal Lahir</label>
                             <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= old('tanggal_lahir') ?>" required>
                         </div>
                         <div class="form-group">
-                            <label for="kelas_id">Kelas</label>
-                            <select class="form-control" id="kelas_id" name="kelas_id" required>
-                                <option value="">Pilih Kelas</option>
-                                <?php foreach ($kelas as $k) : ?>
-                                    <option value="<?= $k['id'] ?>" <?= old('kelas_id') == $k['id'] ? 'selected' : '' ?>>
-                                        <?= $k['nama_kelas'] ?>
-                                    </option>
+                            <label for="kd_kelas">Kelas</label>
+                            <select class="form-control" id="kd_kelas" name="kd_kelas" required>
+                                <option value="">- Pilih Kelas -</option>
+                                <?php foreach ($kelas as $k): ?>
+                                    <option value="<?= $k['kd_kelas'] ?>" <?= old('kd_kelas') == $k['kd_kelas'] ? 'selected' : '' ?>><?= $k['nama_kelas'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="jurusan_id">Jurusan</label>
-                            <select class="form-control" id="jurusan_id" name="jurusan_id" required>
-                                <option value="">Pilih Jurusan</option>
-                                <?php foreach ($jurusan as $j) : ?>
-                                    <option value="<?= $j['id'] ?>" <?= old('jurusan_id') == $j['id'] ? 'selected' : '' ?>>
-                                        <?= $j['nama_jurusan'] ?>
-                                    </option>
+                            <label for="kd_jurusan">Jurusan</label>
+                            <select class="form-control" id="kd_jurusan" name="kd_jurusan" required>
+                                <option value="">- Pilih Jurusan -</option>
+                                <?php foreach ($jurusan as $j): ?>
+                                    <option value="<?= $j['kd_jurusan'] ?>" <?= old('kd_jurusan') == $j['kd_jurusan'] ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

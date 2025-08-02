@@ -1,0 +1,11 @@
+
+%% Activity Diagram Input Nilai
+flowchart TD
+    start([Start]) --> U1["Guru: Masuk ke menu nilai"]
+    U1 --> S1["Sistem: Menampilkan daftar siswa dan form nilai"]
+    U2["Guru: Mengisi nilai"] --> U3["Guru: Tekan simpan"]
+    U3 --> S2["Sistem: Menyimpan nilai ke database"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["Guru: Nilai tidak diisi"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U2

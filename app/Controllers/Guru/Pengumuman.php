@@ -39,7 +39,7 @@ class Pengumuman extends BaseController
 
     public function download($id)
     {
-        $pengumuman = $this->pengumumanModel->find($id);
+        $pengumuman = $this->pengumumanModel->where('kd_pengumuman', $id)->first();
         if (!$pengumuman || !$pengumuman['file']) {
             return redirect()->back()->with('error', 'File tidak ditemukan');
         }
@@ -51,4 +51,4 @@ class Pengumuman extends BaseController
 
         return $this->response->download($filePath, $pengumuman['file']);
     }
-} 
+}

@@ -8,7 +8,7 @@ class SpmbModel extends Model
     protected $allowedFields = [
         'no_pendaftaran', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir',
         'agama_id', 'alamat', 'asal_sekolah', 'nama_ortu', 'no_hp_ortu', 'email', 'no_hp',
-        'jurusan_id', 'nisn', 'status_pendaftaran', 'catatan', 'created_at', 'updated_at'
+        'jurusan_pilihan', 'nis', 'status_pendaftaran', 'catatan', 'created_at', 'updated_at'
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
@@ -38,7 +38,7 @@ class SpmbModel extends Model
     {
         $builder = $this->select('spmb.*, agama.nama_agama, jurusan.nama_jurusan')
             ->join('agama', 'agama.id = spmb.agama_id', 'left')
-            ->join('jurusan', 'jurusan.id = spmb.jurusan_id', 'left');
+            ->join('jurusan', 'jurusan.kd_jurusan = spmb.jurusan_pilihan', 'left');
 
         if (!empty($filters['nama'])) {
             $builder->like('spmb.nama_lengkap', $filters['nama']);
@@ -50,7 +50,7 @@ class SpmbModel extends Model
             $builder->where('spmb.status_pendaftaran', $filters['status']);
         }
         if (!empty($filters['jurusan'])) {
-            $builder->where('spmb.jurusan_id', $filters['jurusan']);
+            $builder->where('spmb.kd_jurusan', $filters['jurusan']);
         }
 
         return $builder->orderBy('spmb.created_at', 'DESC')->findAll();

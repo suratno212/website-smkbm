@@ -1,0 +1,12 @@
+
+%% Activity Diagram Kelola Data Master
+flowchart TD
+    start([Start]) --> U1["Admin: Masuk ke menu data master"]
+    U1 --> S1["Sistem: Menampilkan daftar data master"]
+    U2["Admin: Pilih tambah/edit/hapus"] --> U3["Admin: Isi data"]
+    U3 --> U4["Admin: Tekan simpan"]
+    U4 --> S2["Sistem: Menyimpan perubahan"]
+    S1 --> U2
+    S2 --> end([End])
+    U5["Admin: Data tidak lengkap"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U3

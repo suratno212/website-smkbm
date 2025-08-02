@@ -10,14 +10,18 @@ class WaliKelasSeeder extends Seeder
     {
         $data = [
             [
-                'guru_id'  => 1,
-                'kelas_id' => 1,
-                'tahun_akademik_id' => 1,
+                'kd_kelas' => 'X-TKJ-1',
+                'nik_nip' => '198001010001',
+                'kd_tahun_akademik' => '2024GJ',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
             [
-                'guru_id'  => 1,
-                'kelas_id' => 2,
-                'tahun_akademik_id' => 1,
+                'kd_kelas' => 'X-TKJ-2',
+                'nik_nip' => '198101010002',
+                'kd_tahun_akademik' => '2024GJ',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ],
         ];
 

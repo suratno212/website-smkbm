@@ -6,34 +6,58 @@ use CodeIgniter\Model;
 
 class SiswaModel extends Model
 {
-    protected $table = 'siswa';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'nisn', 'nama', 'tanggal_lahir', 'jenis_kelamin', 'agama_id', 'kelas_id', 'jurusan_id', 'alamat', 'no_hp'];
+    protected $table            = 'siswa';
+    protected $primaryKey       = 'nis';
+    protected $useAutoIncrement = false;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $allowedFields = ['user_id', 'nis', 'nama', 'tanggal_lahir', 'jenis_kelamin', 'agama_id', 'kd_kelas', 'kd_jurusan', 'alamat', 'no_hp'];
+
+    // Dates
     protected $useTimestamps = true;
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
     public function getSiswaWithRelations($filters = [])
     {
-        $builder = $this->select('siswa.*, kelas.nama_kelas, jurusan.nama_jurusan, agama.nama_agama')
-                    ->join('kelas', 'kelas.id = siswa.kelas_id')
-                    ->join('jurusan', 'jurusan.id = siswa.jurusan_id')
-                    ->join('agama', 'agama.id = siswa.agama_id', 'left');
+        $builder = $this->db->table('siswa')
+            ->select('siswa.*, kelas.nama_kelas, jurusan.nama_jurusan, agama.nama_agama, users.username, users.email')
+            ->join('kelas', 'kelas.kd_kelas = siswa.kd_kelas')
+            ->join('jurusan', 'jurusan.kd_jurusan = siswa.kd_jurusan')
+            ->join('agama', 'agama.id = siswa.agama_id', 'left')
+            ->join('users', 'users.id = siswa.user_id', 'left');
 
-        // Terapkan filter jika ada
+        // Apply filters
         if (!empty($filters['nis'])) {
-            $builder->like('siswa.nisn', $filters['nis']);
+            $builder->like('siswa.nis', $filters['nis']);
         }
         if (!empty($filters['nama'])) {
             $builder->like('siswa.nama', $filters['nama']);
         }
-        if (!empty($filters['kelas_id'])) {
-            $builder->where('siswa.kelas_id', $filters['kelas_id']);
+        if (!empty($filters['kd_kelas'])) {
+            $builder->where('siswa.kd_kelas', $filters['kd_kelas']);
         }
-        if (!empty($filters['jurusan_id'])) {
-            $builder->where('siswa.jurusan_id', $filters['jurusan_id']);
+        if (!empty($filters['kd_jurusan'])) {
+            $builder->where('siswa.kd_jurusan', $filters['kd_jurusan']);
         }
 
-        return $builder->findAll();
+        return $builder->get()->getResultArray();
     }
+
+    // Validation
+    protected $validationRules      = [
+        'nis' => 'required|is_unique[siswa.nis]',
+        'nama' => 'required',
+        'tanggal_lahir' => 'required|valid_date',
+        'jenis_kelamin' => 'required|in_list[L,P]',
+        'agama_id' => 'required|numeric',
+        'kd_kelas' => 'required',
+        'kd_jurusan' => 'required',
+        'alamat' => 'required',
+        'no_hp' => 'required|numeric'
+    ];
+    protected $validationMessages   = [];
+    protected $skipValidation       = false;
+    protected $cleanValidationRules = true;
 } 

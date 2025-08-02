@@ -9,15 +9,17 @@ class CreateMapelTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_mapel' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
             'nama_mapel' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '100',
+            ],
+            'kelompok' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -28,7 +30,7 @@ class CreateMapelTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+        $this->forge->addKey('kd_mapel', true); // PRIMARY KEY
         $this->forge->createTable('mapel');
     }
 

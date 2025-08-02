@@ -19,6 +19,7 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="<?= base_url('admin/users/store') ?>" method="post" enctype="multipart/form-data">
+                                <?= csrf_field() ?>
                                 <div class="form-group">
                                     <label for="username">Username</label>
                                     <input type="text" name="username" id="username" class="form-control <?= session('errors.username') ? 'is-invalid' : '' ?>" value="<?= old('username') ?>" required>

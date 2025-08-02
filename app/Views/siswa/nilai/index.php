@@ -1,3 +1,30 @@
+<style>
+    .avatar-title, .mini-stat-icon, .stat-icon {
+        background: linear-gradient(135deg, #1a237e 60%, #1976d2 100%) !important;
+        border: 2px solid #fff;
+        box-shadow: 0 4px 16px rgba(26,35,126,0.12), 0 1.5px 4px rgba(25,118,210,0.10);
+        transition: box-shadow 0.2s, transform 0.2s;
+        width: 48px !important;
+        height: 48px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+    .avatar-title:hover, .mini-stat-icon:hover, .stat-icon:hover {
+        box-shadow: 0 8px 32px rgba(26,35,126,0.18), 0 3px 8px rgba(25,118,210,0.16);
+        transform: scale(1.08);
+    }
+    .stat-icon i {
+        color: #fff !important;
+        font-size: 1.7rem !important;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.10));
+    }
+    .bg-primary, .bg-success, .bg-warning, .bg-info, .bg-danger {
+        border: none !important;
+    }
+</style>
 <?= $this->extend('layout/siswa') ?>
 
 <?= $this->section('content') ?>
@@ -38,7 +65,7 @@
                                         </tr>
                                         <tr>
                                             <td><strong>NIS:</strong></td>
-                                            <td><?= esc($siswa['nisn']) ?></td>
+                                            <td><?= esc($siswa['nis']) ?></td>
                                         </tr>
                                         <tr>
                                             <td><strong>Kelas:</strong></td>
@@ -89,10 +116,8 @@
                             <h4 class="mb-0"><?= count($nilai) ?></h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary d-flex align-items-center justify-content-center shadow">
-                                <span class="avatar-title">
-                                    <i class="fas fa-book text-white fs-5"></i>
-                                </span>
+                            <div class="stat-icon">
+                                <i class="fas fa-layer-group"></i>
                             </div>
                         </div>
                     </div>
@@ -108,10 +133,8 @@
                             <h4 class="mb-0"><?= number_format($rataRata, 2) ?></h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-success d-flex align-items-center justify-content-center shadow">
-                                <span class="avatar-title">
-                                    <i class="fas fa-chart-line text-white fs-5"></i>
-                                </span>
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
                     </div>
@@ -127,10 +150,8 @@
                             <h4 class="mb-0"><?= $peringkat ?></h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-warning d-flex align-items-center justify-content-center shadow">
-                                <span class="avatar-title">
-                                    <i class="fas fa-trophy text-white fs-5"></i>
-                                </span>
+                            <div class="stat-icon">
+                                <i class="fas fa-trophy"></i>
                             </div>
                         </div>
                     </div>
@@ -152,10 +173,8 @@
                             </h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle <?= $rataRata >= 70 ? 'bg-success' : 'bg-danger' ?> d-flex align-items-center justify-content-center shadow">
-                                <span class="avatar-title">
-                                    <i class="fas <?= $rataRata >= 70 ? 'fa-check' : 'fa-times' ?> text-white fs-5"></i>
-                                </span>
+                            <div class="stat-icon">
+                                <i class="fas <?= $rataRata >= 70 ? 'fa-check' : 'fa-times' ?>"></i>
                             </div>
                         </div>
                     </div>
@@ -218,41 +237,41 @@
                                             <strong><?= esc($n['nama_mapel']) ?></strong>
                                         </td>
                                         <td>
-                                            <?php if ($n['uts'] !== null): ?>
-                                                <span class="badge bg-info"><?= $n['uts'] ?></span>
+                                            <?php if ($n['nilai_uts'] !== null): ?>
+                                                <span class="badge bg-info"><?= $n['nilai_uts'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <?php if ($n['uas'] !== null): ?>
-                                                <span class="badge bg-warning"><?= $n['uas'] ?></span>
+                                            <?php if ($n['nilai_uas'] !== null): ?>
+                                                <span class="badge bg-warning"><?= $n['nilai_uas'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <?php if ($n['tugas'] !== null): ?>
-                                                <span class="badge bg-success"><?= $n['tugas'] ?></span>
+                                            <?php if ($n['nilai_tugas'] !== null): ?>
+                                                <span class="badge bg-success"><?= $n['nilai_tugas'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <?php if ($n['akhir'] !== null): ?>
+                                            <?php if ($n['nilai_akhir'] !== null): ?>
                                                 <?php
                                                 $grade = '';
                                                 $gradeClass = '';
-                                                if ($n['akhir'] >= 90) {
+                                                if ($n['nilai_akhir'] >= 90) {
                                                     $grade = 'A';
                                                     $gradeClass = 'bg-success';
-                                                } elseif ($n['akhir'] >= 80) {
+                                                } elseif ($n['nilai_akhir'] >= 80) {
                                                     $grade = 'B';
                                                     $gradeClass = 'bg-info';
-                                                } elseif ($n['akhir'] >= 70) {
+                                                } elseif ($n['nilai_akhir'] >= 70) {
                                                     $grade = 'C';
                                                     $gradeClass = 'bg-warning';
-                                                } elseif ($n['akhir'] >= 60) {
+                                                } elseif ($n['nilai_akhir'] >= 60) {
                                                     $grade = 'D';
                                                     $gradeClass = 'bg-danger';
                                                 } else {
@@ -260,20 +279,20 @@
                                                     $gradeClass = 'bg-dark';
                                                 }
                                                 ?>
-                                                <span class="badge <?= $gradeClass ?>"><?= $n['akhir'] ?></span>
+                                                <span class="badge <?= $gradeClass ?>"><?= $n['nilai_akhir'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <?php if ($n['akhir'] !== null): ?>
+                                            <?php if ($n['nilai_akhir'] !== null): ?>
                                                 <span class="badge <?= $gradeClass ?>"><?= $grade ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a href="<?= base_url('siswa/nilai/detail/' . $n['mapel_id']) ?>" class="btn btn-sm btn-outline-primary" aria-label="Lihat Detail Nilai">
+                                            <a href="<?= base_url('siswa/nilai/detail/' . $n['kd_mapel']) ?>" class="btn btn-sm btn-outline-primary" aria-label="Lihat Detail Nilai">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>

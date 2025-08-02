@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -6,9 +7,20 @@ use CodeIgniter\Model;
 class MateriModel extends Model
 {
     protected $table = 'materi';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'kd_materi';
     protected $allowedFields = [
-        'guru_id', 'mapel_id', 'kelas_id', 'judul', 'deskripsi', 'file'
+        'kd_materi',
+        'nik_nip',
+        'kd_mapel',
+        'kd_kelas',
+        'judul',
+        'deskripsi',
+        'file',
+        'video_url',
+        'created_at',
+        'updated_at'
     ];
-    protected $useTimestamps = false;
-} 
+    protected $useTimestamps = true;
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
+}

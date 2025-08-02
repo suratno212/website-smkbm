@@ -5,109 +5,141 @@ namespace App\Controllers\Guru;
 use App\Controllers\BaseController;
 use App\Models\NilaiModel;
 use App\Models\SiswaModel;
-use App\Models\MapelModel;
-use App\Models\KelasModel;
-use App\Models\GuruModel;
 use App\Models\JadwalModel;
+use App\Models\GuruModel;
 use App\Models\TahunAkademikModel;
 
 class Nilai extends BaseController
 {
     protected $nilaiModel;
     protected $siswaModel;
-    protected $mapelModel;
-    protected $kelasModel;
-    protected $guruModel;
     protected $jadwalModel;
+    protected $guruModel;
+    protected $tahunAkademikModel;
 
     public function __construct()
     {
         $this->nilaiModel = new NilaiModel();
         $this->siswaModel = new SiswaModel();
-        $this->mapelModel = new MapelModel();
-        $this->kelasModel = new KelasModel();
-        $this->guruModel = new GuruModel();
         $this->jadwalModel = new JadwalModel();
+        $this->guruModel = new GuruModel();
+        $this->tahunAkademikModel = new TahunAkademikModel();
     }
 
     public function index()
     {
-        $guruId = session()->get('user_id');
-        $guru = $this->guruModel->where('user_id', $guruId)->first();
-        if (!$guru) {
-            return redirect()->to(base_url('guru/dashboard'))->with('error', 'Data guru tidak ditemukan. Pastikan data guru sudah terdaftar dan user_id sesuai.');
-        }
-        $kelasList = $this->jadwalModel
-            ->select('kelas.*, jurusan.nama_jurusan')
-            ->join('kelas', 'kelas.id = jadwal.kelas_id')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
-            ->where('jadwal.guru_id', $guru['id'])
-            ->groupBy('kelas.id')
+        $nik_nip = session()->get('nik_nip');
+        $guru = $this->guruModel->find($nik_nip);
+
+        // Get classes taught by this guru
+        $kelas_diampu = $this->jadwalModel->select('DISTINCT(kelas.kd_kelas), kelas.nama_kelas')
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->where('jadwal.nik_nip', $nik_nip)
             ->findAll();
+
+        // Get classes where this guru is wali kelas
+        $kelasModel = new \App\Models\KelasModel();
+        $kelas_wali = $kelasModel->where('wali_kelas_nik_nip', $nik_nip)->findAll();
+
+        // Gabungkan kelas diampu dan kelas wali (tanpa duplikat)
+        $all_kelas = $kelas_diampu;
+        foreach ($kelas_wali as $kw) {
+            $found = false;
+            foreach ($all_kelas as $k) {
+                if ($k['kd_kelas'] == $kw['kd_kelas']) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                $all_kelas[] = [
+                    'kd_kelas' => $kw['kd_kelas'],
+                    'nama_kelas' => $kw['nama_kelas']
+                ];
+            }
+        }
+
+        $kd_kelas_diampu = array_column($all_kelas, 'kd_kelas');
+        $kelasList = [];
+        if (!empty($kd_kelas_diampu)) {
+            $allKelas = $kelasModel->getKelasWithJurusan();
+            foreach ($allKelas as $k) {
+                if (in_array($k['kd_kelas'], $kd_kelas_diampu)) {
+                    $kelasList[] = $k;
+                }
+            }
+        }
+        $mapelList = [];
+        // Ambil mapel yang diajar guru
+        if ($guru && isset($guru['kd_mapel'])) {
+            $mapelList[] = [
+                'id' => $guru['kd_mapel'],
+                'nama_mapel' => $guru['kd_mapel'] // atau ambil nama mapel dari tabel mapel jika perlu
+            ];
+        }
         $data = [
-            'title' => 'Kelola Nilai',
+            'title' => 'Input Nilai',
             'guru' => $guru,
+            'kelas_diampu' => $kelas_diampu,
             'kelasList' => $kelasList,
-            'mapelList' => $this->mapelModel->findAll(),
-            'user' => session()->get('user')
+            'mapelList' => $mapelList
         ];
+
         return view('guru/nilai/index', $data);
     }
 
     public function input()
     {
-        $kelasId = $this->request->getGet('kelas_id');
-        $mapelId = $this->request->getGet('mapel_id');
+        $nik_nip = session()->get('nik_nip');
+        $kd_kelas = $this->request->getGet('kd_kelas');
         $semester = $this->request->getGet('semester') ?? 'Ganjil';
 
-        if (!$kelasId || !$mapelId) {
-            return redirect()->to('guru/nilai')->with('error', 'Pilih kelas dan mata pelajaran terlebih dahulu');
+        // Get current academic year
+        $tahunAkademik = $this->tahunAkademikModel->where('status', 'Aktif')->first();
+        $tahunAkademikId = $tahunAkademik ? $tahunAkademik['kd_tahun_akademik'] : 1;
+
+        // Get students in the class
+        $siswa_list = [];
+        if ($kd_kelas) {
+            $siswa_list = $this->siswaModel->select('nis, nama')
+                ->where('kd_kelas', $kd_kelas)
+                ->findAll();
+
+            // Get existing grades
+            foreach ($siswa_list as &$siswa) {
+                $nilai = $this->nilaiModel->where([
+                    'nis' => $siswa['nis'],
+                    'kd_kelas' => $kd_kelas,
+                    'kd_mapel' => $this->guruModel->find($nik_nip)['kd_mapel'],
+                    'tahun_akademik_id' => $tahunAkademikId,
+                    'semester' => $semester
+                ])->first();
+
+                $siswa['nilai'] = $nilai;
+            }
         }
 
-        $guruId = session()->get('user_id');
-        
-        // Get students in the selected class
-        $siswaList = $this->siswaModel->select('siswa.*, kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = siswa.kelas_id')
-            ->where('siswa.kelas_id', $kelasId)
-            ->findAll();
-
-        // Ambil tahun akademik aktif
-        $tahunAkademikModel = new TahunAkademikModel();
-        $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
-        $tahun_akademik_id = $tahunAkademikAktif ? $tahunAkademikAktif['id'] : null;
-
-        // DEBUG: log ke file jika tahun_akademik_id null atau tidak
-        if (!$tahun_akademik_id) {
-            log_message('error', 'DEBUG NILAI: tahun_akademik_id NULL di input nilai!');
-        } else {
-            log_message('info', 'DEBUG NILAI: tahun_akademik_id=' . $tahun_akademik_id . ' di input nilai!');
+        $kelas = null;
+        $mapel = null;
+        if ($kd_kelas) {
+            $kelasModel = new \App\Models\KelasModel();
+            $kelas = $kelasModel->find($kd_kelas);
+            $guru = $this->guruModel->find($nik_nip);
+            if ($guru && isset($guru['kd_mapel'])) {
+                $mapelModel = new \App\Models\MapelModel();
+                $mapel = $mapelModel->where('kd_mapel', $guru['kd_mapel'])->first();
+            }
         }
-
-        // Get existing grades
-        $nilaiList = $this->nilaiModel->where([
-            'mapel_id' => $mapelId,
-            'semester' => $semester,
-            'tahun_akademik_id' => $tahun_akademik_id
-        ])->findAll();
-
-        // Create a map of existing grades
-        $nilaiMap = [];
-        foreach ($nilaiList as $nilai) {
-            $nilaiMap[$nilai['siswa_id']] = $nilai;
-        }
-
         $data = [
             'title' => 'Input Nilai',
-            'kelasId' => $kelasId,
-            'mapelId' => $mapelId,
-            'semester' => $semester,
-            'siswaList' => $siswaList,
-            'nilaiMap' => $nilaiMap,
-            'mapel' => $this->mapelModel->find($mapelId),
-            'kelas' => $this->kelasModel->find($kelasId),
-            'user' => session()->get('user'),
-            'tahun_akademik_id' => $tahun_akademik_id
+            'siswa_list' => $siswa_list,
+            'selected_kelas' => $kd_kelas,
+            'selected_semester' => $semester,
+            'tahun_akademik' => $tahunAkademik,
+            'tahun_akademik_id' => $tahunAkademikId,
+            'kelas' => $kelas,
+            'mapel' => $mapel,
+            'semester' => $semester
         ];
 
         return view('guru/nilai/input', $data);
@@ -115,144 +147,115 @@ class Nilai extends BaseController
 
     public function store()
     {
-        $kelasId = $this->request->getPost('kelas_id');
-        $mapelId = $this->request->getPost('mapel_id');
-        $semester = $this->request->getPost('semester') ?? 'Ganjil';
-        $tahunAkademikId = $this->request->getPost('tahun_akademik_id');
-        $siswaIds = $this->request->getPost('siswa_id');
-        $utsScores = $this->request->getPost('uts');
-        $uasScores = $this->request->getPost('uas');
-        $tugasScores = $this->request->getPost('tugas');
+        $nik_nip = session()->get('nik_nip');
+        $kd_kelas = $this->request->getPost('kd_kelas');
+        $kd_mapel = $this->guruModel->find($nik_nip)['kd_mapel'];
+        $semester = $this->request->getPost('semester');
+        $tahun_akademik_id = $this->request->getPost('tahun_akademik_id');
 
-        // DEBUG: log nilai tahun_akademik_id dari POST
-        if (!$tahunAkademikId) {
-            log_message('error', 'POST NILAI: tahun_akademik_id NULL di store!');
-            return redirect()->to("guru/nilai/input?kelas_id={$kelasId}&mapel_id={$mapelId}&semester={$semester}")->with('error', 'Gagal menyimpan nilai: Tahun akademik aktif tidak ditemukan. Silakan reload halaman dan pastikan tahun akademik aktif sudah diatur.');
-        } else {
-            log_message('info', 'POST NILAI: tahun_akademik_id=' . $tahunAkademikId . ' di store!');
-        }
+        $nis_list = $this->request->getPost('nis');
+        $nilai_tugas = $this->request->getPost('nilai_tugas');
+        $nilai_uts = $this->request->getPost('nilai_uts');
+        $nilai_uas = $this->request->getPost('nilai_uas');
 
-        $successCount = 0;
-        $errorCount = 0;
+        $inserted = 0;
+        $updated = 0;
 
-        foreach ($siswaIds as $index => $siswaId) {
-            if ($siswaId) {
-                $uts = $utsScores[$index] ?? 0;
-                $uas = $uasScores[$index] ?? 0;
-                $tugas = $tugasScores[$index] ?? 0;
+        foreach ($nis_list as $index => $nis) {
+            if ($nis) {
+                $tugas = $nilai_tugas[$index] ?? 0;
+                $uts = $nilai_uts[$index] ?? 0;
+                $uas = $nilai_uas[$index] ?? 0;
 
-                // Calculate final score (30% UTS + 40% UAS + 30% Tugas)
-                $akhir = ($uts * 0.3) + ($uas * 0.4) + ($tugas * 0.3);
+                // Calculate final grade
+                $akhir = ($tugas * 0.3) + ($uts * 0.3) + ($uas * 0.4);
 
-                $data = [
-                    'siswa_id' => $siswaId,
-                    'mapel_id' => $mapelId,
-                    'tahun_akademik_id' => $tahunAkademikId,
+                $nilaiData = [
+                    'nis' => $nis,
+                    'kd_kelas' => $kd_kelas,
+                    'kd_mapel' => $kd_mapel,
+                    'kd_jurusan' => $this->siswaModel->find($nis)['kd_jurusan'],
+                    'tahun_akademik_id' => $tahun_akademik_id,
                     'semester' => $semester,
-                    'uts' => $uts,
-                    'uas' => $uas,
-                    'tugas' => $tugas,
-                    'akhir' => round($akhir, 2)
+                    'nilai_tugas' => $tugas,
+                    'nilai_uts' => $uts,
+                    'nilai_uas' => $uas,
+                    'nilai_akhir' => round($akhir, 2)
                 ];
 
                 // Check if grade already exists
-                $existingNilai = $this->nilaiModel->where([
-                    'siswa_id' => $siswaId,
-                    'mapel_id' => $mapelId,
-                    'semester' => $semester,
-                    'tahun_akademik_id' => $tahunAkademikId
+                $existing = $this->nilaiModel->where([
+                    'nis' => $nis,
+                    'kd_kelas' => $kd_kelas,
+                    'kd_mapel' => $kd_mapel,
+                    'tahun_akademik_id' => $tahun_akademik_id,
+                    'semester' => $semester
                 ])->first();
 
-                if ($existingNilai) {
-                    // Update existing grade
-                    $data['id'] = $existingNilai['id'];
-                    if ($this->nilaiModel->save($data)) {
-                        $successCount++;
-                    } else {
-                        $errorCount++;
-                    }
+                if ($existing) {
+                    $this->nilaiModel->update($existing['id'], $nilaiData);
+                    $updated++;
                 } else {
-                    // Insert new grade
-                    if ($this->nilaiModel->insert($data)) {
-                        $successCount++;
-                    } else {
-                        $errorCount++;
-                    }
+                    $this->nilaiModel->insert($nilaiData);
+                    $inserted++;
                 }
             }
         }
 
-        if ($successCount > 0) {
-            $message = "Berhasil menyimpan nilai untuk {$successCount} siswa";
-            if ($errorCount > 0) {
-                $message .= " (Gagal: {$errorCount} siswa)";
-            }
-            return redirect()->to("guru/nilai/input?kelas_id={$kelasId}&mapel_id={$mapelId}&semester={$semester}")->with('success', $message);
-        } else {
-            return redirect()->to("guru/nilai/input?kelas_id={$kelasId}&mapel_id={$mapelId}&semester={$semester}")->with('error', 'Gagal menyimpan nilai');
-        }
+        $message = "Berhasil menyimpan nilai: $inserted baru, $updated diperbarui";
+        return redirect()->to("guru/nilai/input?kd_kelas=$kd_kelas&semester=$semester")->with('success', $message);
     }
 
     public function rekap()
     {
-        $kelasId = $this->request->getGet('kelas_id');
-        $semester = $this->request->getGet('semester');
+        $nik_nip = session()->get('nik_nip');
+        $kd_kelas = $this->request->getGet('kd_kelas');
+        $semester = $this->request->getGet('semester') ?? 'Ganjil';
 
-        if (!$kelasId) {
-            return redirect()->to('guru/nilai')->with('error', 'Pilih kelas terlebih dahulu');
+        // Get current academic year
+        $tahunAkademik = $this->tahunAkademikModel->where('status', 'Aktif')->first();
+        $tahunAkademikId = $tahunAkademik ? $tahunAkademik['kd_tahun_akademik'] : 1;
+
+        $rekap_nilai = [];
+        if ($kd_kelas) {
+            $rekap_nilai = $this->nilaiModel->select('nilai.*, siswa.nama as nama_siswa')
+                ->join('siswa', 'siswa.nis = nilai.nis')
+                ->where('nilai.kd_kelas', $kd_kelas)
+                ->where('nilai.kd_mapel', $this->guruModel->find($nik_nip)['kd_mapel'])
+                ->where('nilai.tahun_akademik_id', $tahunAkademikId)
+                ->where('nilai.semester', $semester)
+                ->orderBy('siswa.nama', 'ASC')
+                ->findAll();
         }
 
-        // Ambil tahun akademik aktif
-        $tahunAkademikModel = new \App\Models\TahunAkademikModel();
-        $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
-        $tahun_akademik_id = $tahunAkademikAktif ? $tahunAkademikAktif['id'] : null;
-        if (!$tahun_akademik_id) {
-            return redirect()->to('guru/nilai')->with('error', 'Tahun akademik aktif belum diatur. Silakan hubungi admin.');
+        $kelas = null;
+        if ($kd_kelas) {
+            $kelasModel = new \App\Models\KelasModel();
+            $kelas = $kelasModel->find($kd_kelas);
         }
-        if (!$semester) {
-            $semester = $tahunAkademikAktif['semester'];
+        $siswaList = [];
+        if ($kd_kelas) {
+            $siswaList = $this->siswaModel->select('nis, nama')->where('kd_kelas', $kd_kelas)->findAll();
         }
-
-        $guruId = session()->get('user_id');
-        
-        // Get class info
-        $kelas = $this->kelasModel->select('kelas.*, jurusan.nama_jurusan')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
-            ->find($kelasId);
-
-        // Get students with their grades
-        $siswaList = $this->siswaModel->select('siswa.*, kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = siswa.kelas_id')
-            ->where('siswa.kelas_id', $kelasId)
-            ->findAll();
-
-        // Get all subjects
-        $mapelList = $this->mapelModel->findAll();
-
-        // Get grades for all students and subjects
-        $nilaiData = [];
-        foreach ($siswaList as $siswa) {
-            $nilaiData[$siswa['id']] = [];
-            foreach ($mapelList as $mapel) {
-                $nilai = $this->nilaiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'mapel_id' => $mapel['id'],
-                    'semester' => $semester,
-                    'tahun_akademik_id' => $tahun_akademik_id
-                ])->first();
-                
-                $nilaiData[$siswa['id']][$mapel['id']] = $nilai ?: null;
+        $mapelList = [];
+        $guru = $this->guruModel->find($nik_nip);
+        if ($guru && isset($guru['kd_mapel'])) {
+            $mapelModel = new \App\Models\MapelModel();
+            $mapel = $mapelModel->where('kd_mapel', $guru['kd_mapel'])->first();
+            if ($mapel) {
+                $mapelList[] = $mapel;
             }
         }
-
         $data = [
             'title' => 'Rekap Nilai',
+            'rekap_nilai' => $rekap_nilai,
+            'selected_kelas' => $kd_kelas,
+            'selected_semester' => $semester,
+            'tahun_akademik' => $tahunAkademik,
             'kelas' => $kelas,
             'semester' => $semester,
             'siswaList' => $siswaList,
-            'mapelList' => $mapelList,
-            'nilaiData' => $nilaiData,
-            'user' => session()->get('user')
+            'mapelList' => $mapelList
         ];
 
         return view('guru/nilai/rekap', $data);
@@ -260,61 +263,37 @@ class Nilai extends BaseController
 
     public function cetak()
     {
-        $kelasId = $this->request->getGet('kelas_id');
+        $nik_nip = session()->get('nik_nip');
+        $kelas_id = $this->request->getGet('kelas_id');
         $semester = $this->request->getGet('semester') ?? 'Ganjil';
 
-        if (!$kelasId) {
-            return redirect()->to('guru/nilai')->with('error', 'Pilih kelas terlebih dahulu');
-        }
+        // Get current academic year
+        $tahunAkademik = $this->tahunAkademikModel->where('status', 'Aktif')->first();
+        $tahunAkademikId = $tahunAkademik ? $tahunAkademik['kd_tahun_akademik'] : 1;
 
-        // Ambil tahun akademik aktif
-        $tahunAkademikModel = new \App\Models\TahunAkademikModel();
-        $tahunAkademikAktif = $tahunAkademikModel->where('status', 'Aktif')->first();
-        $tahun_akademik_id = $tahunAkademikAktif ? $tahunAkademikAktif['id'] : null;
-        if (!$tahun_akademik_id) {
-            return redirect()->to('guru/nilai')->with('error', 'Tahun akademik aktif belum diatur. Silakan hubungi admin.');
-        }
-
-        // Get class info
-        $kelas = $this->kelasModel->select('kelas.*, jurusan.nama_jurusan')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
-            ->find($kelasId);
-
-        // Get students with their grades
-        $siswaList = $this->siswaModel->select('siswa.*, kelas.nama_kelas')
-            ->join('kelas', 'kelas.id = siswa.kelas_id')
-            ->where('siswa.kelas_id', $kelasId)
+        // Ambil data nilai siswa di kelas dan semester tersebut
+        $nilai_list = $this->nilaiModel->select('nilai.*, siswa.nama as nama_siswa')
+            ->join('siswa', 'siswa.nis = nilai.nis')
+            ->where('nilai.kd_kelas', $kelas_id)
+            ->where('nilai.kd_mapel', $this->guruModel->find($nik_nip)['kd_mapel'])
+            ->where('nilai.tahun_akademik_id', $tahunAkademikId)
+            ->where('nilai.semester', $semester)
+            ->orderBy('siswa.nama', 'ASC')
             ->findAll();
 
-        // Get all subjects
-        $mapelList = $this->mapelModel->findAll();
+        $kelasModel = new \App\Models\KelasModel();
+        $kelas = $kelasModel->find($kelas_id);
 
-        // Get grades for all students and subjects
-        $nilaiData = [];
-        foreach ($siswaList as $siswa) {
-            $nilaiData[$siswa['id']] = [];
-            foreach ($mapelList as $mapel) {
-                $nilai = $this->nilaiModel->where([
-                    'siswa_id' => $siswa['id'],
-                    'mapel_id' => $mapel['id'],
-                    'semester' => $semester,
-                    'tahun_akademik_id' => $tahun_akademik_id
-                ])->first();
-                
-                $nilaiData[$siswa['id']][$mapel['id']] = $nilai ?: null;
-            }
-        }
+        $mapelModel = new \App\Models\MapelModel();
+        $guru = $this->guruModel->find($nik_nip);
+        $mapel = $mapelModel->where('kd_mapel', $guru['kd_mapel'])->first();
 
-        $data = [
-            'title' => 'Cetak Nilai',
+        return view('guru/nilai/cetak', [
+            'nilai_list' => $nilai_list,
             'kelas' => $kelas,
+            'mapel' => $mapel,
             'semester' => $semester,
-            'siswaList' => $siswaList,
-            'mapelList' => $mapelList,
-            'nilaiData' => $nilaiData,
-            'user' => session()->get('user')
-        ];
-
-        return view('guru/nilai/cetak', $data);
+            'tahun_akademik' => $tahunAkademik
+        ]);
     }
-} 
+}

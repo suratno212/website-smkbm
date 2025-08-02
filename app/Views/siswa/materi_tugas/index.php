@@ -66,7 +66,7 @@
                                         <td><?= esc($m['nama_guru']) ?></td>
                                         <td>
                                             <?php if ($m['file']): ?>
-                                                <a href="<?= base_url('siswa/materitugas/downloadMateri/' . $m['id']) ?>" 
+                                                <a href="<?= base_url('siswa/materitugas/downloadMateri/' . $m['kd_materi']) ?>" 
                                                    class="btn btn-sm btn-outline-primary" title="Download">
                                                     <i class="fas fa-download"></i>
                                                 </a>
@@ -144,7 +144,7 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <a href="<?= base_url('siswa/materitugas/detailTugas/' . $t['id']) ?>" 
+                                            <a href="<?= base_url('siswa/materitugas/detailTugas/' . $t['kd_tugas']) ?>" 
                                                class="btn btn-sm btn-outline-info">
                                                 Detail
                                             </a>
@@ -171,9 +171,9 @@
                             <h4 class="mb-0"><?= count($materi) ?></h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-primary align-self-center d-flex justify-content-center align-items-center shadow" style="width:56px;height:56px;margin:auto;">
                                 <span class="avatar-title">
-                                    <i class="fas fa-book font-size-24"></i>
+                                    <i class="fas fa-book" style="font-size:2rem;color:#fff;"></i>
                                 </span>
                             </div>
                         </div>
@@ -190,9 +190,9 @@
                             <h4 class="mb-0"><?= count($tugas) ?></h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-warning align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-warning align-self-center d-flex justify-content-center align-items-center shadow" style="width:56px;height:56px;margin:auto;">
                                 <span class="avatar-title">
-                                    <i class="fas fa-tasks font-size-24"></i>
+                                    <i class="fas fa-tasks" style="font-size:2rem;color:#fff;"></i>
                                 </span>
                             </div>
                         </div>
@@ -219,9 +219,9 @@
                             </h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-success align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-success align-self-center d-flex justify-content-center align-items-center shadow" style="width:56px;height:56px;margin:auto;">
                                 <span class="avatar-title">
-                                    <i class="fas fa-clock font-size-24"></i>
+                                    <i class="fas fa-clock" style="font-size:2rem;color:#fff;"></i>
                                 </span>
                             </div>
                         </div>
@@ -248,9 +248,9 @@
                             </h4>
                         </div>
                         <div class="flex-shrink-0 align-self-center">
-                            <div class="mini-stat-icon avatar-sm rounded-circle bg-danger align-self-center">
+                            <div class="mini-stat-icon avatar-sm rounded-circle bg-danger align-self-center d-flex justify-content-center align-items-center shadow" style="width:56px;height:56px;margin:auto;">
                                 <span class="avatar-title">
-                                    <i class="fas fa-exclamation-triangle font-size-24"></i>
+                                    <i class="fas fa-exclamation-triangle" style="font-size:2rem;color:#fff;"></i>
                                 </span>
                             </div>
                         </div>

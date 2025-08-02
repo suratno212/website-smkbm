@@ -58,7 +58,7 @@ class MateriTugasDrilldown extends BaseController
         ]);
     }
 
-    public function detail($mapel_id, $kelas_id, $pertemuan_id)
+    public function detail($mapel_id, $kelas_id, $kd_pertemuan)
     {
         $pertemuanModel = new PertemuanModel();
         $materiModel = new MateriModel();
@@ -68,11 +68,11 @@ class MateriTugasDrilldown extends BaseController
         $pengumpulanTugasModel = new \App\Models\PengumpulanTugasModel();
         $siswaModel = new \App\Models\SiswaModel();
 
-        $pertemuan = $pertemuanModel->find($pertemuan_id);
-        $materi = $materiModel->where('pertemuan_id', $pertemuan_id)->findAll();
-        $tugas = $tugasModel->where('pertemuan_id', $pertemuan_id)->findAll();
-        $pretest = $pretestModel->where('pertemuan_id', $pertemuan_id)->first();
-        $pretest_soal = $pretest ? $pretestSoalModel->where('pretest_id', $pretest['id'])->findAll() : [];
+        $pertemuan = $pertemuanModel->find($kd_pertemuan);
+        $materi = $materiModel->where('kd_pertemuan', $kd_pertemuan)->findAll();
+        $tugas = $tugasModel->where('kd_pertemuan', $kd_pertemuan)->findAll();
+        $pretest = $pretestModel->where('kd_pertemuan', $kd_pertemuan)->first();
+        $pretest_soal = $pretest ? $pretestSoalModel->where('kd_pretest', $pretest['id'])->findAll() : [];
 
         // Ambil pengumpulan tugas siswa untuk tugas pertama (jika ada)
         $pengumpulan_tugas = [];
@@ -94,27 +94,27 @@ class MateriTugasDrilldown extends BaseController
         ]);
     }
 
-    public function updateTopik($pertemuan_id)
+    public function updateTopik($kd_pertemuan)
     {
         $pertemuanModel = new \App\Models\PertemuanModel();
         $topik = $this->request->getPost('topik');
-        $pertemuanModel->update($pertemuan_id, ['topik' => $topik]);
+        $pertemuanModel->update($kd_pertemuan, ['topik' => $topik]);
         return redirect()->back()->with('success', 'Topik berhasil diupdate');
     }
 
-    public function updateVideo($pertemuan_id)
+    public function updateVideo($kd_pertemuan)
     {
         $pertemuanModel = new \App\Models\PertemuanModel();
         $video = $this->request->getPost('video_youtube');
-        $pertemuanModel->update($pertemuan_id, ['video_youtube' => $video]);
+        $pertemuanModel->update($kd_pertemuan, ['video_youtube' => $video]);
         return redirect()->back()->with('success', 'Link video berhasil diupdate');
     }
 
-    public function tambahMateri($pertemuan_id)
+    public function tambahMateri($kd_pertemuan)
     {
         $materiModel = new \App\Models\MateriModel();
         $data = [
-            'pertemuan_id' => $pertemuan_id,
+            'kd_pertemuan' => $kd_pertemuan,
             'judul' => $this->request->getPost('judul'),
             'deskripsi' => $this->request->getPost('deskripsi'),
             'file' => $this->request->getPost('file'), // handle upload di view
@@ -135,11 +135,11 @@ class MateriTugasDrilldown extends BaseController
         return redirect()->back()->with('success', 'Materi berhasil diupdate');
     }
 
-    public function tambahTugas($pertemuan_id)
+    public function tambahTugas($kd_pertemuan)
     {
         $tugasModel = new \App\Models\TugasModel();
         $data = [
-            'pertemuan_id' => $pertemuan_id,
+            'kd_pertemuan' => $kd_pertemuan,
             'deskripsi' => $this->request->getPost('deskripsi'),
             'deadline' => $this->request->getPost('deadline'),
             'file' => $this->request->getPost('file'), // handle upload di view
@@ -148,15 +148,15 @@ class MateriTugasDrilldown extends BaseController
         return redirect()->back()->with('success', 'Tugas berhasil ditambahkan');
     }
 
-    public function editTugas($tugas_id)
+    public function editTugas($kd_tugas)
     {
-        $tugasModel = new \App\Models\TugasModel();
+        $tugasModel = new TugasModel();
         $data = [
             'deskripsi' => $this->request->getPost('deskripsi'),
             'deadline' => $this->request->getPost('deadline'),
             'file' => $this->request->getPost('file'), // handle upload di view
         ];
-        $tugasModel->update($tugas_id, $data);
+        $tugasModel->update($kd_tugas, $data);
         return redirect()->back()->with('success', 'Tugas berhasil diupdate');
     }
 
@@ -172,20 +172,20 @@ class MateriTugasDrilldown extends BaseController
         return redirect()->back()->with('success', 'Nilai tugas berhasil disimpan');
     }
 
-    public function simpanPretest($pertemuan_id)
+    public function simpanPretest($kd_pertemuan)
     {
         $pretestModel = new \App\Models\PretestModel();
         $pretestSoalModel = new \App\Models\PretestSoalModel();
         // Cek pretest sudah ada atau belum
-        $pretest = $pretestModel->where('pertemuan_id', $pertemuan_id)->first();
+        $pretest = $pretestModel->where('kd_pertemuan', $kd_pertemuan)->first();
         if (!$pretest) {
-            $pretest_id = $pretestModel->insert([
-                'pertemuan_id' => $pertemuan_id,
+            $kd_pretest = $pretestModel->insert([
+                'kd_pertemuan' => $kd_pertemuan,
                 'judul' => 'Pretest Pertemuan',
             ], true);
         } else {
-            $pretest_id = $pretest['id'];
-            $pretestSoalModel->where('pretest_id', $pretest_id)->delete(); // hapus soal lama
+            $kd_pretest = $pretest['id'];
+            $pretestSoalModel->where('kd_pretest', $kd_pretest)->delete(); // hapus soal lama
         }
         $soal = $this->request->getPost('soal');
         $pilihan_a = $this->request->getPost('pilihan_a');
@@ -195,7 +195,7 @@ class MateriTugasDrilldown extends BaseController
         $jawaban_benar = $this->request->getPost('jawaban_benar');
         for ($i=1; $i<=10; $i++) {
             $pretestSoalModel->insert([
-                'pretest_id' => $pretest_id,
+                'kd_pretest' => $kd_pretest,
                 'soal' => $soal[$i],
                 'pilihan_a' => $pilihan_a[$i],
                 'pilihan_b' => $pilihan_b[$i],
@@ -207,14 +207,14 @@ class MateriTugasDrilldown extends BaseController
         return redirect()->back()->with('success', 'Pretest berhasil disimpan');
     }
 
-    public function simpanAbsensi($pertemuan_id)
+    public function simpanAbsensi($kd_pertemuan)
     {
         $absensiModel = new \App\Models\AbsensiModel();
-        $status = $this->request->getPost('status'); // [siswa_id => status]
+        $status = $this->request->getPost('status'); // [nis => status]
         $tanggal = date('Y-m-d');
-        foreach ($status as $siswa_id => $stat) {
+        foreach ($status as $nis => $stat) {
             $absensiModel->insert([
-                'siswa_id' => $siswa_id,
+                'nis' => $nis,
                 'tanggal' => $tanggal,
                 'status' => $stat
             ]);

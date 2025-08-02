@@ -40,6 +40,16 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="nama">Nama</label>
+                                    <input type="text" name="nama" id="nama" class="form-control <?= session('errors.nama') ? 'is-invalid' : '' ?>" value="<?= old('nama', isset($user['nama']) ? $user['nama'] : '') ?>" required>
+                                    <?php if (session('errors.nama')) : ?>
+                                        <div class="invalid-feedback">
+                                            <?= session('errors.nama') ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="email">Email</label>
                                     <input type="email" name="email" id="email" class="form-control <?= session('errors.email') ? 'is-invalid' : '' ?>" value="<?= old('email', isset($user['email']) ? $user['email'] : '') ?>" required>
                                     <?php if (session('errors.email')) : ?>

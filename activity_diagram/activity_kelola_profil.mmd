@@ -1,0 +1,11 @@
+
+%% Activity Diagram Kelola Profil
+flowchart TD
+    start([Start]) --> U1["Admin/Guru/Siswa: Masuk ke menu profil"]
+    U1 --> S1["Sistem: Menampilkan data profil"]
+    U2["Admin/Guru/Siswa: Edit data profil"] --> U3["Admin/Guru/Siswa: Tekan simpan"]
+    U3 --> S2["Sistem: Menyimpan perubahan"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["Admin/Guru/Siswa: Data tidak lengkap"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U2

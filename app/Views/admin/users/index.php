@@ -37,6 +37,25 @@
                 </div>
             <?php endif; ?>
 
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <form method="get" action="<?= base_url('admin/users') ?>" class="form-inline">
+                        <select name="role" class="form-control mr-2">
+                            <option value="">Semua Role</option>
+                            <option value="admin" <?= (isset(
+                                $role_filter) && $role_filter == 'admin') ? 'selected' : '' ?>>Admin</option>
+                            <option value="guru" <?= (isset(
+                                $role_filter) && $role_filter == 'guru') ? 'selected' : '' ?>>Guru</option>
+                            <option value="siswa" <?= (isset(
+                                $role_filter) && $role_filter == 'siswa') ? 'selected' : '' ?>>Siswa</option>
+                            <option value="kepala_sekolah" <?= (isset(
+                                $role_filter) && $role_filter == 'kepala_sekolah') ? 'selected' : '' ?>>Kepala Sekolah</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -55,6 +74,7 @@
                                                 <th>No</th>
                                                 <th>Foto</th>
                                                 <th>Username</th>
+                                                <th>Nama</th>
                                                 <th>Email</th>
                                                 <th>Role</th>
                                                 <th>Aksi</th>
@@ -74,6 +94,7 @@
                                                         <?php endif; ?>
                                                     </td>
                                                     <td><?= isset($user['username']) ? $user['username'] : '-' ?></td>
+                                                    <td><?= isset($user['nama']) ? $user['nama'] : '-' ?></td>
                                                     <td><?= isset($user['email']) ? $user['email'] : '-' ?></td>
                                                     <td>
                                                         <?php

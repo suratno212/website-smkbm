@@ -1,0 +1,10 @@
+
+%% Activity Diagram Cetak/Download e-Raport
+flowchart TD
+    start([Start]) --> U1["Guru/Siswa: Masuk ke menu e-Raport"]
+    U1 --> S1["Sistem: Menampilkan data raport"]
+    U2["Guru/Siswa: Tekan tombol cetak/download"] --> S2["Sistem: Menghasilkan file PDF"]
+    S1 --> U2
+    S2 --> end([End])
+    U3["Guru/Siswa: Data raport tidak ditemukan"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U1

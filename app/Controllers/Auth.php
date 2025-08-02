@@ -26,20 +26,22 @@ class Auth extends BaseController
             $role = $this->session->get('role');
             log_message('debug', 'User already logged in with role: ' . $role);
             
-            switch ($role) {
-                case 'admin':
-                    return redirect()->to(base_url('admin/dashboard'));
-                case 'guru':
-                    return redirect()->to(base_url('guru/dashboard'));
-                case 'siswa':
-                    return redirect()->to(base_url('siswa/dashboard'));
-                case 'kepala_sekolah':
-                    return redirect()->to(base_url('kepalasekolah'));
-                default:
-                    log_message('error', 'Invalid role in session: ' . $role);
-                    $this->session->destroy();
-                    return redirect()->to(base_url('auth'))->with('error', 'Role tidak valid');
-            }
+                            switch ($role) {
+                    case 'admin':
+                        return redirect()->to(base_url('admin/dashboard'));
+                    case 'guru':
+                        return redirect()->to(base_url('guru/dashboard'));
+                    case 'siswa':
+                        return redirect()->to(base_url('siswa/dashboard'));
+                    case 'calon_siswa':
+                        return redirect()->to(base_url('calonsiswa/dashboard'));
+                    case 'kepala_sekolah':
+                        return redirect()->to(base_url('kepalasekolah'));
+                    default:
+                        log_message('error', 'Invalid role in session: ' . $role);
+                        $this->session->destroy();
+                        return redirect()->to(base_url('auth'))->with('error', 'Role tidak valid');
+                }
         }
         
         // Tampilkan halaman login
@@ -62,6 +64,7 @@ class Auth extends BaseController
         $password = $this->request->getPost('password');
 
         $user = $this->userModel->where('username', $username)->first();
+        log_message('debug', 'LOGIN USER: ' . json_encode($user));
 
         if ($user) {
             // Verifikasi password
@@ -74,15 +77,24 @@ class Auth extends BaseController
                     'foto' => $user['foto'] ?? null,
                     'logged_in' => true
                 ];
-                $this->session->set($sessionData);
-
-                // Tambahan: set guru_id jika role guru
-                if ($user['role'] === 'guru') {
+                // Ambil nama sesuai role
+                $nama = null;
+                if ($user['role'] === 'siswa') {
+                    $siswa = (new \App\Models\SiswaModel())->where('user_id', $user['id'])->first();
+                    $nama = $siswa['nama'] ?? $user['username'];
+                        $this->session->set('nis', $siswa['nis'] ?? null);
+                        $this->session->set('nama_siswa', $siswa['nama'] ?? null);
+                } elseif ($user['role'] === 'guru') {
                     $guru = (new \App\Models\GuruModel())->where('user_id', $user['id'])->first();
-                    if ($guru) {
-                        $this->session->set('guru_id', $guru['id']);
-                    }
+                    $nama = $guru['nama'] ?? $user['username'];
+                        $this->session->set('guru_id', $guru['nik_nip'] ?? null);
+                        $this->session->set('nik_nip', $guru['nik_nip'] ?? null);
+                } else {
+                    $nama = $user['nama'] ?? $user['username'];
                 }
+                $sessionData['nama'] = $nama;
+                $this->session->set($sessionData);
+                log_message('debug', 'SESSION DATA AFTER LOGIN: ' . json_encode(session()->get()));
 
                 // Debug: Log session data
                 log_message('info', 'User logged in: ' . json_encode($sessionData));
@@ -95,6 +107,8 @@ class Auth extends BaseController
                         return redirect()->to(base_url('guru/dashboard'));
                     case 'siswa':
                         return redirect()->to(base_url('siswa/dashboard'));
+                    case 'calon_siswa':
+                        return redirect()->to(base_url('calonsiswa/dashboard'));
                     case 'kepala_sekolah':
                         return redirect()->to(base_url('kepalasekolah'));
                     default:

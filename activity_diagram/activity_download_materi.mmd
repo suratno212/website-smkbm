@@ -1,0 +1,11 @@
+
+%% Activity Diagram Download Materi & Tugas
+flowchart TD
+    start([Start]) --> U1["Siswa: Masuk ke menu materi/tugas"]
+    U1 --> S1["Sistem: Menampilkan daftar materi/tugas"]
+    U2["Siswa: Pilih materi/tugas yang diinginkan"] --> U3["Siswa: Tekan download"]
+    U3 --> S2["Sistem: Mengunduh file"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["Siswa: File tidak ditemukan"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U2

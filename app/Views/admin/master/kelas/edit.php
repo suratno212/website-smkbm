@@ -15,8 +15,12 @@
                             </ul>
                         </div>
                     <?php endif; ?>
-                    <form action="<?= base_url('admin/master/kelas/update/' . $kelas['id']) ?>" method="post">
+                    <form action="<?= base_url('admin/master/kelas/update/' . $kelas['kd_kelas']) ?>" method="post">
                         <?= csrf_field() ?>
+                        <div class="form-group">
+                            <label for="kd_kelas">Kode Kelas</label>
+                            <input type="text" class="form-control" id="kd_kelas" name="kd_kelas" value="<?= old('kd_kelas', $kelas['kd_kelas']) ?>" required readonly>
+                        </div>
                         <div class="form-group">
                             <label for="nama_kelas">Nama Kelas</label>
                             <input type="text" class="form-control" id="nama_kelas" name="nama_kelas" value="<?= old('nama_kelas', $kelas['nama_kelas']) ?>" required>
@@ -31,22 +35,26 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="jurusan_id">Jurusan</label>
-                            <select name="jurusan_id" id="jurusan_id" class="form-control" required>
+                            <label for="kd_jurusan">Jurusan</label>
+                            <select name="kd_jurusan" id="kd_jurusan" class="form-control" required>
                                 <option value="">Pilih Jurusan</option>
                                 <?php foreach ($jurusan as $j) : ?>
-                                    <option value="<?= $j['id'] ?>" <?= old('jurusan_id', $kelas['jurusan_id']) == $j['id'] ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
+                                    <option value="<?= $j['kd_jurusan'] ?>" <?= old('kd_jurusan', $kelas['kd_jurusan']) == $j['kd_jurusan'] ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="wali_kelas_id">Wali Kelas</label>
-                            <select name="wali_kelas_id" id="wali_kelas_id" class="form-control" required>
+                            <label for="wali_kelas_nik_nip">Wali Kelas</label>
+                            <select name="wali_kelas_nik_nip" id="wali_kelas_nik_nip" class="form-control" required>
                                 <option value="">Pilih Wali Kelas</option>
                                 <?php foreach ($guru as $g) : ?>
-                                    <option value="<?= $g['id'] ?>" <?= old('wali_kelas_id', $kelas['wali_kelas_id']) == $g['id'] ? 'selected' : '' ?>><?= $g['nama'] ?></option>
+                                    <option value="<?= $g['nik_nip'] ?>" <?= old('wali_kelas_nik_nip', $kelas['wali_kelas_nik_nip']) == $g['nik_nip'] ? 'selected' : '' ?>><?= $g['nama'] ?></option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="kuota">Kuota</label>
+                            <input type="number" class="form-control" id="kuota" name="kuota" value="<?= old('kuota', $kelas['kuota']) ?>" required>
                         </div>
                         <div class="form-group mt-3">
                             <button type="submit" class="btn btn-primary btn-sm">Update</button>

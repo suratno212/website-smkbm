@@ -7,22 +7,21 @@ class CreatePretestTable extends Migration
 {
     public function up()
     {
-        // Tabel pretest
+        // Drop table if exists to avoid conflicts
+        $this->forge->dropTable('pretest_soal', true);
+        $this->forge->dropTable('pretest', true);
+
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
-            'pertemuan_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_pretest' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'judul' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
+            ],
+            'deskripsi' => [
+                'type' => 'TEXT',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -33,8 +32,7 @@ class CreatePretestTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('pertemuan_id', 'pertemuan', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_pretest', true); // PRIMARY KEY
         $this->forge->createTable('pretest');
 
         // Tabel pretest_soal
@@ -45,10 +43,9 @@ class CreatePretestTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'pretest_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_pretest' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'soal' => [
                 'type' => 'TEXT',
@@ -83,7 +80,7 @@ class CreatePretestTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('pretest_id', 'pretest', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_pretest', 'pretest', 'kd_pretest', 'CASCADE', 'CASCADE');
         $this->forge->createTable('pretest_soal');
     }
 

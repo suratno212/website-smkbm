@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?> - SIAKAD SMK Bhakti Mulya BNS</title>
-    
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#1a237e">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,15 +13,15 @@
     <meta name="apple-mobile-web-app-title" content="SIAKAD SMK">
     <meta name="msapplication-TileColor" content="#1a237e">
     <meta name="msapplication-config" content="/browserconfig.xml">
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
-    
+
     <!-- PWA Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/icon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/icon-16x16.png">
     <link rel="apple-touch-icon" href="/assets/images/icons/icon-192x192.png">
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -96,19 +97,24 @@
             transition: all 0.3s ease;
             overflow-y: auto;
             max-height: calc(100vh - 160px);
-            scrollbar-width: thin;           /* Firefox */
-            scrollbar-color: #888 #222;      /* Firefox */
+            scrollbar-width: thin;
+            /* Firefox */
+            scrollbar-color: #888 #222;
+            /* Firefox */
         }
+
         .sidebar-menu::-webkit-scrollbar {
             width: 8px;
             background: transparent;
         }
+
         .sidebar-menu::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 4px;
             opacity: 0;
             transition: opacity 0.2s;
         }
+
         .sidebar-menu:hover::-webkit-scrollbar-thumb {
             opacity: 1;
         }
@@ -235,7 +241,7 @@
             transition: all 0.3s ease;
         }
 
-        .sidebar.collapsed + .main-content .sidebar-toggle i {
+        .sidebar.collapsed+.main-content .sidebar-toggle i {
             transform: rotate(180deg);
         }
 
@@ -274,11 +280,11 @@
             position: relative;
             display: block;
             margin-bottom: 20px;
-            box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+            box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
             border-radius: 0.25rem;
         }
 
-        .small-box > .inner {
+        .small-box>.inner {
             padding: 10px;
         }
 
@@ -296,7 +302,7 @@
         }
 
         .small-box .icon {
-            color: rgba(0,0,0,.15);
+            color: rgba(0, 0, 0, .15);
             z-index: 0;
             position: absolute;
             right: 10px;
@@ -304,20 +310,20 @@
             font-size: 70px;
         }
 
-        .small-box > .small-box-footer {
+        .small-box>.small-box-footer {
             position: relative;
             text-align: center;
             padding: 3px 0;
-            color: rgba(255,255,255,.8);
+            color: rgba(255, 255, 255, .8);
             display: block;
             z-index: 10;
-            background: rgba(0,0,0,.1);
+            background: rgba(0, 0, 0, .1);
             text-decoration: none;
         }
 
-        .small-box > .small-box-footer:hover {
+        .small-box>.small-box-footer:hover {
             color: #fff;
-            background: rgba(0,0,0,.15);
+            background: rgba(0, 0, 0, .15);
         }
 
         .bg-info {
@@ -339,9 +345,19 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                max-width: 100vw;
+                min-width: 100vw;
+                z-index: 1100;
                 transform: translateX(-100%);
-                width: var(--sidebar-width);
                 padding: 20px;
+                border-radius: 0;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+                transition: transform 0.3s cubic-bezier(.4, 2, .6, 1), width 0.3s;
             }
 
             .sidebar.show {
@@ -352,10 +368,7 @@
                 transform: translateX(-100%);
             }
 
-            .main-content {
-                margin-left: 0;
-            }
-
+            .main-content,
             .main-content.expanded {
                 margin-left: 0;
             }
@@ -393,6 +406,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -416,10 +430,6 @@
                 <i class="fas fa-chalkboard-teacher"></i>
                 <span>Data Guru</span>
             </a>
-            <a href="<?= base_url('admin/wali_kelas') ?>" class="menu-item <?= strpos(uri_string(), 'admin/wali_kelas') === 0 ? 'active' : '' ?>">
-                <i class="fas fa-users"></i>
-                <span>Wali Kelas</span>
-            </a>
             <a href="<?= base_url('admin/jadwal') ?>" class="menu-item <?= strpos(uri_string(), 'admin/jadwal') === 0 ? 'active' : '' ?>">
                 <i class="fas fa-calendar-alt"></i>
                 <span>Jadwal Pelajaran</span>
@@ -428,14 +438,29 @@
                 <i class="fas fa-bullhorn"></i>
                 <span>Pengumuman</span>
             </a>
-            <a href="<?= base_url('admin/master') ?>" class="menu-item <?= strpos(uri_string(), 'admin/master') === 0 ? 'active' : '' ?>">
+            <div class="menu-item sidebar-dropdown <?= (strpos(uri_string(), 'admin/master') === 0) ? 'active' : '' ?>" style="cursor:pointer;">
                 <i class="fas fa-cogs"></i>
                 <span>Data Master</span>
-            </a>
-            <a href="<?= base_url('admin/spmb') ?>" class="menu-item <?= strpos(uri_string(), 'admin/spmb') === 0 ? 'active' : '' ?>">
+                <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="sidebar-submenu" style="display: none; margin-left: 20px;">
+                <a href="<?= base_url('admin/master/jurusan') ?>" class="menu-item<?= strpos(uri_string(), 'admin/master/jurusan') === 0 ? ' active' : '' ?>"><i class="fas fa-stream"></i> Jurusan</a>
+                <a href="<?= base_url('admin/master/kelas') ?>" class="menu-item<?= strpos(uri_string(), 'admin/master/kelas') === 0 ? ' active' : '' ?>"><i class="fas fa-door-open"></i> Kelas</a>
+                <a href="<?= base_url('admin/master/tahun_akademik') ?>" class="menu-item<?= strpos(uri_string(), 'admin/master/tahun_akademik') === 0 ? ' active' : '' ?>"><i class="fas fa-calendar-alt"></i> Tahun Akademik</a>
+                <a href="<?= base_url('admin/master/mapel') ?>" class="menu-item<?= strpos(uri_string(), 'admin/master/mapel') === 0 ? ' active' : '' ?>"><i class="fas fa-book"></i> Mapel</a>
+                <a href="<?= base_url('admin/master/agama') ?>" class="menu-item<?= strpos(uri_string(), 'admin/master/agama') === 0 ? ' active' : '' ?>"><i class="fas fa-praying-hands"></i> Agama</a>
+                <a href="<?= base_url('admin/master/ekstrakurikuler') ?>" class="menu-item<?= strpos(uri_string(), 'admin/master/ekstrakurikuler') === 0 ? ' active' : '' ?>"><i class="fas fa-futbol"></i> Ekstrakurikuler</a>
+            </div>
+            <div class="menu-item sidebar-dropdown <?= (strpos(uri_string(), 'admin/spmb') === 0 || strpos(uri_string(), 'admin/spmbsoal') === 0 || strpos(uri_string(), 'admin/calon-siswa') === 0) ? 'active' : '' ?>" style="cursor:pointer;">
                 <i class="fas fa-user-plus"></i>
                 <span>SPMB</span>
-            </a>
+                <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="sidebar-submenu" style="display: none; margin-left: 20px;">
+                <a href="<?= base_url('admin/spmb') ?>" class="menu-item<?= strpos(uri_string(), 'admin/spmb') === 0 ? ' active' : '' ?>"><i class="fas fa-list"></i> Data SPMB</a>
+                <a href="<?= base_url('admin/spmbsoal') ?>" class="menu-item<?= strpos(uri_string(), 'admin/spmbsoal') === 0 ? ' active' : '' ?>"><i class="fas fa-question-circle"></i> Bank Soal SPMB</a>
+                <a href="<?= base_url('admin/calon-siswa') ?>" class="menu-item<?= strpos(uri_string(), 'admin/calon-siswa') === 0 ? ' active' : '' ?>"><i class="fas fa-user-friends"></i> Calon Siswa</a>
+            </div>
             <a href="<?= base_url('admin/users') ?>" class="menu-item <?= strpos(uri_string(), 'admin/users') === 0 ? 'active' : '' ?>">
                 <i class="fas fa-user-cog"></i>
                 <span>Manajemen User</span>
@@ -448,16 +473,15 @@
                 <i class="fas fa-file-export"></i>
                 <span>Export Data</span>
             </a>
-            <li class="nav-item dropdown">
-                <a href="#" class="menu-item nav-link dropdown-toggle<?= strpos(uri_string(), 'admin/absensi/rekap') === 0 ? ' active' : '' ?>" data-bs-toggle="dropdown" role="button" aria-expanded="false">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span>Rekap Absensi</span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item<?= strpos(uri_string(), 'admin/absensi/rekap-siswa') === 0 ? ' active' : '' ?>" href="<?= base_url('admin/absensi/rekap-siswa') ?>">Rekap Siswa</a></li>
-                    <li><a class="dropdown-item<?= strpos(uri_string(), 'admin/absensi/rekap-guru') === 0 ? ' active' : '' ?>" href="<?= base_url('admin/absensi/rekap-guru') ?>">Rekap Guru</a></li>
-                </ul>
-            </li>
+            <div class="menu-item sidebar-dropdown <?= (strpos(uri_string(), 'admin/absensi/rekap-siswa') === 0 || strpos(uri_string(), 'admin/absensi/rekap-guru') === 0) ? 'active' : '' ?>" style="cursor:pointer;">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Rekap Absensi</span>
+                <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="sidebar-submenu" style="display: none; margin-left: 20px;">
+                <a href="<?= base_url('admin/absensi/rekap-siswa') ?>" class="menu-item<?= strpos(uri_string(), 'admin/absensi/rekap-siswa') === 0 ? ' active' : '' ?>"><i class="fas fa-user-graduate"></i> Rekap Siswa</a>
+                <a href="<?= base_url('admin/absensi/rekap-guru') ?>" class="menu-item<?= strpos(uri_string(), 'admin/absensi/rekap-guru') === 0 ? ' active' : '' ?>"><i class="fas fa-chalkboard-teacher"></i> Rekap Guru</a>
+            </div>
         </div>
     </div>
 
@@ -481,7 +505,7 @@
                         <img src="<?= base_url('assets/images/Logo.png') ?>" alt="User" class="profile-image">
                     <?php endif; ?>
                     <div>
-                        <h6 class="mb-0"><?= $user['username'] ?? 'Admin' ?></h6>
+                        <h6 class="mb-0"><?= $user['nama'] ?? $user['username'] ?? 'Admin' ?></h6>
                         <small class="text-muted"><?= ucfirst($user['role'] ?? 'admin') ?></small>
                     </div>
                 </a>
@@ -498,10 +522,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- PWA Script -->
     <script src="<?= base_url('assets/js/pwa.js') ?>"></script>
-    
+
     <script>
         // Sidebar Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -509,10 +533,10 @@
             const mainContent = document.getElementById('mainContent');
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-            
+
             // Check if sidebar state is saved in localStorage
             const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-            
+
             if (sidebarCollapsed) {
                 sidebar.classList.add('collapsed');
                 mainContent.classList.add('expanded');
@@ -520,14 +544,8 @@
 
             // Toggle sidebar
             sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-                
-                // Save state to localStorage
-                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
-                
-                // Show overlay on mobile when sidebar is open
                 if (window.innerWidth <= 768) {
+                    // Mobile: show fullscreen sidebar
                     if (sidebar.classList.contains('show')) {
                         sidebar.classList.remove('show');
                         sidebarOverlay.classList.remove('show');
@@ -535,6 +553,13 @@
                         sidebar.classList.add('show');
                         sidebarOverlay.classList.add('show');
                     }
+                } else {
+                    // Desktop: collapse/expand
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+
+                    // Save state to localStorage
+                    localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
                 }
             });
 
@@ -557,6 +582,19 @@
             // Remove hover effect for collapsed sidebar - let user control manually
             // The sidebar will stay in the state the user chooses
         });
+
+        // Sidebar Dropdown SPMB & Rekap Absensi
+        $(document).ready(function() {
+            $('.sidebar-dropdown').click(function() {
+                $(this).toggleClass('active');
+                $(this).next('.sidebar-submenu').slideToggle(200);
+            });
+            // Auto-open if on SPMB or Rekap Absensi page
+            $('.sidebar-dropdown.active').each(function() {
+                $(this).next('.sidebar-submenu').show();
+            });
+        });
     </script>
 </body>
-</html> 
+
+</html>

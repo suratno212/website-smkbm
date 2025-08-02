@@ -9,34 +9,33 @@ class CreatePengumpulanTugasTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            // Hapus kolom id jika ada, gunakan kd_pengumpulan sebagai primary key
+            'kd_pengumpulan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'tugas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_tugas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'siswa_id' => [
                 'type'       => 'INT',
-                'constraint' => 11,
+                'constraint' => 20,
                 'unsigned'   => true,
             ],
             'file_tugas' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '255',
             ],
             'status' => [
-                'type'       => 'ENUM',
-                'constraint' => ['Belum Dikumpulkan', 'Sudah Dikumpulkan', 'Terlambat'],
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+                'default'    => 'dikumpulkan',
             ],
             'nilai' => [
-                'type' => 'INT',
-                'constraint' => 3,
-                'null' => true,
+                'type'       => 'DECIMAL',
+                'constraint' => '5,2',
+                'null'       => true,
             ],
             'catatan' => [
                 'type' => 'TEXT',
@@ -51,9 +50,9 @@ class CreatePengumpulanTugasTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('tugas_id', 'tugas', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('siswa_id', 'siswa', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_pengumpulan', true); // PRIMARY KEY
+        $this->forge->addForeignKey('kd_tugas', 'tugas', 'kd_tugas', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('siswa_id', 'siswa', 'nis', 'CASCADE', 'CASCADE');
         $this->forge->createTable('pengumpulan_tugas');
     }
 

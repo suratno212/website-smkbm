@@ -35,10 +35,10 @@
                                     <?php if ($p['isi']) : ?>
                                         <p class="card-text"><?= nl2br($p['isi']) ?></p>
                                     <?php endif; ?>
-                                    
+
                                     <?php if ($p['file']) : ?>
                                         <div class="mt-3">
-                                            <a href="<?= base_url('guru/pengumuman/download/' . $p['id']) ?>" class="btn btn-danger btn-lg">
+                                            <a href="<?= base_url('guru/pengumuman/download/' . $p['kd_pengumuman']) ?>" class="btn btn-danger btn-lg">
                                                 <i class="fas fa-download"></i> Download Jadwal Ujian
                                             </a>
                                             <small class="text-muted d-block mt-2">Klik tombol di atas untuk mengunduh file jadwal ujian</small>
@@ -53,4 +53,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

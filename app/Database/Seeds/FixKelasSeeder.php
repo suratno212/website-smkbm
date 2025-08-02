@@ -16,7 +16,7 @@ class FixKelasSeeder extends Seeder
                 'id' => 1,
                 'nama_kelas' => 'X TKJ 1',
                 'tingkat' => 10,
-                'jurusan_id' => 2,
+                'kd_jurusan' => 2,
                 'wali_kelas_id' => 2,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')

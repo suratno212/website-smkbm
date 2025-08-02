@@ -1,0 +1,12 @@
+
+%% Activity Diagram Registrasi
+flowchart TD
+    start([Start]) --> U1["User: Masuk ke menu registrasi"]
+    U1 --> S1["Sistem: Menampilkan form registrasi"]
+    U2["User: Mengisi form registrasi dengan lengkap"] --> U3["User: Tekan submit"]
+    U3 --> S2["Sistem: Menyimpan data registrasi ke database"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["User: Mengisi form registrasi tidak lengkap"] --> U5["User: Tekan submit"]
+    U5 --> S3["Sistem: Data tidak berhasil ditambahkan"]
+    S3 --> S1

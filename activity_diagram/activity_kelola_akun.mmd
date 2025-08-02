@@ -1,0 +1,12 @@
+
+%% Activity Diagram Kelola Akun
+flowchart TD
+    start([Start]) --> U1["Admin: Masuk ke menu kelola akun"]
+    U1 --> S1["Sistem: Menampilkan daftar akun"]
+    U2["Admin: Pilih tambah/edit/hapus akun"] --> U3["Admin: Isi data akun"]
+    U3 --> U4["Admin: Tekan simpan"]
+    U4 --> S2["Sistem: Menyimpan perubahan"]
+    S1 --> U2
+    S2 --> end([End])
+    U5["Admin: Data tidak lengkap"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U3

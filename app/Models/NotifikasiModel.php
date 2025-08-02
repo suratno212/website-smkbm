@@ -8,6 +8,6 @@ class NotifikasiModel extends Model
 {
     protected $table = 'notifikasi';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['user_id', 'siswa_id', 'absensi_id', 'pesan', 'status', 'created_at'];
+    protected $allowedFields = ['user_id', 'nis', 'kd_absensi', 'pesan', 'status', 'created_at'];
     public $timestamps = false;
 } 

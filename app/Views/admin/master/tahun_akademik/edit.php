@@ -21,7 +21,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('admin/master/tahun_akademik/update/' . $tahun_akademik['id']) ?>" method="post">
+                    <form action="<?= base_url('admin/master/tahun_akademik/update/' . $tahun_akademik['kd_tahun_akademik']) ?>" method="post">
                         <?= csrf_field() ?>
                         <div class="form-group">
                             <label for="tahun">Tahun</label>
@@ -53,5 +53,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
- 
+<?= $this->endSection() ?>

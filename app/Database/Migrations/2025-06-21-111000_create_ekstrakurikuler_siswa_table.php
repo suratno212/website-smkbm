@@ -9,35 +9,22 @@ class CreateEkstrakurikulerSiswaTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
-            'siswa_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-            ],
-            'ekstrakurikuler_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-            ],
-            'tahun_akademik_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-            ],
-            'nilai' => [
+            'kd_ekstrakurikuler_siswa' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 20,
-                'null'       => true,
+                'constraint' => '20',
             ],
-            'keterangan' => [
-                'type' => 'TEXT',
-                'null' => true,
+            'nis' => [
+                'type'       => 'INT',
+                'constraint' => 20,
+                'unsigned'   => true,
+            ],
+            'kd_ekstrakurikuler' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+            ],
+            'tahun_ajaran' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -48,10 +35,9 @@ class CreateEkstrakurikulerSiswaTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('siswa_id', 'siswa', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('ekstrakurikuler_id', 'ekstrakurikuler', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('tahun_akademik_id', 'tahun_akademik', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_ekstrakurikuler_siswa', true); // PRIMARY KEY
+        $this->forge->addForeignKey('nis', 'siswa', 'nis', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_ekstrakurikuler', 'ekstrakurikuler', 'kd_ekstrakurikuler', 'CASCADE', 'CASCADE');
         $this->forge->createTable('ekstrakurikuler_siswa');
     }
 

@@ -21,14 +21,14 @@
         <h3 class="mb-0 mt-2">SMK BHAKTI MULYA</h3>
         <h4 class="mb-0">DAFTAR SISWA</h4>
         <div>Filter:
-            <?php if (!empty($filters['kelas_id'])): ?>
-                Kelas: <strong><?= esc(array_values(array_filter($kelas, fn($k) => $k['id'] == $filters['kelas_id']))[0]['nama_kelas'] ?? '-') ?></strong>
+            <?php if (!empty($filters['kd_kelas'])): ?>
+                Kelas: <strong><?= esc(array_values(array_filter($kelas, fn($k) => $k['kd_kelas'] == $filters['kd_kelas']))[0]['nama_kelas'] ?? '-') ?></strong>
             <?php endif; ?>
-            <?php if (!empty($filters['jurusan_id'])): ?>
-                , Jurusan: <strong><?= esc(array_values(array_filter($jurusan, fn($j) => $j['id'] == $filters['jurusan_id']))[0]['nama_jurusan'] ?? '-') ?></strong>
+            <?php if (!empty($filters['kd_jurusan'])): ?>
+                , Jurusan: <strong><?= esc(array_values(array_filter($jurusan, fn($j) => $j['kd_jurusan'] == $filters['kd_jurusan']))[0]['nama_jurusan'] ?? '-') ?></strong>
             <?php endif; ?>
-            <?php if (!empty($filters['nisn'])): ?>
-                , NISN: <strong><?= esc($filters['nisn']) ?></strong>
+            <?php if (!empty($filters['nis'])): ?>
+                , NIS: <strong><?= esc($filters['nis']) ?></strong>
             <?php endif; ?>
             <?php if (!empty($filters['nama'])): ?>
                 , Nama: <strong><?= esc($filters['nama']) ?></strong>
@@ -39,7 +39,7 @@
         <thead class="table-dark">
             <tr>
                 <th>No</th>
-                <th>NISN</th>
+                <th>NIS</th>
                 <th>Nama</th>
                 <th>Kelas</th>
                 <th>Jurusan</th>
@@ -53,7 +53,7 @@
             <?php foreach ($siswa as $i => $s): ?>
             <tr>
                 <td><?= $i+1 ?></td>
-                <td><?= esc($s['nisn']) ?></td>
+                <td><?= esc($s['nis']) ?></td>
                 <td><?= esc($s['nama']) ?></td>
                 <td><?= esc($s['nama_kelas']) ?></td>
                 <td><?= esc($s['nama_jurusan']) ?></td>

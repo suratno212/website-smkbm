@@ -41,7 +41,8 @@ class FixSiswaSuraSeeder extends Seeder
             $this->db->table('kelas')->insert([
                 'nama_kelas' => 'X TKJ 1',
                 'tingkat' => 'X',
-                'jurusan_id' => $jurusan['id'],
+                'kd_jurusan' => $jurusan['kd_jurusan'],
+                'kd_kelas' => 'X TKJ 1',
                 'wali_kelas_id' => null
             ]);
             $kelas = $this->db->table('kelas')->get()->getRowArray();
@@ -54,14 +55,14 @@ class FixSiswaSuraSeeder extends Seeder
         // Insert data siswa
         $siswaData = [
             'user_id' => $user['id'],
-            'nisn' => '2024001',
+            'nis' => '2024001',
             'nama' => 'Sura Siswa',
             'jenis_kelamin' => 'Laki-laki',
             'tempat_lahir' => 'Jakarta',
             'tanggal_lahir' => '2006-01-15',
             'agama_id' => $agama_id,
-            'kelas_id' => $kelas['id'],
-            'jurusan_id' => $jurusan['id'],
+            'kd_kelas' => $kelas['kd_kelas'],
+            'kd_jurusan' => $jurusan['kd_jurusan'],
             'alamat' => 'Jl. Contoh No. 123',
             'no_hp' => '081234567890',
             'created_at' => date('Y-m-d H:i:s'),
@@ -71,7 +72,7 @@ class FixSiswaSuraSeeder extends Seeder
         $this->db->table('siswa')->insert($siswaData);
         
         echo "Data siswa untuk user 'sura' berhasil ditambahkan\n";
-        echo "NISN: 2024001\n";
+        echo "NIS: 2024001\n";
         echo "Nama: Sura Siswa\n";
         echo "Kelas: " . $kelas['nama_kelas'] . "\n";
         echo "Jurusan: " . $jurusan['nama_jurusan'] . "\n";

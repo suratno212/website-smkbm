@@ -1,25 +1,24 @@
 <?php
+
 namespace App\Database\Migrations;
+
 use CodeIgniter\Database\Migration;
+
 class CreatePengaturanTable extends Migration
 {
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type' => 'INT',
-                'constraint' => 11,
-                'unsigned' => true,
-                'auto_increment' => true,
+            'kd_pengaturan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'key' => [
-                'type' => 'VARCHAR',
+            'nama_pengaturan' => [
+                'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'unique' => true,
             ],
-            'value' => [
+            'nilai' => [
                 'type' => 'TEXT',
-                'null' => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -30,9 +29,10 @@ class CreatePengaturanTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+        $this->forge->addKey('kd_pengaturan', true); // PRIMARY KEY
         $this->forge->createTable('pengaturan');
     }
+
     public function down()
     {
         $this->forge->dropTable('pengaturan');

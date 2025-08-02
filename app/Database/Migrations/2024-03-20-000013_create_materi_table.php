@@ -9,37 +9,32 @@ class CreateMateriTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_materi' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'guru_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'nik_nip' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '25',
             ],
-            'mapel_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_mapel' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
-            'kelas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'judul' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '255',
             ],
             'deskripsi' => [
                 'type' => 'TEXT',
             ],
             'file' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '255',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -50,10 +45,11 @@ class CreateMateriTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('guru_id', 'guru', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('mapel_id', 'mapel', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('kelas_id', 'kelas', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_materi', true); // PRIMARY KEY
+        $this->forge->addKey(['nik_nip', 'kd_mapel', 'kd_kelas', 'judul'], true);
+        $this->forge->addForeignKey('nik_nip', 'guru', 'nik_nip', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_mapel', 'mapel', 'kd_mapel', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_kelas', 'kelas', 'kd_kelas', 'CASCADE', 'CASCADE');
         $this->forge->createTable('materi');
     }
 

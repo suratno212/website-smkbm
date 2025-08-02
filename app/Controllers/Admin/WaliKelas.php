@@ -3,226 +3,127 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Models\WaliKelasModel;
 use App\Models\KelasModel;
 use App\Models\GuruModel;
-use App\Models\TahunAkademikModel;
-use App\Models\UserModel;
+use App\Models\SiswaModel;
+use App\Models\WaliKelasModel;
 
 class WaliKelas extends BaseController
 {
-    protected $waliKelasModel;
     protected $kelasModel;
     protected $guruModel;
-    protected $tahunAkademikModel;
-    protected $userModel;
+    protected $siswaModel;
+    protected $waliKelasModel;
 
     public function __construct()
     {
-        $this->waliKelasModel = new WaliKelasModel();
         $this->kelasModel = new KelasModel();
         $this->guruModel = new GuruModel();
-        $this->tahunAkademikModel = new TahunAkademikModel();
-        $this->userModel = new UserModel();
+        $this->siswaModel = new SiswaModel();
+        $this->waliKelasModel = new WaliKelasModel();
     }
 
     public function index()
     {
-        // Cek session
-        if (!session()->get('logged_in')) {
-            return redirect()->to('auth');
-        }
-
-        // Ambil data user
-        $userId = session()->get('user_id');
-        $user = $this->userModel->find($userId);
-        
-        if (!$user) {
-            session()->destroy();
-            return redirect()->to('auth')->with('error', 'Sesi Anda telah berakhir. Silakan login kembali.');
-        }
-
         $data = [
             'title' => 'Data Wali Kelas',
-            'wali_kelas' => $this->waliKelasModel->getWaliKelasWithRelations(),
-            'user' => $user
+            'wali_kelas' => $this->waliKelasModel->getWaliKelasWithRelations()
         ];
 
         return view('admin/wali_kelas/index', $data);
     }
 
-    public function create()
+    public function assign()
     {
-        // Cek session
-        if (!session()->get('logged_in')) {
-            return redirect()->to('auth');
+        $kd_kelas = $this->request->getPost('kd_kelas');
+        $nik_nip = $this->request->getPost('nik_nip');
+
+        if (!$kd_kelas || !$nik_nip) {
+            return redirect()->back()->with('error', 'Data tidak lengkap');
         }
 
-        // Ambil data user
-        $userId = session()->get('user_id');
-        $user = $this->userModel->find($userId);
-        
-        if (!$user) {
-            session()->destroy();
-            return redirect()->to('auth')->with('error', 'Sesi Anda telah berakhir. Silakan login kembali.');
+        // Update wali kelas
+        $this->kelasModel->update($kd_kelas, [
+            'wali_kelas_id' => $nik_nip
+        ]);
+
+        return redirect()->to('admin/wali-kelas')->with('success', 'Wali kelas berhasil ditugaskan');
+    }
+
+    public function remove($kdKelas)
+    {
+        $this->kelasModel->update($kdKelas, [
+            'wali_kelas_id' => null
+        ]);
+
+        return redirect()->to('admin/wali-kelas')->with('success', 'Wali kelas berhasil dihapus');
+    }
+
+    public function detail($kdKelas)
+    {
+        $kelas = $this->kelasModel->find($kdKelas);
+        $wali_kelas = null;
+        $siswa_list = [];
+
+        if ($kelas) {
+            if ($kelas['wali_kelas_id']) {
+                $wali_kelas = $this->guruModel->find($kelas['wali_kelas_id']);
+            }
+
+            $siswa_list = $this->siswaModel->where('kd_kelas', $kdKelas)->findAll();
         }
 
         $data = [
-            'title' => 'Tambah Wali Kelas',
-            'kelas' => $this->kelasModel->findAll(),
-            'guru' => $this->guruModel->getGuruWithRelations(),
-            'tahun_akademik' => $this->tahunAkademikModel->findAll(),
-            'validation' => \Config\Services::validation(),
-            'user' => $user
+            'title' => 'Detail Wali Kelas',
+            'kelas' => $kelas,
+            'wali_kelas' => $wali_kelas,
+            'siswa_list' => $siswa_list
         ];
 
+        return view('admin/wali_kelas/detail', $data);
+    }
+
+    public function create()
+    {
+        $tahunAkademikModel = new \App\Models\TahunAkademikModel();
+        $data = [
+            'title' => 'Tambah Wali Kelas',
+            'tahun_akademik' => $tahunAkademikModel->findAll(),
+            'kelas' => $this->kelasModel->findAll(),
+            'guru' => $this->guruModel->findAll(),
+            'validation' => \Config\Services::validation()
+        ];
         return view('admin/wali_kelas/create', $data);
     }
 
     public function store()
     {
-        // Cek session
-        if (!session()->get('logged_in')) {
-            return redirect()->to('auth');
-        }
-
-        // Validasi input
-        if (!$this->validate([
-            'kelas_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Kelas harus dipilih'
-                ]
-            ],
-            'guru_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Guru harus dipilih'
-                ]
-            ],
-            'tahun_akademik_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Tahun akademik harus dipilih'
-                ]
-            ]
-        ])) {
-            return redirect()->back()->withInput();
-        }
-
-        // Cek apakah kelas sudah memiliki wali kelas di tahun akademik yang sama
-        $existingWaliKelas = $this->waliKelasModel->where([
-            'kelas_id' => $this->request->getPost('kelas_id'),
-            'tahun_akademik_id' => $this->request->getPost('tahun_akademik_id')
-        ])->first();
-        
-        if ($existingWaliKelas) {
-            return redirect()->back()->withInput()->with('error', 'Kelas ini sudah memiliki wali kelas pada tahun akademik yang dipilih');
-        }
-
-        // Simpan data wali kelas
-        $this->waliKelasModel->insert([
-            'kelas_id' => $this->request->getPost('kelas_id'),
-            'guru_id' => $this->request->getPost('guru_id'),
-            'tahun_akademik_id' => $this->request->getPost('tahun_akademik_id')
-        ]);
-
-        session()->setFlashdata('success', 'Data wali kelas berhasil ditambahkan');
-        return redirect()->to('admin/wali_kelas');
-    }
-
-    public function edit($id)
-    {
-        // Cek session
-        if (!session()->get('logged_in')) {
-            return redirect()->to('auth');
-        }
-
-        // Ambil data user
-        $userId = session()->get('user_id');
-        $user = $this->userModel->find($userId);
-        
-        if (!$user) {
-            session()->destroy();
-            return redirect()->to('auth')->with('error', 'Sesi Anda telah berakhir. Silakan login kembali.');
-        }
-
-        $data = [
-            'title' => 'Edit Wali Kelas',
-            'wali_kelas' => $this->waliKelasModel->find($id),
-            'kelas' => $this->kelasModel->findAll(),
-            'guru' => $this->guruModel->getGuruWithRelations(),
-            'tahun_akademik' => $this->tahunAkademikModel->findAll(),
-            'validation' => \Config\Services::validation(),
-            'user' => $user
+        $validation = \Config\Services::validation();
+        $rules = [
+            'kd_kelas' => 'required',
+            'nik_nip' => 'required',
+            'kd_tahun_akademik' => 'required',
         ];
-
-        return view('admin/wali_kelas/edit', $data);
-    }
-
-    public function update($id)
-    {
-        // Cek session
-        if (!session()->get('logged_in')) {
-            return redirect()->to('auth');
+        if (! $this->validate($rules)) {
+            return redirect()->back()->withInput()->with('validation', $validation);
         }
-
-        // Validasi input
-        if (!$this->validate([
-            'kelas_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Kelas harus dipilih'
-                ]
-            ],
-            'guru_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Guru harus dipilih'
-                ]
-            ],
-            'tahun_akademik_id' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Tahun akademik harus dipilih'
-                ]
-            ]
-        ])) {
-            return redirect()->back()->withInput();
+        $data = [
+            'kd_kelas' => $this->request->getPost('kd_kelas'),
+            'nik_nip' => $this->request->getPost('nik_nip'),
+            'kd_tahun_akademik' => $this->request->getPost('kd_tahun_akademik'),
+        ];
+        try {
+            $this->waliKelasModel->insert($data);
+            return redirect()->to('/admin/wali_kelas')->with('success', 'Data wali kelas berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah data wali kelas: ' . $e->getMessage());
         }
-
-        // Cek apakah kelas sudah memiliki wali kelas di tahun akademik yang sama (kecuali data yang sedang diedit)
-        $existingWaliKelas = $this->waliKelasModel->where([
-            'kelas_id' => $this->request->getPost('kelas_id'),
-            'tahun_akademik_id' => $this->request->getPost('tahun_akademik_id')
-        ])->where('id !=', $id)->first();
-        
-        if ($existingWaliKelas) {
-            return redirect()->back()->withInput()->with('error', 'Kelas ini sudah memiliki wali kelas pada tahun akademik yang dipilih');
-        }
-
-        // Update data wali kelas
-        $this->waliKelasModel->update($id, [
-            'kelas_id' => $this->request->getPost('kelas_id'),
-            'guru_id' => $this->request->getPost('guru_id'),
-            'tahun_akademik_id' => $this->request->getPost('tahun_akademik_id')
-        ]);
-
-        session()->setFlashdata('success', 'Data wali kelas berhasil diperbarui');
-        return redirect()->to('admin/wali_kelas');
     }
 
     public function delete($id)
     {
-        // Cek session
-        if (!session()->get('logged_in')) {
-            return redirect()->to('auth');
-        }
-
-        // Hapus data wali kelas
+        // Hapus data wali kelas berdasarkan id
         $this->waliKelasModel->delete($id);
-
-        session()->setFlashdata('success', 'Data wali kelas berhasil dihapus');
-        return redirect()->to('admin/wali_kelas');
+        return redirect()->to('/admin/wali_kelas')->with('success', 'Data wali kelas berhasil dihapus');
     }
-} 
+}

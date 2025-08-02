@@ -8,13 +8,13 @@ class AgamaSeeder extends Seeder
     public function run()
     {
         $data = [
-            ['nama_agama' => 'Islam'],
-            ['nama_agama' => 'Kristen'],
-            ['nama_agama' => 'Katolik'],
-            ['nama_agama' => 'Hindu'],
-            ['nama_agama' => 'Buddha'],
-            ['nama_agama' => 'Konghucu'],
-            ['nama_agama' => 'Lainnya']
+            ['id' => 1, 'nama_agama' => 'Islam'],
+            ['id' => 2, 'nama_agama' => 'Kristen'],
+            ['id' => 3, 'nama_agama' => 'Katolik'],
+            ['id' => 4, 'nama_agama' => 'Hindu'],
+            ['id' => 5, 'nama_agama' => 'Buddha'],
+            ['id' => 6, 'nama_agama' => 'Konghucu'],
+            ['id' => 7, 'nama_agama' => 'Lainnya']
         ];
         $this->db->table('agama')->insertBatch($data);
     }

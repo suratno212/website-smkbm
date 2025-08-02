@@ -172,11 +172,11 @@ $jumlahKelompok = [];
 
     <table class="identitas-table" style="width:70%; margin-bottom:10px;">
         <tr><td><b>Nama Siswa</b></td><td>: <?= esc($siswa['nama']) ?></td><td><b>Jurusan</b></td><td>: <?= esc($kelas['nama_jurusan'] ?? '-') ?></td></tr>
-        <tr><td><b>NIS</b></td><td>: <?= esc($siswa['nisn']) ?></td><td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td></tr>
+        <tr><td><b>NIS</b></td><td>: <?= esc($siswa['nis']) ?></td><td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td></tr>
         <tr><td><b>Nama Sekolah</b></td><td>: SMK Bhakti Mulya BNS</td><td><b>Semester</b></td><td>: <?= esc($semester) ?></td></tr>
         <tr><td><b>Alamat</b></td><td colspan="3">: Gunung Ratu BNS</td></tr>
         <tr><td><b>Wali Kelas</b></td><td>: <?= esc($kelas['nama_wali_kelas'] ?? ($wali_kelas['nama'] ?? '-')) ?></td><td><b>Tahun Ajaran</b></td><td>: <?= esc($tahunAkademik['tahun'] ?? (date('Y').'/'.(date('Y')+1))) ?></td></tr>
-        <tr><td><b>NIP/NUPTK Wali Kelas</b></td><td>: <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?></td><td><b>Peringkat</b></td><td>: <?= $ranking ?? '-' ?></td></tr>
+        <tr><td><b>NIK/NIP Wali Kelas</b></td><td>: <?= esc($wali_kelas['nik_nip'] ?? '-') ?></td><td><b>Peringkat</b></td><td>: <?= $ranking ?? '-' ?></td></tr>
     </table>
 
     <div class="section-title">Nilai Akademik</div>
@@ -314,7 +314,7 @@ $jumlahKelompok = [];
             <td style="border:none; text-align:center; line-height:1.2;">
                 <?= esc($wali_kelas['nama'] ?? ($kelas['nama_wali_kelas'] ?? '-')) ?><br>
                 ____________________<br>
-                <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?>
+                <?= esc($wali_kelas['nik_nip'] ?? '-') ?>
             </td>
             <td style="border:none; text-align:center; line-height:1.2;">
                 <br>____________________<br>
@@ -322,7 +322,7 @@ $jumlahKelompok = [];
             <td style="border:none; text-align:center; line-height:1.2;">
                 <?= esc($siswa['nama']) ?><br>
                 ____________________<br>
-                <?= esc($siswa['nisn']) ?>
+                <?= esc($siswa['nis']) ?>
             </td>
         </tr>
     </table>

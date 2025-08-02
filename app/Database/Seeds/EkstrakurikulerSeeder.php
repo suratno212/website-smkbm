@@ -10,11 +10,13 @@ class EkstrakurikulerSeeder extends Seeder
     {
         $data = [
             [
+                'kd_ekstrakurikuler' => 'EKSKUL001',
                 'nama_ekstrakurikuler' => 'drum band',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
+                'kd_ekstrakurikuler' => 'EKSKUL002',
                 'nama_ekstrakurikuler' => 'pramuka',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),

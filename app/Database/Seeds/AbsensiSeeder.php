@@ -7,12 +7,14 @@ class AbsensiSeeder extends Seeder
     {
         $data = [
             [
-                'siswa_id' => 1,
+                'kd_absensi' => 'ABS001',
+                'nis' => '2024001',
                 'tanggal'  => '2024-03-20',
                 'status'   => 'Hadir',
             ],
             [
-                'siswa_id' => 1,
+                'kd_absensi' => 'ABS002',
+                'nis' => '2024001',
                 'tanggal'  => '2024-03-21',
                 'status'   => 'Hadir',
             ],

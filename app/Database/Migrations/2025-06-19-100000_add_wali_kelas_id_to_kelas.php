@@ -7,21 +7,22 @@ class AddWaliKelasIdToKelas extends Migration
 {
     public function up()
     {
-        $this->forge->addColumn('kelas', [
-            'wali_kelas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => true,
-                'after'      => 'jurusan_id',
-            ],
-        ]);
-        $this->forge->addForeignKey('wali_kelas_id', 'guru', 'id', 'SET NULL', 'CASCADE');
+        // Kolom wali_kelas_id sudah ada, tidak perlu ditambah lagi
+        // $this->forge->addColumn('kelas', [
+        //     'wali_kelas_id' => [
+        //         'type' => 'VARCHAR',
+        //         'constraint' => '25',
+        //         'null' => true,
+        //         'after' => 'kd_jurusan',
+        //     ],
+        // ]);
+        // $this->forge->addForeignKey('wali_kelas_id', 'guru', 'nik_nip', 'SET NULL', 'CASCADE');
     }
 
     public function down()
     {
-        $this->forge->dropForeignKey('kelas', 'kelas_wali_kelas_id_foreign');
-        $this->forge->dropColumn('kelas', 'wali_kelas_id');
+        // Kolom wali_kelas_id tidak ada di tabel kelas, jadi tidak perlu drop foreign key
+        // $this->forge->dropForeignKey('kelas', 'kelas_wali_kelas_id_foreign');
+        // $this->forge->dropColumn('kelas', 'wali_kelas_id');
     }
 } 

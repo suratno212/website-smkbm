@@ -9,24 +9,31 @@ class CreateKelasTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'nama_kelas' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '50',
             ],
             'tingkat' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '10',
             ],
-            'jurusan_id' => [
+            'kd_jurusan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
+            ],
+            'wali_kelas_nik_nip' => [
+                'type' => 'VARCHAR',
+                'constraint' => '25',
+                'null' => true,
+            ],
+            'kuota' => [
                 'type'       => 'INT',
                 'constraint' => 11,
-                'unsigned'   => true,
+                'default'    => 36,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -37,8 +44,8 @@ class CreateKelasTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('jurusan_id', 'jurusan', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_kelas', true); // PRIMARY KEY
+        $this->forge->addForeignKey('kd_jurusan', 'jurusan', 'kd_jurusan', 'CASCADE', 'CASCADE');
         $this->forge->createTable('kelas');
     }
 

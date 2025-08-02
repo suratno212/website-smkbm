@@ -9,44 +9,27 @@ class CreateNotifikasiTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_notifikasi' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'user_id' => [ // wali kelas/guru
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'judul' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
             ],
-            'siswa_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-            ],
-            'absensi_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-            ],
-            'pesan' => [
-                'type'       => 'TEXT',
-            ],
-            'status' => [
-                'type'       => 'ENUM',
-                'constraint' => ['belum_dibaca', 'dibaca'],
-                'default'    => 'belum_dibaca',
+            'isi' => [
+                'type' => 'TEXT',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('siswa_id', 'siswa', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('absensi_id', 'absensi', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_notifikasi', true); // PRIMARY KEY
         $this->forge->createTable('notifikasi');
     }
 

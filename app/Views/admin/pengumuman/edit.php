@@ -17,7 +17,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <form action="<?= base_url('admin/pengumuman/update/' . $pengumuman['id']) ?>" method="post" enctype="multipart/form-data">
+                    <form action="<?= base_url('admin/pengumuman/update/' . $pengumuman['kd_pengumuman']) ?>" method="post" enctype="multipart/form-data">
                         <?= csrf_field() ?>
                         <div class="row">
                             <div class="col-md-6">
@@ -67,7 +67,7 @@
                                     <?php if ($pengumuman['file']) : ?>
                                         <div class="mb-2">
                                             <strong>File saat ini:</strong> <?= $pengumuman['file'] ?>
-                                            <a href="<?= base_url('admin/pengumuman/download/' . $pengumuman['id']) ?>" class="btn btn-success btn-sm ml-2">
+                                            <a href="<?= base_url('admin/pengumuman/download/' . $pengumuman['kd_pengumuman']) ?>" class="btn btn-success btn-sm ml-2">
                                                 <i class="fas fa-download"></i> Download
                                             </a>
                                         </div>
@@ -112,4 +112,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

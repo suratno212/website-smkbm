@@ -20,23 +20,20 @@ class CreateJadwalUjianTable extends Migration
                 'constraint' => ['UTS', 'UAS', 'US', 'UN'],
                 'comment'    => 'Jenis ujian',
             ],
-            'mapel_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'comment'    => 'ID mata pelajaran',
+            'kd_mapel' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
+                'comment'    => 'Kode mata pelajaran',
             ],
-            'kelas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'comment'    => 'ID kelas',
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+                'comment'    => 'Kode kelas',
             ],
-            'jurusan_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'comment'    => 'ID jurusan',
+            'kd_jurusan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
+                'comment'    => 'Kode jurusan',
             ],
             'semester' => [
                 'type'       => 'ENUM',
@@ -55,17 +52,15 @@ class CreateJadwalUjianTable extends Migration
                 'type' => 'TIME',
                 'comment' => 'Jam selesai ujian',
             ],
-            'ruang_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'comment'    => 'ID ruangan',
+            'kd_ruangan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+                'comment'    => 'Kode ruangan',
             ],
-            'pengawas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'comment'    => 'ID guru pengawas',
+            'nik_nip' => [
+                'type' => 'VARCHAR',
+                'constraint' => '25',
+                'comment'    => 'NIK/NIP guru pengawas',
             ],
             'keterangan' => [
                 'type'       => 'TEXT',
@@ -83,11 +78,11 @@ class CreateJadwalUjianTable extends Migration
         ]);
         
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('mapel_id', 'mapel', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('kelas_id', 'kelas', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('jurusan_id', 'jurusan', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('ruang_id', 'ruangan', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('pengawas_id', 'guru', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_mapel', 'mapel', 'kd_mapel', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_kelas', 'kelas', 'kd_kelas', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_jurusan', 'jurusan', 'kd_jurusan', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('kd_ruangan', 'ruangan', 'kd_ruangan', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('nik_nip', 'guru', 'nik_nip', 'CASCADE', 'CASCADE');
         $this->forge->createTable('jadwal_ujian');
     }
 

@@ -9,51 +9,41 @@ class CreateGuruTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'nik_nip' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '25',
             ],
             'user_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
             ],
-            'nip_nuptk' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
-            ],
             'nama' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '100',
             ],
             'jenis_kelamin' => [
                 'type'       => 'ENUM',
-                'constraint' => ['Laki-laki', 'Perempuan'],
+                'constraint' => ['L', 'P'],
             ],
-            'tempat_lahir' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
+            'agama_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
             ],
             'tanggal_lahir' => [
                 'type' => 'DATE',
             ],
-            'agama' => [
+            'kd_mapel' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
-            ],
-            'mapel_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+                'constraint' => '10',
             ],
             'alamat' => [
                 'type' => 'TEXT',
             ],
             'no_hp' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '15',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -64,9 +54,10 @@ class CreateGuruTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+        $this->forge->addKey('nik_nip', true); // PRIMARY KEY
         $this->forge->addForeignKey('user_id', 'users', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('mapel_id', 'mapel', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_mapel', 'mapel', 'kd_mapel', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('agama_id', 'agama', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('guru');
     }
 

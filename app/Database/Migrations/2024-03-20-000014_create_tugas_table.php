@@ -9,30 +9,25 @@ class CreateTugasTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_tugas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'guru_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'nik_nip' => [
+                'type' => 'VARCHAR',
+                'constraint' => '25',
             ],
-            'mapel_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_mapel' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
-            'kelas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'judul' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '255',
             ],
             'deskripsi' => [
                 'type' => 'TEXT',
@@ -49,10 +44,10 @@ class CreateTugasTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('guru_id', 'guru', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('mapel_id', 'mapel', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('kelas_id', 'kelas', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_tugas', true); // PRIMARY KEY
+        $this->forge->addForeignKey('nik_nip', 'guru', 'nik_nip', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_mapel', 'mapel', 'kd_mapel', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_kelas', 'kelas', 'kd_kelas', 'CASCADE', 'CASCADE');
         $this->forge->createTable('tugas');
     }
 

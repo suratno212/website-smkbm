@@ -9,41 +9,49 @@ class CreateNilaiTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
-            ],
-            'siswa_id' => [
+            'nis' => [
                 'type'       => 'INT',
-                'constraint' => 11,
+                'constraint' => 20,
                 'unsigned'   => true,
             ],
-            'mapel_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_mapel' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
-            'tahun_akademik_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'uts' => [
-                'type'       => 'FLOAT',
+            'kd_jurusan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
+            ],
+            'kd_tahun_akademik' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+            ],
+            'semester' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
+            ],
+            'nilai_tugas' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '5,2',
                 'null'       => true,
             ],
-            'uas' => [
-                'type'       => 'FLOAT',
+            'nilai_uts' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '5,2',
                 'null'       => true,
             ],
-            'tugas' => [
-                'type'       => 'FLOAT',
+            'nilai_uas' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '5,2',
                 'null'       => true,
             ],
-            'akhir' => [
-                'type'       => 'FLOAT',
+            'nilai_akhir' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '5,2',
                 'null'       => true,
             ],
             'created_at' => [
@@ -55,10 +63,12 @@ class CreateNilaiTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('siswa_id', 'siswa', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('mapel_id', 'mapel', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('tahun_akademik_id', 'tahun_akademik', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['nis', 'kd_mapel', 'kd_kelas', 'kd_jurusan', 'kd_tahun_akademik'], true);
+        $this->forge->addForeignKey('nis', 'siswa', 'nis', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_mapel', 'mapel', 'kd_mapel', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_kelas', 'kelas', 'kd_kelas', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_jurusan', 'jurusan', 'kd_jurusan', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_tahun_akademik', 'tahun_akademik', 'kd_tahun_akademik', 'CASCADE', 'CASCADE');
         $this->forge->createTable('nilai');
     }
 

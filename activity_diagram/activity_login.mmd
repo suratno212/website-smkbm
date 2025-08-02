@@ -1,0 +1,12 @@
+
+%% Activity Diagram Login
+flowchart TD
+    start([Start]) --> U1["User: Mengakses website SIAKAD"]
+    U1 --> S1["Sistem: Menampilkan halaman guest"]
+    U2["User: Klik button login"] --> S2["Sistem: Menampilkan halaman login"]
+    U3["User: Memasukkan username dan password"] --> S3{"Sistem: Username dan password valid?"}
+    S3 -- yes --> S4["Sistem: Menampilkan halaman dashboard"]
+    S3 -- no --> S2
+    S1 --> U2
+    S2 --> U3
+    S4 --> end([End])

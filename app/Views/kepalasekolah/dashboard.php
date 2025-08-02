@@ -62,6 +62,24 @@
             </div>
         </div>
     </div>
+    <div class="row mb-4 g-4 align-items-stretch">
+        <div class="col-lg-6 col-md-12 d-flex">
+            <div class="card shadow-sm flex-fill w-100 mb-3 mb-lg-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="fas fa-user-graduate me-2"></i>Pendaftar SPMB per Jurusan</h5>
+                    <canvas id="chartSpmbJurusan" height="80" style="max-height:220px;"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 d-flex">
+            <div class="card shadow-sm flex-fill w-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="fas fa-chart-line me-2"></i>Status Pendaftaran SPMB</h5>
+                    <canvas id="chartSpmbStatus" height="80" style="max-height:220px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="alert alert-info">Selamat datang, Kepala Sekolah!<br>Gunakan menu di sidebar untuk melihat rekap nilai, absensi, raport, dan statistik.</div>
     <div class="row">
         <div class="col-md-3 mb-3">
@@ -88,6 +106,12 @@ const jurusanData = <?= json_encode(array_map('intval', array_column($siswa_per_
 const kelasLabels = <?= json_encode(array_column($siswa_per_kelas, 'nama_kelas')) ?>;
 const kelasData = <?= json_encode(array_map('intval', array_column($siswa_per_kelas, 'total'))) ?>;
 
+// Data untuk grafik SPMB
+const spmbJurusanLabels = <?= json_encode(array_column($spmb_per_jurusan, 'jurusan_pilihan')) ?>;
+const spmbJurusanData = <?= json_encode(array_map('intval', array_column($spmb_per_jurusan, 'total'))) ?>;
+const spmbStatusLabels = <?= json_encode(array_column($spmb_status, 'status_pendaftaran')) ?>;
+const spmbStatusData = <?= json_encode(array_map('intval', array_column($spmb_status, 'total'))) ?>;
+
 // Bar Chart Jurusan
 const ctxJurusan = document.getElementById('chartJurusan').getContext('2d');
 new Chart(ctxJurusan, {
@@ -113,17 +137,71 @@ new Chart(ctxJurusan, {
         }
     }
 });
-// Pie Chart Kelas
+// Bar Chart Kelas
 const ctxKelas = document.getElementById('chartKelas').getContext('2d');
 new Chart(ctxKelas, {
-    type: 'pie',
+    type: 'bar',
     data: {
         labels: kelasLabels,
         datasets: [{
+            label: 'Jumlah Siswa',
             data: kelasData,
+            backgroundColor: '#3949ab',
+            borderRadius: 8,
+            maxBarThickness: 40
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+        },
+        scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+    }
+});
+
+// Bar Chart SPMB per Jurusan
+const ctxSpmbJurusan = document.getElementById('chartSpmbJurusan').getContext('2d');
+new Chart(ctxSpmbJurusan, {
+    type: 'bar',
+    data: {
+        labels: spmbJurusanLabels,
+        datasets: [{
+            label: 'Jumlah Pendaftar',
+            data: spmbJurusanData,
+            backgroundColor: '#8e24aa',
+            borderRadius: 8,
+            maxBarThickness: 40
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+        },
+        scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+    }
+});
+
+// Doughnut Chart Status SPMB
+const ctxSpmbStatus = document.getElementById('chartSpmbStatus').getContext('2d');
+new Chart(ctxSpmbStatus, {
+    type: 'doughnut',
+    data: {
+        labels: spmbStatusLabels,
+        datasets: [{
+            data: spmbStatusData,
             backgroundColor: [
-                '#1a237e', '#43a047', '#fbc02d', '#e53935', '#3949ab', '#00897b', '#fb8c00', '#8e24aa', '#00acc1', '#c62828', '#6d4c41', '#f06292', '#7e57c2', '#d4e157', '#ff7043', '#26a69a', '#ec407a', '#ab47bc', '#ffa726', '#66bb6a'
-            ]
+                '#4caf50', '#ff9800', '#f44336', '#2196f3', '#9c27b0', '#607d8b'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
         }]
     },
     options: {
@@ -136,50 +214,57 @@ new Chart(ctxKelas, {
 });
 </script>
 <style>
+body, .container-fluid {
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #e3e9f7 0%, #f5f7fa 100%);
+}
 .stats-card {
     position: relative;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 2px 10px rgba(26,35,126,0.08);
-    padding: 24px 20px 20px 20px;
+    background: linear-gradient(120deg, #fff 60%, #e3e9f7 100%);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(26,35,126,0.10);
+    padding: 32px 24px 28px 24px;
     overflow: hidden;
-    min-height: 140px;
-    transition: box-shadow 0.2s;
+    min-height: 150px;
+    transition: box-shadow 0.25s, transform 0.18s;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    border: 1.5px solid #f0f0f0;
 }
 .stats-card:hover {
-    box-shadow: 0 6px 24px rgba(26,35,126,0.18);
-    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 10px 32px rgba(26,35,126,0.18);
+    transform: translateY(-4px) scale(1.04);
+    border-color: #b3b3e6;
 }
 .stats-icon {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     color: #fff;
-    background: #1a237e;
+    background: linear-gradient(135deg, #1a237e 60%, #3949ab 100%);
     border-radius: 50%;
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 8px rgba(26,35,126,0.12);
+    margin-bottom: 12px;
+    box-shadow: 0 2px 12px rgba(26,35,126,0.13);
+    border: 2px solid #fff;
 }
-.stats-card-success .stats-icon, .stats-card-success .stats-bg { background: #43a047 !important; }
-.stats-card-warning .stats-icon, .stats-card-warning .stats-bg { background: #fbc02d !important; }
-.stats-card-danger .stats-icon, .stats-card-danger .stats-bg { background: #e53935 !important; }
-.stats-card-primary .stats-icon, .stats-card-primary .stats-bg { background: #1a237e !important; }
+.stats-card-success .stats-icon, .stats-card-success .stats-bg { background: linear-gradient(135deg, #43a047 60%, #66bb6a 100%) !important; }
+.stats-card-warning .stats-icon, .stats-card-warning .stats-bg { background: linear-gradient(135deg, #fbc02d 60%, #ffd54f 100%) !important; }
+.stats-card-danger .stats-icon, .stats-card-danger .stats-bg { background: linear-gradient(135deg, #e53935 60%, #ff7043 100%) !important; }
+.stats-card-primary .stats-icon, .stats-card-primary .stats-bg { background: linear-gradient(135deg, #1a237e 60%, #3949ab 100%) !important; }
 .stats-content { z-index: 2; }
-.stats-number { font-size: 2.2rem; font-weight: bold; color: #1a237e; margin-bottom: 0; }
-.stats-label { color: #888; font-size: 1rem; margin-bottom: 0; }
+.stats-number { font-size: 2.3rem; font-weight: 700; color: #1a237e; margin-bottom: 0; letter-spacing: 1px; }
+.stats-label { color: #888; font-size: 1.08rem; margin-bottom: 0; font-weight: 500; }
 .stats-bg {
     position: absolute;
-    right: 16px;
-    bottom: 16px;
-    font-size: 3.5rem;
-    color: rgba(26,35,126,0.08);
+    right: 18px;
+    bottom: 18px;
+    font-size: 3.2rem;
+    color: rgba(26,35,126,0.10);
     z-index: 1;
     pointer-events: none;
 }
@@ -187,11 +272,63 @@ new Chart(ctxKelas, {
 .stats-card-warning .stats-number { color: #fbc02d; }
 .stats-card-danger .stats-number { color: #e53935; }
 .stats-card-primary .stats-number { color: #1a237e; }
-@media (max-width: 767px) {
-    .stats-card { min-height: 110px; padding: 16px 10px 14px 10px; }
-    .stats-icon { font-size: 1.5rem; width: 36px; height: 36px; }
+.card {
+    border-radius: 18px !important;
+    border: none;
+    box-shadow: 0 2px 12px rgba(26,35,126,0.07);
+    background: #fff;
+}
+.card-title {
+    font-weight: 600;
+    color: #1a237e;
+    letter-spacing: 0.5px;
+}
+.btn {
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+    font-weight: 500;
+    border-radius: 12px;
+    padding: 12px 0;
+    font-size: 1.08rem;
+    transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
+    box-shadow: 0 2px 8px rgba(26,35,126,0.07);
+}
+.btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 18px rgba(26,35,126,0.13);
+}
+.alert-info {
+    border-radius: 14px;
+    font-size: 1.08rem;
+    background: linear-gradient(90deg, #e3e9f7 60%, #fff 100%);
+    color: #1a237e;
+    border: 1.5px solid #b3b3e6;
+    margin-bottom: 28px;
+}
+@media (max-width: 991px) {
+    .stats-card { min-height: 120px; padding: 18px 10px 14px 10px; }
+    .stats-icon { font-size: 1.4rem; width: 32px; height: 32px; }
     .stats-bg { font-size: 2.2rem; right: 8px; bottom: 8px; }
-    .stats-number { font-size: 1.3rem; }
+    .stats-number { font-size: 1.2rem; }
+    .card { border-radius: 12px !important; }
+}
+@media (max-width: 767px) {
+    .row.mb-4 { flex-direction: column; }
+    .stats-card { min-height: 100px; padding: 12px 6px 10px 6px; }
+    .stats-icon { font-size: 1rem; width: 26px; height: 26px; }
+    .stats-bg { font-size: 1.1rem; right: 4px; bottom: 4px; }
+    .stats-number { font-size: 1.1rem; }
+    .card { border-radius: 8px !important; }
+}
+.row.g-4 > [class^='col-'] {
+    margin-bottom: 0 !important;
+}
+.card {
+    margin-bottom: 0 !important;
+}
+@media (max-width: 991px) {
+    .row.g-4 > [class^='col-'] {
+        margin-bottom: 1.5rem !important;
+    }
 }
 </style>
 <?= $this->endSection() ?> 

@@ -61,7 +61,7 @@
                             <select name="jurusan" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="">Semua</option>
                                 <?php foreach ($jurusan as $j) : ?>
-                                    <option value="<?= $j['id'] ?>" <?= ($filters['jurusan'] ?? '') == $j['id'] ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
+                                    <option value="<?= $j['kd_jurusan'] ?>" <?= ($filters['jurusan'] ?? '') == $j['kd_jurusan'] ? 'selected' : '' ?>><?= $j['nama_jurusan'] ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -128,7 +128,7 @@
                                                 $userSiswa = $userModel->where('username', $p['no_pendaftaran'])->first();
                                             ?>
                                             <tr>
-                                                <td><input type="checkbox" class="check-item" name="ids[]" value="<?= $p['id'] ?>"></td>
+                                                <td><input type="checkbox" class="check-item" name="ids[]" value="<?= $p['no_pendaftaran'] ?>"></td>
                                                 <td><?= $i++; ?></td>
                                                 <td><?= $p['no_pendaftaran']; ?></td>
                                                 <td><?= $p['nama_lengkap']; ?></td>
@@ -146,18 +146,18 @@
                                                 </td>
                                                 <td><?= date('d/m/Y H:i', strtotime($p['created_at'])); ?></td>
                                                 <td>
-                                                    <a href="<?= base_url('admin/spmb/' . $p['id']); ?>" class="btn btn-info btn-sm">
+                                                    <a href="<?= base_url('admin/spmb/' . $p['no_pendaftaran']); ?>" class="btn btn-info btn-sm">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
                                                     <?php if ($p['status_pendaftaran'] == 'Menunggu') : ?>
-                                                        <a href="<?= base_url('admin/spmb/terima/' . $p['id']); ?>" class="btn btn-success btn-sm">
+                                                        <a href="<?= base_url('admin/spmb/terima/' . $p['no_pendaftaran']); ?>" class="btn btn-success btn-sm">
                                                             <i class="fas fa-check"></i>
                                                         </a>
-                                                        <a href="<?= base_url('admin/spmb/tolak/' . $p['id']); ?>" class="btn btn-danger btn-sm">
+                                                        <a href="<?= base_url('admin/spmb/tolak/' . $p['no_pendaftaran']); ?>" class="btn btn-danger btn-sm">
                                                             <i class="fas fa-times"></i>
                                                         </a>
                                                     <?php elseif ($p['status_pendaftaran'] == 'Diterima' && !$userSiswa) : ?>
-                                                        <a href="<?= base_url('admin/spmb/jadikanSiswa/' . $p['id']); ?>" class="btn btn-primary btn-sm" onclick="return confirm('Jadikan pendaftar ini sebagai siswa?')">
+                                                        <a href="<?= base_url('admin/spmb/jadikanSiswa/' . $p['no_pendaftaran']); ?>" class="btn btn-primary btn-sm" onclick="return confirm('Jadikan pendaftar ini sebagai siswa?')">
                                                             <i class="fas fa-user-plus"></i> Jadikan Siswa
                                                         </a>
                                                     <?php elseif ($p['status_pendaftaran'] == 'Sudah Jadi Siswa' || $userSiswa) : ?>

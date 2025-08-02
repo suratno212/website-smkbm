@@ -34,9 +34,10 @@ class CreatePpdbTable extends Migration
             'tanggal_lahir' => [
                 'type' => 'DATE',
             ],
-            'agama' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
+            'agama_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
             ],
             'alamat' => [
                 'type' => 'TEXT',
@@ -74,6 +75,12 @@ class CreatePpdbTable extends Migration
                 'type' => 'TEXT',
                 'null' => true,
             ],
+            'nis' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'unique'     => true,
+                'null'       => true,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
@@ -85,11 +92,12 @@ class CreatePpdbTable extends Migration
         ]);
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('no_pendaftaran');
-        $this->forge->createTable('ppdb');
+        $this->forge->addForeignKey('agama_id', 'agama', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->createTable('spmb');
     }
 
     public function down()
     {
-        $this->forge->dropTable('ppdb');
+        $this->forge->dropTable('spmb');
     }
 } 

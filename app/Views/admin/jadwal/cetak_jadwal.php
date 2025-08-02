@@ -12,6 +12,17 @@
 </head>
 <body>
 <div class="container my-4">
+    <div class="row align-items-center mb-2">
+        <div class="col-2 text-center">
+            <img src="<?= base_url('public/assets/images/logo.png') ?>" alt="Logo" style="max-width:80px;max-height:80px;">
+        </div>
+        <div class="col-10 text-center">
+            <h4 class="mb-0" style="font-weight:bold;">SMK BHAKTI MULYA BNS</h4>
+            <div style="font-size:1.1rem;">Jl. Contoh Alamat No. 123, Kota, Provinsi</div>
+            <div style="font-size:1rem;">Telp. (021) 12345678 | Website: www.smkbmbns.sch.id</div>
+        </div>
+    </div>
+    <hr style="border:2px solid #000; margin-top:0; margin-bottom:1.5rem;">
     <div class="no-print mb-3">
         <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Print</button>
         <a href="<?= base_url('admin/jadwal') ?>" class="btn btn-secondary">Kembali</a>

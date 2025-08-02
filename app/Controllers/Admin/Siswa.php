@@ -6,170 +6,211 @@ use App\Controllers\BaseController;
 use App\Models\SiswaModel;
 use App\Models\KelasModel;
 use App\Models\JurusanModel;
-use App\Models\UserModel;
 use App\Models\AgamaModel;
+use App\Models\UserModel;
 
 class Siswa extends BaseController
 {
     protected $siswaModel;
     protected $kelasModel;
     protected $jurusanModel;
+    protected $agamaModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->siswaModel = new SiswaModel();
         $this->kelasModel = new KelasModel();
         $this->jurusanModel = new JurusanModel();
+        $this->agamaModel = new AgamaModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
     {
-        // Ambil parameter filter
         $filters = [
-            'nisn' => $this->request->getGet('nis'),
+            'nis' => $this->request->getGet('nis'),
             'nama' => $this->request->getGet('nama'),
-            'kelas_id' => $this->request->getGet('kelas_id'),
-            'jurusan_id' => $this->request->getGet('jurusan_id')
+            'kd_kelas' => $this->request->getGet('kd_kelas'),
+            'kd_jurusan' => $this->request->getGet('kd_jurusan')
         ];
 
-        $userModel = new UserModel();
-        $user = $userModel->find(session()->get('user_id'));
         $data = [
             'title' => 'Data Siswa',
-            'user' => $user,
             'siswa' => $this->siswaModel->getSiswaWithRelations($filters),
             'kelas' => $this->kelasModel->findAll(),
             'jurusan' => $this->jurusanModel->findAll(),
             'filters' => $filters
         ];
-        
+
         return view('admin/siswa/index', $data);
     }
 
     public function create()
     {
-        $agamaModel = new AgamaModel();
         $data = [
             'title' => 'Tambah Siswa',
-            'user' => [
-                'username' => session()->get('username'),
-                'role' => session()->get('role')
-            ],
             'kelas' => $this->kelasModel->findAll(),
             'jurusan' => $this->jurusanModel->findAll(),
-            'agama' => $agamaModel->findAll(),
+            'agama' => $this->agamaModel->findAll(),
+            'validation' => \Config\Services::validation()
         ];
-        
+
         return view('admin/siswa/create', $data);
     }
 
     public function store()
     {
-        // Validasi input
+        // Validation rules
         $rules = [
-            'nisn' => 'required|is_unique[siswa.nisn]',
+            'nis' => 'required|is_unique[siswa.nis]',
             'nama' => 'required',
-            'tanggal_lahir' => 'required',
-            'kelas_id' => 'required',
-            'jurusan_id' => 'required',
+            'tanggal_lahir' => 'required|valid_date',
+            'jenis_kelamin' => 'required|in_list[L,P]',
+            'agama_id' => 'required|numeric',
+            'kd_kelas' => 'required',
+            'kd_jurusan' => 'required',
             'alamat' => 'required',
-            'no_hp' => 'required',
-            'agama_id' => 'required',
+            'no_hp' => 'required|numeric'
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Simpan data siswa
-        $this->siswaModel->insert([
-            'nisn' => $this->request->getPost('nisn'),
+        // Create user account
+        $userData = [
+            'username' => $this->request->getPost('nis'),
+            'email' => $this->request->getPost('nis') . '@smkbm.sch.id',
+            'password' => password_hash($this->request->getPost('nis'), PASSWORD_DEFAULT),
+            'role' => 'siswa'
+        ];
+
+        $this->userModel->insert($userData);
+        $userId = $this->userModel->insertID();
+
+        // Create siswa data
+        $siswaData = [
+            'user_id' => $userId,
+            'nis' => $this->request->getPost('nis'),
             'nama' => $this->request->getPost('nama'),
             'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
-            'kelas_id' => $this->request->getPost('kelas_id'),
-            'jurusan_id' => $this->request->getPost('jurusan_id'),
-            'alamat' => $this->request->getPost('alamat'),
-            'no_hp' => $this->request->getPost('no_hp'),
+            'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
             'agama_id' => $this->request->getPost('agama_id'),
-        ]);
+            'kd_kelas' => $this->request->getPost('kd_kelas'),
+            'kd_jurusan' => $this->request->getPost('kd_jurusan'),
+            'alamat' => $this->request->getPost('alamat'),
+            'no_hp' => $this->request->getPost('no_hp')
+        ];
 
-        return redirect()->to(base_url('admin/siswa'))->with('success', 'Data siswa berhasil ditambahkan');
+        $this->siswaModel->insert($siswaData);
+
+        return redirect()->to('admin/siswa')->with('success', 'Data siswa berhasil ditambahkan');
     }
 
-    public function edit($id)
+    public function edit($nis)
     {
-        $agamaModel = new AgamaModel();
         $data = [
             'title' => 'Edit Siswa',
-            'user' => [
-                'username' => session()->get('username'),
-                'role' => session()->get('role')
-            ],
-            'siswa' => $this->siswaModel->find($id),
+            'siswa' => $this->siswaModel->find($nis),
             'kelas' => $this->kelasModel->findAll(),
             'jurusan' => $this->jurusanModel->findAll(),
-            'agama' => $agamaModel->findAll(),
+            'agama' => $this->agamaModel->findAll(),
+            'validation' => \Config\Services::validation()
         ];
-        
+
         return view('admin/siswa/edit', $data);
     }
 
-    public function update($id)
+    public function update($nis)
     {
-        // Validasi input
+        // Validation rules
         $rules = [
-            'nisn' => "required|is_unique[siswa.nisn,id,$id]",
+            'nis' => "required|is_unique[siswa.nis,nis,$nis]",
             'nama' => 'required',
-            'tanggal_lahir' => 'required',
-            'kelas_id' => 'required',
-            'jurusan_id' => 'required',
+            'tanggal_lahir' => 'required|valid_date',
+            'jenis_kelamin' => 'required|in_list[L,P]',
+            'agama_id' => 'required|numeric',
+            'kd_kelas' => 'required',
+            'kd_jurusan' => 'required',
             'alamat' => 'required',
-            'no_hp' => 'required',
-            'agama_id' => 'required',
+            'no_hp' => 'required|numeric'
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Update data siswa
-        $this->siswaModel->update($id, [
-            'nisn' => $this->request->getPost('nisn'),
+        $siswaData = [
+            'nis' => $this->request->getPost('nis'),
             'nama' => $this->request->getPost('nama'),
             'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
-            'kelas_id' => $this->request->getPost('kelas_id'),
-            'jurusan_id' => $this->request->getPost('jurusan_id'),
-            'alamat' => $this->request->getPost('alamat'),
-            'no_hp' => $this->request->getPost('no_hp'),
+            'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
             'agama_id' => $this->request->getPost('agama_id'),
-        ]);
+            'kd_kelas' => $this->request->getPost('kd_kelas'),
+            'kd_jurusan' => $this->request->getPost('kd_jurusan'),
+            'alamat' => $this->request->getPost('alamat'),
+            'no_hp' => $this->request->getPost('no_hp')
+        ];
 
-        return redirect()->to(base_url('admin/siswa'))->with('success', 'Data siswa berhasil diperbarui');
+        $this->siswaModel->update($nis, $siswaData);
+
+        // Update email di tabel users
+        $siswaLama = $this->siswaModel->find($nis);
+        if ($siswaLama && $this->request->getPost('email')) {
+            $this->userModel->update($siswaLama['user_id'], [
+                'email' => $this->request->getPost('email')
+            ]);
+        }
+
+        return redirect()->to('admin/siswa')->with('success', 'Data siswa berhasil diperbarui');
     }
 
-    public function delete($id)
+    public function delete($nis)
     {
-        $this->siswaModel->delete($id);
-        return redirect()->to(base_url('admin/siswa'))->with('success', 'Data siswa berhasil dihapus');
+        $siswa = $this->siswaModel->find($nis);
+        if ($siswa) {
+            // Delete user account
+            $this->userModel->delete($siswa['user_id']);
+            // Delete siswa
+            $this->siswaModel->delete($nis);
+        }
+
+        return redirect()->to('admin/siswa')->with('success', 'Data siswa berhasil dihapus');
+    }
+
+    public function export()
+    {
+        $filters = [
+            'kd_kelas' => $this->request->getGet('kd_kelas'),
+            'kd_jurusan' => $this->request->getGet('kd_jurusan')
+        ];
+
+        $data = [
+            'title' => 'Export Data Siswa',
+            'siswa' => $this->siswaModel->getSiswaWithRelations($filters)
+        ];
+
+        return view('admin/siswa/export', $data);
     }
 
     public function cetak()
     {
         $filters = [
-            'nisn' => $this->request->getGet('nis'),
+            'nis' => $this->request->getGet('nis'),
             'nama' => $this->request->getGet('nama'),
-            'kelas_id' => $this->request->getGet('kelas_id'),
-            'jurusan_id' => $this->request->getGet('jurusan_id')
+            'kd_kelas' => $this->request->getGet('kd_kelas'),
+            'kd_jurusan' => $this->request->getGet('kd_jurusan')
         ];
-        $kelas = $this->kelasModel->findAll();
-        $jurusan = $this->jurusanModel->findAll();
-        $siswa = $this->siswaModel->getSiswaWithRelations($filters);
-        return view('admin/siswa/cetak_siswa', [
+
+        $data = [
             'title' => 'Cetak Data Siswa',
-            'kelas' => $kelas,
-            'jurusan' => $jurusan,
-            'filters' => $filters,
-            'siswa' => $siswa
-        ]);
+            'siswa' => $this->siswaModel->getSiswaWithRelations($filters),
+            'kelas' => $this->kelasModel->findAll(),
+            'jurusan' => $this->jurusanModel->findAll(),
+            'filters' => $filters
+        ];
+
+        return view('admin/siswa/cetak', $data);
     }
-} 
+}

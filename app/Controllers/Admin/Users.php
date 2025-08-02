@@ -18,10 +18,13 @@ class Users extends BaseController
     {
         $userModel = new \App\Models\UserModel();
         $user = $userModel->find(session()->get('user_id'));
+        $role = $this->request->getGet('role');
+        $users = $role ? $this->userModel->where('role', $role)->findAll() : $this->userModel->findAll();
         $data = [
             'title' => 'Manajemen User',
             'user' => $user,
-            'users' => $this->userModel->findAll()
+            'users' => $users,
+            'role_filter' => $role
         ];
 
         return view('admin/users/index', $data);
@@ -106,6 +109,7 @@ class Users extends BaseController
 
         $data = [
             'username' => $this->request->getPost('username'),
+            'nama' => $this->request->getPost('nama'),
             'email' => $this->request->getPost('email'),
             'role' => $this->request->getPost('role')
         ];
@@ -184,4 +188,4 @@ class Users extends BaseController
         }
         return redirect()->to('admin/users')->with('message', 'User terpilih berhasil dihapus');
     }
-} 
+}

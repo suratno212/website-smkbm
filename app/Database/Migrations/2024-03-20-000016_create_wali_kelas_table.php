@@ -15,20 +15,17 @@ class CreateWaliKelasTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'kelas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'guru_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'nik_nip' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '25',
             ],
-            'tahun_akademik_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_tahun_akademik' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -40,9 +37,9 @@ class CreateWaliKelasTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('kelas_id', 'kelas', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('guru_id', 'guru', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('tahun_akademik_id', 'tahun_akademik', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_kelas', 'kelas', 'kd_kelas', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('nik_nip', 'guru', 'nik_nip', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('kd_tahun_akademik', 'tahun_akademik', 'kd_tahun_akademik', 'CASCADE', 'CASCADE');
         $this->forge->createTable('wali_kelas');
     }
 

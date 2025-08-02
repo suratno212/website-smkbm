@@ -112,7 +112,7 @@
                                             <tr>
                                                 <td><?= $index + 1 ?></td>
                                                 <td>
-                                                    <strong><?= $siswa['nisn'] ?></strong>
+                                                    <strong><?= $siswa['nis'] ?></strong>
                                                     <input type="hidden" name="siswa_id[]" value="<?= $siswa['id'] ?>">
                                                 </td>
                                                 <td>

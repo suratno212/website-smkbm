@@ -1,0 +1,12 @@
+
+%% Activity Diagram Upload Tugas
+flowchart TD
+    start([Start]) --> U1["Siswa: Masuk ke menu tugas"]
+    U1 --> S1["Sistem: Menampilkan daftar tugas"]
+    U2["Siswa: Pilih tugas yang akan diupload"] --> U3["Siswa: Pilih file tugas"]
+    U3 --> U4["Siswa: Tekan upload"]
+    U4 --> S2["Sistem: Menyimpan file tugas"]
+    S1 --> U2
+    S2 --> end([End])
+    U5["Siswa: File tidak dipilih"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U3

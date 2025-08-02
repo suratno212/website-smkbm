@@ -9,15 +9,13 @@ class CreateJurusanTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_jurusan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '10',
             ],
             'nama_jurusan' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 255,
+                'constraint' => '100',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -28,7 +26,7 @@ class CreateJurusanTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
+        $this->forge->addKey('kd_jurusan', true); // PRIMARY KEY
         $this->forge->createTable('jurusan');
     }
 

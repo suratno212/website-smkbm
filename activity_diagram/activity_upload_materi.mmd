@@ -1,0 +1,11 @@
+
+%% Activity Diagram Upload Materi & Tugas
+flowchart TD
+    start([Start]) --> U1["Guru: Masuk ke menu materi/tugas"]
+    U1 --> S1["Sistem: Menampilkan form upload"]
+    U2["Guru: Mengisi data dan memilih file"] --> U3["Guru: Tekan upload"]
+    U3 --> S2["Sistem: Menyimpan file dan data ke database"]
+    S1 --> U2
+    S2 --> end([End])
+    U4["Guru: Data/file tidak lengkap"] --> S3["Sistem: Menampilkan pesan error"]
+    S3 --> U2

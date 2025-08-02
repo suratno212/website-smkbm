@@ -8,16 +8,13 @@ class CreatePertemuanTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_pertemuan' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'kelas_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'kd_kelas' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
             'nama_pertemuan' => [
                 'type'       => 'VARCHAR',
@@ -41,8 +38,8 @@ class CreatePertemuanTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('kelas_id', 'kelas', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_pertemuan', true); // PRIMARY KEY
+        $this->forge->addForeignKey('kd_kelas', 'kelas', 'kd_kelas', 'CASCADE', 'CASCADE');
         $this->forge->createTable('pertemuan');
     }
 

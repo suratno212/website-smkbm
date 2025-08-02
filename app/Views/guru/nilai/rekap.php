@@ -14,7 +14,7 @@
                                 <i class="fas fa-chart-bar me-2"></i>Rekap Nilai Siswa
                             </h4>
                             <p class="text-muted mb-0">
-                                Kelas: <strong><?= $kelas['nama_kelas'] ?> - <?= $kelas['nama_jurusan'] ?></strong> | 
+                                Kelas: <strong><?= $kelas['nama_kelas'] ?? '-' ?> - <?= $kelas['nama_jurusan'] ?? '-' ?></strong> |
                                 Semester: <strong><?= $semester ?></strong>
                             </p>
                         </div>
@@ -72,13 +72,29 @@
         </div>
     </div>
     <style>
-    @media print {
-        .statistik-row { margin-bottom: 10px !important; }
-        .statistik-row .card { margin-bottom: 0 !important; }
-        .statistik-row .col-3 { width: 25% !important; float: left; }
-        .statistik-row .card-body { padding: 6px 2px !important; font-size: 12px; }
-        .statistik-row i { font-size: 1.2em !important; }
-    }
+        @media print {
+            .statistik-row {
+                margin-bottom: 10px !important;
+            }
+
+            .statistik-row .card {
+                margin-bottom: 0 !important;
+            }
+
+            .statistik-row .col-3 {
+                width: 25% !important;
+                float: left;
+            }
+
+            .statistik-row .card-body {
+                padding: 6px 2px !important;
+                font-size: 12px;
+            }
+
+            .statistik-row i {
+                font-size: 1.2em !important;
+            }
+        }
     </style>
 
     <!-- Filters -->
@@ -272,16 +288,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php 
+                                    <?php
                                     $rankingData = [];
-                                    foreach ($siswaList as $index => $siswa) : 
+                                    foreach ($siswaList as $index => $siswa) :
                                         $totalNilai = 0;
                                         $countNilai = 0;
                                         $nilaiSiswa = [];
                                     ?>
                                         <tr data-siswa="<?= $siswa['id'] ?>">
-                                        <td class="align-middle"> <?= $index + 1 ?> </td>
-                                        <td class="align-middle"> <strong><?= $siswa['nisn'] ?></strong> </td>
+                                            <td class="align-middle"> <?= $index + 1 ?> </td>
+                                            <td class="align-middle"> <strong><?= $siswa['nis'] ?></strong> </td>
                                             <td class="align-middle">
                                                 <div class="d-flex align-items-center">
                                                     <div class="bg-primary rounded-circle p-2 me-2">
@@ -290,35 +306,35 @@
                                                     <div>
                                                         <strong><?= $siswa['nama'] ?></strong>
                                                         <br>
-                                                    <small class="text-muted"> <?= $siswa['nama_kelas'] ?> </small>
+                                                        <small class="text-muted"> <?= $siswa['nama_kelas'] ?> </small>
                                                     </div>
                                                 </div>
                                             </td>
-                                        <?php foreach ($kelompokMapel as $kode => $kelompok): ?>
-                                            <?php foreach ($kelompok['sub'] as $namaMapel): ?>
-                                                <?php 
-                                                $mapelObj = null;
-                                                foreach (($mapelByKelompok[$kode] ?? []) as $m) {
-                                                    if (trim(strtolower($m['nama_mapel'])) == trim(strtolower($namaMapel))) {
-                                                        $mapelObj = $m;
-                                                        break;
+                                            <?php foreach ($kelompokMapel as $kode => $kelompok): ?>
+                                                <?php foreach ($kelompok['sub'] as $namaMapel): ?>
+                                                    <?php
+                                                    $mapelObj = null;
+                                                    foreach (($mapelByKelompok[$kode] ?? []) as $m) {
+                                                        if (trim(strtolower($m['nama_mapel'])) == trim(strtolower($namaMapel))) {
+                                                            $mapelObj = $m;
+                                                            break;
+                                                        }
                                                     }
-                                                }
-                                                $nilai = $mapelObj ? ($nilaiData[$siswa['id']][$mapelObj['id']] ?? null) : null;
-                                                $nilaiAkhir = $nilai ? $nilai['akhir'] : 0;
-                                                $nilaiSiswa[$kode][$namaMapel] = $nilaiAkhir;
-                                                if ($nilaiAkhir > 0) {
-                                                    $totalNilai += $nilaiAkhir;
-                                                    $countNilai++;
-                                                }
-                                                ?>
-                                                <td class="text-center align-middle">
-                                                    <?= $nilaiAkhir > 0 ? number_format($nilaiAkhir, 2) : '-' ?>
-                                                </td>
+                                                    $nilai = $mapelObj ? ($nilaiData[$siswa['id']][$mapelObj['id']] ?? null) : null;
+                                                    $nilaiAkhir = $nilai ? $nilai['akhir'] : 0;
+                                                    $nilaiSiswa[$kode][$namaMapel] = $nilaiAkhir;
+                                                    if ($nilaiAkhir > 0) {
+                                                        $totalNilai += $nilaiAkhir;
+                                                        $countNilai++;
+                                                    }
+                                                    ?>
+                                                    <td class="text-center align-middle">
+                                                        <?= $nilaiAkhir > 0 ? number_format($nilaiAkhir, 2) : '-' ?>
+                                                    </td>
+                                                <?php endforeach; ?>
                                             <?php endforeach; ?>
-                                        <?php endforeach; ?>
-                                        <td class="text-center align-middle"> <?= $countNilai ? number_format($totalNilai/$countNilai,2) : '-' ?> </td>
-                                        <td class="text-center align-middle"> <?= $ranking[$siswa['id']] ?? '-' ?> </td>
+                                            <td class="text-center align-middle"> <?= $countNilai ? number_format($totalNilai / $countNilai, 2) : '-' ?> </td>
+                                            <td class="text-center align-middle"> <?= $ranking[$siswa['id']] ?? '-' ?> </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -363,21 +379,24 @@
 
 <!-- Area Tanda Tangan (hanya muncul saat cetak) -->
 <style>
-@media print {
-    .ttd-area {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 60px;
-        padding: 0 40px;
+    @media print {
+        .ttd-area {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            padding: 0 40px;
+        }
+
+        .ttd-box {
+            width: 40%;
+            text-align: center;
+        }
+
+        .ttd-space {
+            height: 80px;
+            /* ruang untuk tanda tangan */
+        }
     }
-    .ttd-box {
-        width: 40%;
-        text-align: center;
-    }
-    .ttd-space {
-        height: 80px; /* ruang untuk tanda tangan */
-    }
-}
 </style>
 <div class="ttd-area d-none d-print-flex mt-5">
     <div class="ttd-box">
@@ -399,54 +418,54 @@ Catatan:
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Store ranking data globally
-const rankingData = <?= json_encode($rankingData) ?>;
+    // Store ranking data globally
+    const rankingData = <?= json_encode($rankingData) ?>;
 
-// Calculate and display rankings
-function calculateRankings() {
-    // Sort by average score (descending)
-    const sortedData = [...rankingData].sort((a, b) => b.rata_rata - a.rata_rata);
-    
-    // Update ranking badges
-    sortedData.forEach((data, index) => {
-        const badge = document.querySelector(`.ranking-badge[data-siswa="${data.siswa_id}"]`);
-        if (badge && data.rata_rata > 0) {
-            badge.textContent = index + 1;
-            badge.className = 'badge fs-6 ranking-badge';
-            
-            if (index === 0) {
-                badge.classList.add('bg-warning', 'text-dark');
-            } else if (index === 1) {
-                badge.classList.add('bg-secondary');
-            } else if (index === 2) {
-                badge.classList.add('bg-danger');
-            } else {
-                badge.classList.add('bg-info');
+    // Calculate and display rankings
+    function calculateRankings() {
+        // Sort by average score (descending)
+        const sortedData = [...rankingData].sort((a, b) => b.rata_rata - a.rata_rata);
+
+        // Update ranking badges
+        sortedData.forEach((data, index) => {
+            const badge = document.querySelector(`.ranking-badge[data-siswa="${data.siswa_id}"]`);
+            if (badge && data.rata_rata > 0) {
+                badge.textContent = index + 1;
+                badge.className = 'badge fs-6 ranking-badge';
+
+                if (index === 0) {
+                    badge.classList.add('bg-warning', 'text-dark');
+                } else if (index === 1) {
+                    badge.classList.add('bg-secondary');
+                } else if (index === 2) {
+                    badge.classList.add('bg-danger');
+                } else {
+                    badge.classList.add('bg-info');
+                }
             }
-        }
-    });
-    
-    // Update top 5 students
-    updateTopStudents(sortedData.slice(0, 5));
-    
-    // Update statistics
-    updateStatistics(sortedData);
-}
+        });
 
-function updateTopStudents(topData) {
-    const container = document.getElementById('topStudents');
-    container.innerHTML = '';
-    
-    topData.forEach((data, index) => {
-        if (data.rata_rata > 0) {
-            const card = document.createElement('div');
-            card.className = 'd-flex align-items-center mb-3 p-2 border rounded';
-            
-            const rankClass = index === 0 ? 'bg-warning text-dark' : 
-                            index === 1 ? 'bg-secondary' : 
-                            index === 2 ? 'bg-danger' : 'bg-info';
-            
-            card.innerHTML = `
+        // Update top 5 students
+        updateTopStudents(sortedData.slice(0, 5));
+
+        // Update statistics
+        updateStatistics(sortedData);
+    }
+
+    function updateTopStudents(topData) {
+        const container = document.getElementById('topStudents');
+        container.innerHTML = '';
+
+        topData.forEach((data, index) => {
+            if (data.rata_rata > 0) {
+                const card = document.createElement('div');
+                card.className = 'd-flex align-items-center mb-3 p-2 border rounded';
+
+                const rankClass = index === 0 ? 'bg-warning text-dark' :
+                    index === 1 ? 'bg-secondary' :
+                    index === 2 ? 'bg-danger' : 'bg-info';
+
+                card.innerHTML = `
                 <div class="badge ${rankClass} me-3 fs-6">${index + 1}</div>
                 <div class="flex-grow-1">
                     <strong>${data.nama}</strong>
@@ -454,85 +473,86 @@ function updateTopStudents(topData) {
                     <small class="text-muted">Rata-rata: ${data.rata_rata.toFixed(2)}</small>
                 </div>
             `;
-            container.appendChild(card);
-        }
-    });
-}
-
-function updateStatistics(data) {
-    const validData = data.filter(d => d.rata_rata > 0);
-    
-    if (validData.length > 0) {
-        const rataRataKelas = validData.reduce((sum, d) => sum + d.rata_rata, 0) / validData.length;
-        const nilaiTertinggi = Math.max(...validData.map(d => d.rata_rata));
-        
-        document.getElementById('rataRataKelas').textContent = rataRataKelas.toFixed(2);
-        document.getElementById('nilaiTertinggi').textContent = nilaiTertinggi.toFixed(2);
+                container.appendChild(card);
+            }
+        });
     }
-}
 
-// Filter functionality
-document.getElementById('filterMapel').addEventListener('change', filterTable);
-document.getElementById('filterRange').addEventListener('change', filterTable);
-document.getElementById('searchSiswa').addEventListener('input', filterTable);
+    function updateStatistics(data) {
+        const validData = data.filter(d => d.rata_rata > 0);
 
-function filterTable() {
-    const mapelFilter = document.getElementById('filterMapel').value;
-    const rangeFilter = document.getElementById('filterRange').value;
-    const searchFilter = document.getElementById('searchSiswa').value.toLowerCase();
-    
-    const rows = document.querySelectorAll('#nilaiTable tbody tr');
-    
-    rows.forEach(row => {
-        let showRow = true;
-        
-        // Search filter
-        if (searchFilter) {
-            const nama = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
-            const nis = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
-            if (!nama.includes(searchFilter) && !nis.includes(searchFilter)) {
-                showRow = false;
-            }
+        if (validData.length > 0) {
+            const rataRataKelas = validData.reduce((sum, d) => sum + d.rata_rata, 0) / validData.length;
+            const nilaiTertinggi = Math.max(...validData.map(d => d.rata_rata));
+
+            document.getElementById('rataRataKelas').textContent = rataRataKelas.toFixed(2);
+            document.getElementById('nilaiTertinggi').textContent = nilaiTertinggi.toFixed(2);
         }
-        
-        // Mapel filter
-        if (mapelFilter && showRow) {
-            const nilaiCell = row.querySelector(`td[data-mapel="${mapelFilter}"]`);
-            if (nilaiCell && nilaiCell.textContent.trim() === '-') {
-                showRow = false;
-            }
-        }
-        
-        // Range filter
-        if (rangeFilter && showRow) {
-            const rataRataCell = row.querySelector('td:nth-last-child(2)');
-            const nilai = parseFloat(rataRataCell.textContent);
-            if (!isNaN(nilai)) {
-                const [min, max] = rangeFilter.split('-').map(Number);
-                if (nilai < min || nilai > max) {
+    }
+
+    // Filter functionality
+    document.getElementById('filterMapel').addEventListener('change', filterTable);
+    document.getElementById('filterRange').addEventListener('change', filterTable);
+    document.getElementById('searchSiswa').addEventListener('input', filterTable);
+
+    function filterTable() {
+        const mapelFilter = document.getElementById('filterMapel').value;
+        const rangeFilter = document.getElementById('filterRange').value;
+        const searchFilter = document.getElementById('searchSiswa').value.toLowerCase();
+
+        const rows = document.querySelectorAll('#nilaiTable tbody tr');
+
+        rows.forEach(row => {
+            let showRow = true;
+
+            // Search filter
+            if (searchFilter) {
+                const nama = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                const nis = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                if (!nama.includes(searchFilter) && !nis.includes(searchFilter)) {
                     showRow = false;
                 }
             }
-        }
-        
-        row.style.display = showRow ? '' : 'none';
+
+            // Mapel filter
+            if (mapelFilter && showRow) {
+                const nilaiCell = row.querySelector(`td[data-mapel="${mapelFilter}"]`);
+                if (nilaiCell && nilaiCell.textContent.trim() === '-') {
+                    showRow = false;
+                }
+            }
+
+            // Range filter
+            if (rangeFilter && showRow) {
+                const rataRataCell = row.querySelector('td:nth-last-child(2)');
+                const nilai = parseFloat(rataRataCell.textContent);
+                if (!isNaN(nilai)) {
+                    const [min, max] = rangeFilter.split('-').map(Number);
+                    if (nilai < min || nilai > max) {
+                        showRow = false;
+                    }
+                }
+            }
+
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateRankings();
     });
-}
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    calculateRankings();
-});
-
-<?php
-function getNilaiBadgeClass($nilai) {
-    if ($nilai >= 90) return 'bg-success';
-    if ($nilai >= 80) return 'bg-primary';
-    if ($nilai >= 70) return 'bg-warning text-dark';
-    if ($nilai >= 60) return 'bg-info';
-    return 'bg-danger';
-}
-?>
+    <?php
+    function getNilaiBadgeClass($nilai)
+    {
+        if ($nilai >= 90) return 'bg-success';
+        if ($nilai >= 80) return 'bg-primary';
+        if ($nilai >= 70) return 'bg-warning text-dark';
+        if ($nilai >= 60) return 'bg-info';
+        return 'bg-danger';
+    }
+    ?>
 </script>
 
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

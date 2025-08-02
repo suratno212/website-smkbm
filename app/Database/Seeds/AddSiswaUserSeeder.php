@@ -10,46 +10,35 @@ class AddSiswaUserSeeder extends Seeder
     {
         $db = \Config\Database::connect();
         
-        // Cek apakah user sudah ada
-        $existingUser = $db->table('users')->where('username', 'sura')->get()->getRow();
+        // Get siswa data
+        $siswa = $db->table('siswa')->get()->getResultArray();
         
-        if (!$existingUser) {
-            // Insert user
-            $userData = [
-                'username' => 'sura',
-                'password' => password_hash('siswa123', PASSWORD_DEFAULT),
-                'role' => 'siswa',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
+        foreach ($siswa as $s) {
+            // Check if user already exists for this siswa
+            $existingUser = $db->table('users')->where('username', $s['nis'])->get()->getRow();
             
-            $db->table('users')->insert($userData);
-            $user_id = $db->insertID();
-            
-            // Insert data siswa
-            $siswaData = [
-                'user_id' => $user_id,
-                'nisn' => '2024001',
-                'nama' => 'Sura',
-                'jenis_kelamin' => 'Laki-laki',
-                'tempat_lahir' => 'Jakarta',
-                'tanggal_lahir' => '2006-01-15',
-                'agama' => 'Islam',
-                'kelas_id' => 1,
-                'jurusan_id' => 1,
-                'alamat' => 'Jl. Contoh No. 123',
-                'no_hp' => '081234567890',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
-            
-            $db->table('siswa')->insert($siswaData);
-            
-            echo "User siswa 'sura' berhasil ditambahkan!\n";
-            echo "Username: sura\n";
-            echo "Password: siswa123\n";
-        } else {
-            echo "User siswa 'sura' sudah ada!\n";
+            if (!$existingUser) {
+                // Insert user
+                $userData = [
+                    'username' => $s['nis'],
+                    'password' => password_hash($s['tanggal_lahir'], PASSWORD_DEFAULT),
+                    'role' => 'siswa',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+                
+                $db->table('users')->insert($userData);
+                $user_id = $db->insertID();
+                
+                // Update siswa with user_id
+                $db->table('siswa')->where('nis', $s['nis'])->update(['user_id' => $user_id]);
+                
+                echo "User siswa '" . $s['nama'] . "' (NIS: " . $s['nis'] . ") berhasil ditambahkan!\n";
+                echo "Username: " . $s['nis'] . "\n";
+                echo "Password: " . $s['tanggal_lahir'] . "\n\n";
+            } else {
+                echo "User siswa '" . $s['nama'] . "' (NIS: " . $s['nis'] . ") sudah ada!\n";
+            }
         }
     }
 } 

@@ -26,7 +26,7 @@
                         <i class="fas fa-file-alt me-2"></i>
                         E-RAPORT SISWA
                     </h2>
-                    <h5 class="text-muted">SMK BINA MANDIRI</h5>
+                    <h5 class="text-muted">SMK BHAKTI MULYA</h5>
                     <p class="text-muted mb-0">Tahun Akademik <?= esc($tahunAkademik['tahun']) ?> - Semester <?= $semester ?></p>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                                 </tr>
                                 <tr>
                                     <td><strong>NIS:</strong></td>
-                                    <td><?= esc($siswa['nisn']) ?></td>
+                                    <td><?= esc($siswa['nis']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Kelas:</strong></td>
@@ -136,8 +136,8 @@
                                     $totalNilai = 0;
                                     $jumlahMapel = 0;
                                     foreach ($nilai as $i => $n): 
-                                        if ($n['akhir'] !== null) {
-                                            $totalNilai += $n['akhir'];
+                                        if ($n['nilai_akhir'] !== null) {
+                                            $totalNilai += $n['nilai_akhir'];
                                             $jumlahMapel++;
                                         }
                                     ?>
@@ -145,41 +145,41 @@
                                         <td class="text-center"><?= $i + 1 ?></td>
                                         <td><strong><?= esc($n['nama_mapel']) ?></strong></td>
                                         <td class="text-center">
-                                            <?php if ($n['uts'] !== null): ?>
-                                                <span class="badge bg-info"><?= $n['uts'] ?></span>
+                                            <?php if ($n['nilai_uts'] !== null): ?>
+                                                <span class="badge bg-info"><?= $n['nilai_uts'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if ($n['uas'] !== null): ?>
-                                                <span class="badge bg-warning"><?= $n['uas'] ?></span>
+                                            <?php if ($n['nilai_uas'] !== null): ?>
+                                                <span class="badge bg-warning"><?= $n['nilai_uas'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if ($n['tugas'] !== null): ?>
-                                                <span class="badge bg-success"><?= $n['tugas'] ?></span>
+                                            <?php if ($n['nilai_tugas'] !== null): ?>
+                                                <span class="badge bg-success"><?= $n['nilai_tugas'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if ($n['akhir'] !== null): ?>
+                                            <?php if ($n['nilai_akhir'] !== null): ?>
                                                 <?php
                                                 $grade = '';
                                                 $gradeClass = '';
-                                                if ($n['akhir'] >= 90) {
+                                                if ($n['nilai_akhir'] >= 90) {
                                                     $grade = 'A';
                                                     $gradeClass = 'bg-success';
-                                                } elseif ($n['akhir'] >= 80) {
+                                                } elseif ($n['nilai_akhir'] >= 80) {
                                                     $grade = 'B';
                                                     $gradeClass = 'bg-info';
-                                                } elseif ($n['akhir'] >= 70) {
+                                                } elseif ($n['nilai_akhir'] >= 70) {
                                                     $grade = 'C';
                                                     $gradeClass = 'bg-warning';
-                                                } elseif ($n['akhir'] >= 60) {
+                                                } elseif ($n['nilai_akhir'] >= 60) {
                                                     $grade = 'D';
                                                     $gradeClass = 'bg-danger';
                                                 } else {
@@ -187,21 +187,21 @@
                                                     $gradeClass = 'bg-dark';
                                                 }
                                                 ?>
-                                                <span class="badge <?= $gradeClass ?> fs-6"><?= $n['akhir'] ?></span>
+                                                <span class="badge <?= $gradeClass ?> fs-6"><?= $n['nilai_akhir'] ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if ($n['akhir'] !== null): ?>
+                                            <?php if ($n['nilai_akhir'] !== null): ?>
                                                 <span class="badge <?= $gradeClass ?>"><?= $grade ?></span>
                                             <?php else: ?>
                                                 <span class="text-muted">-</span>
                                             <?php endif; ?>
                                         </td>
                                         <td class="text-center">
-                                            <?php if ($n['akhir'] !== null): ?>
-                                                <?php if ($n['akhir'] >= 70): ?>
+                                            <?php if ($n['nilai_akhir'] !== null): ?>
+                                                <?php if ($n['nilai_akhir'] >= 70): ?>
                                                     <span class="badge bg-success">Lulus</span>
                                                 <?php else: ?>
                                                     <span class="badge bg-danger">Tidak Lulus</span>

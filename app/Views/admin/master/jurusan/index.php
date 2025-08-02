@@ -37,10 +37,10 @@
                                     <td><?= $i++ ?></td>
                                     <td><?= $j['nama_jurusan'] ?></td>
                                     <td>
-                                        <a href="<?= base_url('admin/master/jurusan/edit/' . $j['id']) ?>" class="btn btn-warning btn-sm">
+                                        <a href="<?= base_url('admin/master/jurusan/edit/' . $j['kd_jurusan']) ?>" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="<?= base_url('admin/master/jurusan/delete/' . $j['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                        <form action="<?= base_url('admin/master/jurusan/delete/' . $j['kd_jurusan']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                             <?= csrf_field() ?>
                                             <button type="submit" class="btn btn-danger btn-sm">
                                                 <i class="fas fa-trash"></i>

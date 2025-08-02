@@ -1,7 +1,7 @@
 <?php helper('url'); ?>
 <?php
 // Ganti logo sekolah dan yayasan dengan gambar PNG/JPG dari internet bebas (Unsplash)
-$logoSekolah = 'https://scontent.ftkg1-1.fna.fbcdn.net/v/t39.30808-6/509840812_1187690260039281_1073171614447097024_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeELHT_qcCFUizj2_Gv-UylyRICmpduDlhNEgKal24OWE8lEftBwlgJrXUmryuTxLa8vOFAAFWMm-AQwLCxJAB08&_nc_ohc=E7Rt4Clt5-AQ7kNvwF_oEif&_nc_oc=Adn8YlBSdH-1lUcuJN82UEUDknvShpKmJ2n2osbrNDr_jK8O2fdUvQcVw1jmh_oI5W4&_nc_zt=23&_nc_ht=scontent.ftkg1-1.fna&_nc_gid=YvVQShVIj5qBU677HOXEXQ&oh=00_AfPtzPGat860lHSCGpcxILZeNtudSsUi7x68oP8R5XNT3A&oe=685DC721';
+$logoSekolah = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOvRXne5UoW788ugKsxXIhxMHiP9tQm5lIpQ&s';
 $logoYayasan = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg/640px-Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg.png';
 // Deteksi jika sedang dicetak Dompdf (CLI atau HTTP_USER_AGENT mengandung Dompdf)
 $isDompdf = (php_sapi_name() === 'cli' || (isset($_SERVER['HTTP_USER_AGENT']) && stripos($_SERVER['HTTP_USER_AGENT'], 'dompdf') !== false));
@@ -114,9 +114,15 @@ foreach ($mapel as $m) {
     $mapelByKelompok[$m['kelompok']][] = $m;
 }
 
+// Mapping nama mapel ke kd_mapel
+$namaToKodeMapel = [];
+foreach ($mapel as $m) {
+    $namaToKodeMapel[strtolower(trim($m['nama_mapel']))] = $m['kd_mapel'];
+}
+
 // Ambil nilai per mapel
-function getNilaiByMapel($nilai, $mapel_id) {
-    foreach ($nilai as $n) if ($n['mapel_id'] == $mapel_id) return $n;
+function getNilaiByMapel($nilai, $kd_mapel) {
+    foreach ($nilai as $n) if ($n['kd_mapel'] == $kd_mapel) return $n;
     return null;
 }
 
@@ -130,56 +136,93 @@ $jumlahKelompok = [];
     <meta charset="utf-8">
     <title>e-Raport Siswa</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 12px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px; background: #f4f8fb; color: #222; margin: 0; padding: 0; }
         h2, h3, h4 { text-align: center; margin: 0; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
-        th { background: #1a237e; color: #fff; }
-        .section-title { background: #e3e3e3; font-weight: bold; text-align: left; padding: 6px; }
-        .identitas-table td { border: none; text-align: left; padding: 2px 8px; }
-        .header-logo { width: 70px; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; box-shadow: 0 2px 8px #e3e3e3; padding: 18px 24px 8px 24px; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 12px; background: #fff; }
+        th, td { border: 1px solid #1a237e; padding: 5px 7px; text-align: center; font-size: 12px; }
+        th {
+            background: #1a237e !important;
+            color: #fff !important;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 1px solid #fff !important;
+        }
+        .section-title { background: #1a237e; color: #fff; font-weight: bold; text-align: left; padding: 7px 12px; border-radius: 4px 4px 0 0; margin-bottom: 0; font-size: 13px; }
+        .identitas-table td { border: none; text-align: left; padding: 2px 8px; font-size: 12px; }
+        .header-logo { width: 60px; border-radius: 8px; box-shadow: 0 2px 8px #e3e3e3; }
         .header-table { width: 100%; border: none; margin-bottom: 0; }
         .header-table td { border: none; text-align: center; }
-        .garis { border-bottom: 2px solid #000; margin: 8px 0 16px 0; }
-        .catatan-box { border: 1px solid #aaa; padding: 10px; margin-bottom: 16px; background: #f8f8f8; }
+        .garis { border-bottom: 2px solid #1a237e; margin: 8px 0 12px 0; }
+        .catatan-box { border: 1px solid #3949ab; padding: 10px; margin-bottom: 10px; background: #e8eaf6; border-radius: 6px; font-style: italic; font-size: 12px; }
+        .ttd-table td { border: none; font-size: 12px; }
+        .ttd-table { margin-top: 18px; margin-bottom: 0; width: 100%; }
+        .ttd-nama { padding-top: 40px; font-weight: bold; }
+        .ttd-ttd { padding-top: 20px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: #43a047; color: #fff; }
+        .badge-warning { background: #ffa000; color: #fff; }
+        .badge-danger { background: #e53935; color: #fff; }
+        .badge-info { background: #1e88e5; color: #fff; }
+        @media print {
+            body { background: #fff; }
+            .container { box-shadow: none !important; border-radius: 0; }
+            .garis, .section-title, table, th, td { box-shadow: none !important; }
+        }
+        /* Hindari page break pada tanda tangan */
+        .avoid-break { page-break-inside: avoid; }
     </style>
 </head>
 <body>
-    <?php // ================= HEADER KOP SEKOLAH & YAYASAN ================= ?>
-    <table class="header-table">
+<div class="container">
+    <!-- HEADER SEKOLAH & YAYASAN -->
+    <table class="header-table" style="margin-bottom: 0;">
         <tr>
-            <td style="width:80px; text-align:left;">
+            <td style="width:70px; text-align:left; vertical-align:top;">
                 <img src="<?= $logoSekolah ?>" class="header-logo">
             </td>
-            <td style="text-align:center;">
-                <h4 style="margin-bottom:2px;">PEMERINTAH PROVINSI LAMPUNG</h4>
-                <h4 style="margin-bottom:2px;">DINAS PENDIDIKAN DAN KEBUDAYAAN LAMPUNG BARAT</h4>
-                <div style="font-weight:bold; font-size:15px; margin-bottom:2px;">YAYASAN PENDIDIKAN BHAKTI MULYA (YPBM)</div>
-                <h3 style="font-size:20px; letter-spacing:1px; margin-bottom:2px;">SMK BHAKTI MULYA BNS</h3>
-                <div style="font-size:13px;">Gunung Ratu BNS</div>
-                <div style="font-size:12px;">Telp: (0728) 123456 | Email: info@smkbhaktimulya.sch.id</div>
+            <td style="text-align:center; vertical-align:top;">
+                <div style="font-size:13px; font-weight:600; letter-spacing:1px;">PEMERINTAH PROVINSI LAMPUNG</div>
+                <div style="font-size:12px; font-weight:600;">DINAS PENDIDIKAN DAN KEBUDAYAAN LAMPUNG BARAT</div>
+                <div style="font-size:14px; font-weight:bold; margin-bottom:2px;">YAYASAN PENDIDIKAN BHAKTI MULYA (YPBM)</div>
+                <div style="font-size:18px; font-weight:bold; letter-spacing:1px; color:#1a237e;">SMK BHAKTI MULYA BNS</div>
+                <div style="font-size:12px;">Gunung Ratu BNS</div>
+                <div style="font-size:11px;">Telp: (0728) 123456 | Email: info@smkbhaktimulya.sch.id</div>
             </td>
-            <td style="width:80px; text-align:right;">
+            <td style="width:70px; text-align:right; vertical-align:top;">
                 <img src="<?= $logoYayasan ?>" class="header-logo">
             </td>
         </tr>
     </table>
     <div class="garis"></div>
-    <h4 style="margin-bottom:10px;">LAPORAN HASIL BELAJAR (E-RAPORT)</h4>
+    <h4 style="margin-bottom:14px; margin-top:0; font-size:15px; letter-spacing:0.5px;">LAPORAN HASIL BELAJAR (E-RAPORT)</h4>
 
-    <?php if ($isDompdf): ?>
-        <div style="font-size:10px; color:#888;">Path logo sekolah: <?= $logoSekolah ?></div>
-        <div style="font-size:10px; color:#888;">Path logo yayasan: <?= $logoYayasan ?></div>
-    <?php endif; ?>
-
-    <?php // ================= IDENTITAS SISWA & WALI KELAS ================= ?>
-    <table class="identitas-table" style="width:70%; margin-bottom:10px;">
-        <tr><td><b>Nama Siswa</b></td><td>: <?= esc($siswa['nama']) ?></td><td><b>Jurusan</b></td><td>: <?= esc($kelas['nama_jurusan'] ?? '-') ?></td></tr>
-        <tr><td><b>NIS</b></td><td>: <?= esc($siswa['nisn']) ?></td><td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td></tr>
-        <tr><td><b>Nama Sekolah</b></td><td>: SMK Bhakti Mulya BNS</td><td><b>Semester</b></td><td>: <?= esc($semester) ?></td></tr>
-        <tr><td><b>Alamat</b></td><td colspan="3">: Gunung Ratu BNS</td></tr>
-        <tr><td><b>Wali Kelas</b></td><td>: <?= esc($kelas['nama_wali_kelas'] ?? ($wali_kelas['nama'] ?? '-')) ?></td><td><b>Tahun Ajaran</b></td><td>: <?= esc($tahunAkademik['tahun'] ?? (date('Y').'/'.(date('Y')+1))) ?></td></tr>
-        <tr><td><b>NIP/NUPTK Wali Kelas</b></td><td>: <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?></td><td><b>Peringkat</b></td><td>: <?= $ranking ?? '-' ?></td></tr>
+    <!-- IDENTITAS SISWA & SEKOLAH -->
+    <table class="identitas-table" style="width:100%; margin-bottom:14px;">
+        <tr>
+            <td style="width:25%;"><b>Nama Siswa</b></td><td style="width:30%;">: <?= esc($siswa['nama']) ?></td>
+            <td style="width:20%;"><b>Jurusan</b></td><td>: <?= esc($kelas['nama_jurusan'] ?? '-') ?></td>
+        </tr>
+        <tr>
+            <td><b>NIS</b></td><td>: <?= esc($siswa['nis']) ?></td>
+            <td><b>Kelas</b></td><td>: <?= esc($kelas['nama_kelas']) ?></td>
+        </tr>
+        <tr>
+            <td><b>Nama Sekolah</b></td><td>: SMK Bhakti Mulya BNS</td>
+            <td><b>Semester</b></td><td>: <?= esc($semester) ?></td>
+        </tr>
+        <tr>
+            <td><b>Alamat</b></td><td>: Gunung Ratu BNS</td>
+            <td><b>Tahun Ajaran</b></td><td>: <?= esc($tahunAkademik['tahun'] ?? (date('Y').'/'.(date('Y')+1))) ?></td>
+        </tr>
+        <tr>
+            <td><b>Wali Kelas</b></td><td>: <?= esc($kelas['nama_wali_kelas'] ?? ($wali_kelas['nama'] ?? '-')) ?></td>
+            <td><b>Peringkat</b></td><td>: <?= $ranking ?? '-' ?></td>
+        </tr>
+        <tr>
+            <td><b>NIK/NIP Wali Kelas</b></td><td>: <?= esc($wali_kelas['nik_nip'] ?? '-') ?></td>
+            <td></td><td></td>
+        </tr>
     </table>
 
     <?php // ================= TABEL NILAI AKADEMIK ================= ?>
@@ -196,38 +239,65 @@ $jumlahKelompok = [];
             </tr>
         </thead>
         <tbody>
-        <?php $no=1; foreach ($kelompokMapel as $kode => $kelompok): ?>
+        <?php 
+        $no = 1;
+        $totalNilai = 0;
+        $totalMapel = 0;
+        if (!empty($kelompokMapel)) {
+            foreach ($kelompokMapel as $kode => $kelompok): 
+                $subtotal = 0;
+                $jumlahMapelKelompok = 0;
+        ?>
             <tr>
-                <td colspan="6" style="text-align:left; font-weight:bold; background:#e3e3e3;"> <?= $kelompok['label'] ?> </td>
+                <td colspan="6" style="text-align:left; font-weight:bold; background:#e3e3e3; color:#1a237e;"> <?= $kelompok['label'] ?> </td>
             </tr>
-            <?php $jumlahKelompok[$kode] = 0; foreach ($kelompok['sub'] as $namaMapel): ?>
-            <?php 
-                $mapelObj = null;
-                foreach (($mapelByKelompok[$kode] ?? []) as $m) {
-                    if (trim(strtolower($m['nama_mapel'])) == trim(strtolower($namaMapel))) {
-                        $mapelObj = $m;
-                        break;
-                    }
-                }
-                $nilaiMapel = $mapelObj ? getNilaiByMapel($nilai, $mapelObj['id']) : null;
-                ?>
+            <?php foreach ($kelompok['sub'] as $namaMapel):
+                $kd_mapel = $namaToKodeMapel[strtolower(trim($namaMapel))] ?? null;
+                $nilaiMapel = $kd_mapel ? getNilaiByMapel($nilai, $kd_mapel) : null;
+            ?>
             <tr>
                 <td><?= $no++ ?></td>
-                    <td style="text-align:left;"><?= esc($namaMapel) ?></td>
-                    <td><?= $nilaiMapel ? esc($nilaiMapel['uts']) : '-' ?></td>
-                    <td><?= $nilaiMapel ? esc($nilaiMapel['uas']) : '-' ?></td>
-                    <td><?= $nilaiMapel ? esc($nilaiMapel['tugas']) : '-' ?></td>
-                    <td><?= $nilaiMapel ? esc($nilaiMapel['akhir']) : '-' ?></td>
-                </tr>
-                <?php if ($nilaiMapel) { $totalNilai += $nilaiMapel['akhir']; $jumlahKelompok[$kode] += $nilaiMapel['akhir']; $totalMapel++; } ?>
-            <?php endforeach; ?>
-            <tr>
-                <td colspan="5" style="text-align:right; font-weight:bold;">Total Jumlah Nilai <?= ltrim(strstr($kelompok['label'], '. '), '. ') ?></td>
-                <td style="font-weight:bold;"> <?= $jumlahKelompok[$kode] ?> </td>
+                <td style="text-align:left;"> <?= esc($namaMapel) ?> </td>
+                <td><?= $nilaiMapel ? esc($nilaiMapel['nilai_uts']) : '-' ?></td>
+                <td><?= $nilaiMapel ? esc($nilaiMapel['nilai_uas']) : '-' ?></td>
+                <td><?= $nilaiMapel ? esc($nilaiMapel['nilai_tugas']) : '-' ?></td>
+                <td><?= $nilaiMapel ? esc($nilaiMapel['nilai_akhir']) : '-' ?></td>
             </tr>
-        <?php endforeach; ?>
+            <?php 
+                if ($nilaiMapel) {
+                    $subtotal += $nilaiMapel['nilai_akhir'];
+                    $totalNilai += $nilaiMapel['nilai_akhir'];
+                    $jumlahMapelKelompok++;
+                    $totalMapel++;
+                }
+            endforeach; ?>
+            <tr>
+                <td colspan="5" style="text-align:right; font-weight:bold; background:#1a237e; color:#fff;">Total Jumlah Nilai <?= ltrim(strstr($kelompok['label'], '. '), '. ') ?></td>
+                <td style="font-weight:bold; background:#1a237e; color:#fff;"> <?= $subtotal ?> </td>
+            </tr>
+        <?php endforeach; } else {
+            // Jika mapping kelompok gagal, tampilkan semua nilai yang ada
+            foreach ($nilai as $n): ?>
+            <tr>
+                <td><?= $no++ ?></td>
+                <td style="text-align:left;"><?= $n['nama_mapel'] ?? $n['kd_mapel'] ?></td>
+                <td><?= $n['nilai_uts'] ?? '-' ?></td>
+                <td><?= $n['nilai_uas'] ?? '-' ?></td>
+                <td><?= $n['nilai_tugas'] ?? '-' ?></td>
+                <td><?= $n['nilai_akhir'] ?? '-' ?></td>
+            </tr>
+            <?php 
+                if (isset($n['nilai_akhir']) && is_numeric($n['nilai_akhir'])) {
+                    $totalNilai += $n['nilai_akhir'];
+                    $totalMapel++;
+                }
+            endforeach; }
+        ?>
         </tbody>
     </table>
+    <?php if (count($nilai) < count($mapel)): ?>
+    <div style="font-size:11px; color:#e53935; margin-bottom:8px;">Sebagian mata pelajaran belum ada nilai.</div>
+    <?php endif; ?>
     <table style="width:40%; margin-bottom:10px;">
         <tr>
             <td style="text-align:right;"><b>Total Nilai Akademik</b></td>
@@ -241,6 +311,7 @@ $jumlahKelompok = [];
 
     <?php // ================= TABEL EKSTRAKURIKULER ================= ?>
     <div class="section-title">Kegiatan Ekstrakurikuler</div>
+    <pre><?php print_r($ekskul); ?></pre>
     <table>
         <thead>
             <tr>
@@ -322,7 +393,7 @@ $jumlahKelompok = [];
             <td style="border:none; text-align:center; line-height:1.2;">
                 <?= esc($wali_kelas['nama'] ?? ($kelas['nama_wali_kelas'] ?? '-')) ?><br>
                 ____________________<br>
-                <?= esc($wali_kelas['nip_nuptk'] ?? '-') ?>
+                <?= esc($wali_kelas['nik_nip'] ?? '-') ?>
             </td>
             <td style="border:none; text-align:center; line-height:1.2;">
                 <br>____________________<br>
@@ -330,9 +401,10 @@ $jumlahKelompok = [];
             <td style="border:none; text-align:center; line-height:1.2;">
                 <?= esc($siswa['nama']) ?><br>
                 ____________________<br>
-                <?= esc($siswa['nisn']) ?>
+                <?= esc($siswa['nis']) ?>
             </td>
         </tr>
     </table>
+</div>
 </body>
 </html> 

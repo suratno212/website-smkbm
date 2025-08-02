@@ -43,7 +43,7 @@ class Export extends BaseController
             'title' => 'Export Data',
             'user' => $this->userModel->find(session()->get('user_id'))
         ];
-        
+
         return view('admin/export/index', $data);
     }
 
@@ -55,7 +55,7 @@ class Export extends BaseController
         }
 
         $data = $this->siswaModel->select('
-            siswa.nisn,
+            siswa.nis,
             siswa.nama,
             siswa.tanggal_lahir,
             kelas.nama_kelas,
@@ -63,16 +63,16 @@ class Export extends BaseController
             siswa.alamat,
             siswa.no_hp
         ')
-        ->join('kelas', 'kelas.id = siswa.kelas_id')
-        ->join('jurusan', 'jurusan.id = siswa.jurusan_id')
-        ->findAll();
+            ->join('kelas', 'kelas.kd_kelas = siswa.kd_kelas')
+            ->join('jurusan', 'jurusan.kd_jurusan = siswa.kd_jurusan')
+            ->findAll();
 
         $filename = 'data_siswa_' . date('Y-m-d_H-i-s');
-        
+
         if ($format === 'pdf') {
             $filename .= '.pdf';
             return $this->exportLibrary->exportPDF($data, [
-                'NISN',
+                'NIS',
                 'Nama',
                 'Tanggal Lahir',
                 'Kelas',
@@ -95,21 +95,21 @@ class Export extends BaseController
             return redirect()->to(base_url('auth'));
         }
 
-        $data = $this->guruModel->select('
+        $guruData = $this->guruModel->select('
             guru.nama,
             guru.tanggal_lahir,
             mapel.nama_mapel,
             guru.alamat,
             guru.no_hp
         ')
-        ->join('mapel', 'mapel.id = guru.mapel_id')
-        ->findAll();
+            ->join('mapel', 'mapel.kd_mapel = guru.kd_mapel')
+            ->findAll();
 
         $filename = 'data_guru_' . date('Y-m-d_H-i-s');
-        
+
         if ($format === 'pdf') {
             $filename .= '.pdf';
-            return $this->exportLibrary->exportPDF($data, [
+            return $this->exportLibrary->exportPDF($guruData, [
                 'Nama',
                 'Tanggal Lahir',
                 'Mata Pelajaran',
@@ -120,7 +120,7 @@ class Export extends BaseController
             ]);
         } else {
             $filename .= '.xlsx';
-            return $this->exportLibrary->exportGuru($data, $filename);
+            return $this->exportLibrary->exportGuru($guruData, $filename);
         }
     }
 
@@ -138,15 +138,15 @@ class Export extends BaseController
             mapel.nama_mapel,
             guru.nama as nama_guru
         ')
-        ->join('kelas', 'kelas.id = jadwal.kelas_id')
-        ->join('mapel', 'mapel.id = jadwal.mapel_id')
-        ->join('guru', 'guru.id = jadwal.guru_id')
-        ->orderBy('jadwal.hari', 'ASC')
-        ->orderBy('jadwal.jam_mulai', 'ASC')
-        ->findAll();
+            ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+            ->join('mapel', 'mapel.kd_mapel = jadwal.kd_mapel')
+            ->join('guru', 'guru.nik_nip = jadwal.nik_nip')
+            ->orderBy('jadwal.hari', 'ASC')
+            ->orderBy('jadwal.jam_mulai', 'ASC')
+            ->findAll();
 
         $filename = 'jadwal_pelajaran_' . date('Y-m-d_H-i-s');
-        
+
         if ($format === 'pdf') {
             $filename .= '.pdf';
             return $this->exportLibrary->exportPDF($data, [
@@ -172,25 +172,25 @@ class Export extends BaseController
         }
 
         $tanggal = $tanggal ?: date('Y-m-d');
-        
-        $data = $this->absensiModel->select('
-            siswa.nisn,
+
+        $absensiData = $this->absensiModel->select('
+            siswa.nis,
             siswa.nama,
             kelas.nama_kelas,
             absensi.tanggal,
             absensi.status
         ')
-        ->join('siswa', 'siswa.id = absensi.siswa_id')
-        ->join('kelas', 'kelas.id = siswa.kelas_id')
-        ->where('absensi.tanggal', $tanggal)
-        ->findAll();
+            ->join('siswa', 'siswa.nis = absensi.nis')
+            ->join('kelas', 'kelas.kd_kelas = siswa.kd_kelas')
+            ->where('absensi.tanggal', $tanggal)
+            ->findAll();
 
         $filename = 'rekap_absensi_' . $tanggal . '_' . date('H-i-s');
-        
+
         if ($format === 'pdf') {
             $filename .= '.pdf';
-            return $this->exportLibrary->exportPDF($data, [
-                'NISN',
+            return $this->exportLibrary->exportPDF($absensiData, [
+                'NIS',
                 'Nama',
                 'Kelas',
                 'Tanggal',
@@ -200,7 +200,7 @@ class Export extends BaseController
             ]);
         } else {
             $filename .= '.xlsx';
-            return $this->exportLibrary->exportAbsensi($data, $filename);
+            return $this->exportLibrary->exportAbsensi($absensiData, $filename);
         }
     }
 
@@ -211,32 +211,32 @@ class Export extends BaseController
             return redirect()->to(base_url('auth'));
         }
 
-        $query = $this->nilaiModel->select('
-            siswa.nisn,
+        $nilaiData = $this->nilaiModel->select('
+            siswa.nis,
             siswa.nama,
             kelas.nama_kelas,
             mapel.nama_mapel,
-            nilai.uts,
-            nilai.uas,
-            nilai.tugas,
-            nilai.akhir
+            nilai.nilai_uts,
+            nilai.nilai_uas,
+            nilai.nilai_tugas,
+            nilai.nilai_akhir
         ')
-        ->join('siswa', 'siswa.id = nilai.siswa_id')
-        ->join('kelas', 'kelas.id = siswa.kelas_id')
-        ->join('mapel', 'mapel.id = nilai.mapel_id');
+            ->join('siswa', 'siswa.nis = nilai.nis')
+            ->join('kelas', 'kelas.kd_kelas = nilai.kd_kelas')
+            ->join('mapel', 'mapel.kd_mapel = nilai.kd_mapel');
 
         if ($kelas_id) {
-            $query->where('siswa.kelas_id', $kelas_id);
+            $nilaiData->where('nilai.kd_kelas', $kelas_id);
         }
 
-        $data = $query->findAll();
+        $data = $nilaiData->findAll();
 
         $filename = 'data_nilai_' . ($kelas_id ? 'kelas_' . $kelas_id . '_' : '') . date('Y-m-d_H-i-s');
-        
+
         if ($format === 'pdf') {
             $filename .= '.pdf';
             return $this->exportLibrary->exportPDF($data, [
-                'NISN',
+                'NIS',
                 'Nama',
                 'Kelas',
                 'Mata Pelajaran',
@@ -268,7 +268,7 @@ class Export extends BaseController
         if ($zip->open($zipPath, \ZipArchive::CREATE) === TRUE) {
             // Export Siswa
             $siswaData = $this->siswaModel->select('
-                siswa.nisn,
+                siswa.nis,
                 siswa.nama,
                 siswa.tanggal_lahir,
                 kelas.nama_kelas,
@@ -276,9 +276,9 @@ class Export extends BaseController
                 siswa.alamat,
                 siswa.no_hp
             ')
-            ->join('kelas', 'kelas.id = siswa.kelas_id')
-            ->join('jurusan', 'jurusan.id = siswa.jurusan_id')
-            ->findAll();
+                ->join('kelas', 'kelas.kd_kelas = siswa.kd_kelas')
+                ->join('jurusan', 'jurusan.kd_jurusan = siswa.kd_jurusan')
+                ->findAll();
 
             $siswaFile = WRITEPATH . 'uploads/data_siswa.xlsx';
             $this->exportLibrary->exportSiswa($siswaData, $siswaFile);
@@ -292,8 +292,8 @@ class Export extends BaseController
                 guru.alamat,
                 guru.no_hp
             ')
-            ->join('mapel', 'mapel.id = guru.mapel_id')
-            ->findAll();
+                ->join('mapel', 'mapel.kd_mapel = guru.kd_mapel')
+                ->findAll();
 
             $guruFile = WRITEPATH . 'uploads/data_guru.xlsx';
             $this->exportLibrary->exportGuru($guruData, $guruFile);
@@ -307,12 +307,12 @@ class Export extends BaseController
                 mapel.nama_mapel,
                 guru.nama as nama_guru
             ')
-            ->join('kelas', 'kelas.id = jadwal.kelas_id')
-            ->join('mapel', 'mapel.id = jadwal.mapel_id')
-            ->join('guru', 'guru.id = jadwal.guru_id')
-            ->orderBy('jadwal.hari', 'ASC')
-            ->orderBy('jadwal.jam_mulai', 'ASC')
-            ->findAll();
+                ->join('kelas', 'kelas.kd_kelas = jadwal.kd_kelas')
+                ->join('mapel', 'mapel.kd_mapel = jadwal.kd_mapel')
+                ->join('guru', 'guru.nik_nip = jadwal.nik_nip')
+                ->orderBy('jadwal.hari', 'ASC')
+                ->orderBy('jadwal.jam_mulai', 'ASC')
+                ->findAll();
 
             $jadwalFile = WRITEPATH . 'uploads/jadwal_pelajaran.xlsx';
             $this->exportLibrary->exportJadwal($jadwalData, $jadwalFile);
@@ -337,4 +337,4 @@ class Export extends BaseController
 
         return redirect()->back()->with('error', 'Gagal membuat file ZIP');
     }
-} 
+}

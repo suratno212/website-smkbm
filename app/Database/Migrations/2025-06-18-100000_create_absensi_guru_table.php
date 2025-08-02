@@ -9,34 +9,20 @@ class CreateAbsensiGuruTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+            'kd_absensi_guru' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
             ],
-            'guru_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            'nik_nip' => [
+                'type' => 'VARCHAR',
+                'constraint' => '25',
             ],
             'tanggal' => [
                 'type' => 'DATE',
             ],
-            'jam_masuk' => [
-                'type' => 'TIME',
-            ],
-            'jam_pulang' => [
-                'type' => 'TIME',
-                'null' => true,
-            ],
             'status' => [
                 'type'       => 'ENUM',
-                'constraint' => ['Hadir', 'Izin', 'Sakit', 'Alpha', 'Dinas Luar'],
-            ],
-            'keterangan' => [
-                'type' => 'TEXT',
-                'null' => true,
+                'constraint' => ['Hadir', 'Izin', 'Sakit', 'Alpha'],
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -47,8 +33,8 @@ class CreateAbsensiGuruTable extends Migration
                 'null' => true,
             ],
         ]);
-        $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('guru_id', 'guru', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey('kd_absensi_guru', true); // PRIMARY KEY
+        $this->forge->addForeignKey('nik_nip', 'guru', 'nik_nip', 'CASCADE', 'CASCADE');
         $this->forge->createTable('absensi_guru');
     }
 

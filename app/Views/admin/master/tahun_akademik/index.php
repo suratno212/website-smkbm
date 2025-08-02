@@ -14,18 +14,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <?php if (session()->getFlashdata('message')) : ?>
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <h5><i class="icon fas fa-check"></i> Berhasil!</h5>
-                            <?= session()->getFlashdata('message') ?>
-                        </div>
-                    <?php endif; ?>
-
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Kode</th>
                                 <th>Tahun</th>
                                 <th>Semester</th>
                                 <th>Status</th>
@@ -37,24 +30,14 @@
                             <?php foreach ($tahun_akademik as $ta) : ?>
                                 <tr>
                                     <td><?= $i++ ?></td>
+                                    <td><?= $ta['kd_tahun_akademik'] ?></td>
                                     <td><?= $ta['tahun'] ?></td>
                                     <td><?= $ta['semester'] ?></td>
+                                    <td><?= $ta['status'] ?></td>
                                     <td>
-                                        <?php if (isset($ta['status']) && $ta['status'] == 'Aktif') : ?>
-                                            <span class="badge badge-success">Aktif</span>
-                                        <?php else : ?>
-                                            <span class="badge badge-secondary">Tidak Aktif</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?= base_url('admin/master/tahun_akademik/edit/' . $ta['id']) ?>" class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="<?= base_url('admin/master/tahun_akademik/delete/' . $ta['id']) ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                            <?= csrf_field() ?>
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                        <a href="<?= base_url('admin/master/tahun_akademik/edit/' . $ta['kd_tahun_akademik']) ?>" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                        <form action="<?= base_url('admin/master/tahun_akademik/delete/' . $ta['kd_tahun_akademik']) ?>" method="post" class="d-inline" onsubmit="return confirm('Yakin hapus data ini?')">
+                                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -66,4 +49,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>

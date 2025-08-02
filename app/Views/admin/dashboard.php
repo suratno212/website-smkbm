@@ -181,6 +181,81 @@
         </div>
     </div>
 
+    <!-- Calon Siswa Stats Row -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card stats-card-purple">
+                <div class="stats-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number"><?= $total_calon_siswa ?></h3>
+                    <p class="stats-label">Total Calon Siswa</p>
+                </div>
+                <div class="stats-bg">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <a href="<?= base_url('admin/calon-siswa') ?>" class="stats-link">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card stats-card-warning">
+                <div class="stats-icon">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number"><?= $calon_siswa_terdaftar ?></h3>
+                    <p class="stats-label">Terdaftar</p>
+                </div>
+                <div class="stats-bg">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <a href="<?= base_url('admin/calon-siswa') ?>" class="stats-link">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card stats-card-success">
+                <div class="stats-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number"><?= $calon_siswa_diterima ?></h3>
+                    <p class="stats-label">Diterima</p>
+                </div>
+                <div class="stats-bg">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <a href="<?= base_url('admin/calon-siswa') ?>" class="stats-link">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stats-card stats-card-danger">
+                <div class="stats-icon">
+                    <i class="fas fa-user-times"></i>
+                </div>
+                <div class="stats-content">
+                    <h3 class="stats-number"><?= $calon_siswa_ditolak ?></h3>
+                    <p class="stats-label">Ditolak</p>
+                </div>
+                <div class="stats-bg">
+                    <i class="fas fa-user-times"></i>
+                </div>
+                <a href="<?= base_url('admin/calon-siswa') ?>" class="stats-link">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Analytics Dashboard Section -->
     <div class="row mb-4">
         <div class="col-12">
@@ -603,6 +678,10 @@
     border-left: 4px solid #adb5bd;
 }
 
+.stats-card-purple {
+    border-left: 4px solid #6f42c1;
+}
+
 .stats-icon {
     width: 60px;
     height: 60px;
@@ -653,6 +732,11 @@
 
 .stats-card-light .stats-icon {
     background: linear-gradient(135deg, #adb5bd, #6c757d);
+    color: white;
+}
+
+.stats-card-purple .stats-icon {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
     color: white;
 }
 
@@ -1397,12 +1481,8 @@ function initializeCharts() {
                 datasets: [{
                     data: [],
                     backgroundColor: [
-                        '#1a237e',
-                        '#283593',
-                        '#303f9f',
-                        '#3949ab',
-                        '#3f51b5',
-                        '#5c6bc0'
+                        '#1a237e', // TKJ (biru tua)
+                        '#388e3c' // TBSM (hijau)
                     ],
                     borderWidth: 2,
                     borderColor: '#fff'

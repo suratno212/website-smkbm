@@ -255,38 +255,38 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                max-width: 100vw;
+                min-width: 100vw;
+                z-index: 1100;
                 transform: translateX(-100%);
-                width: var(--sidebar-width);
                 padding: 20px;
+                border-radius: 0;
+                box-shadow: 0 0 20px rgba(0,0,0,0.2);
+                transition: transform 0.3s cubic-bezier(.4,2,.6,1), width 0.3s;
             }
-
             .sidebar.show {
                 transform: translateX(0);
             }
-
             .sidebar.collapsed {
                 transform: translateX(-100%);
             }
-
-            .main-content {
+            .main-content, .main-content.expanded {
                 margin-left: 0;
             }
-
-            .main-content.expanded {
-                margin-left: 0;
-            }
-
             .sidebar-header h3,
             .menu-item span {
                 display: block;
             }
-
             .menu-item {
                 padding: 12px 20px;
                 justify-content: flex-start;
                 text-align: left;
             }
-
             .menu-item i {
                 margin-right: 10px;
             }
@@ -377,7 +377,7 @@ if (!isset($user)) {
                     <img src="<?= base_url('assets/images/Logo.png') ?>" alt="User" class="profile-image">
                 <?php endif; ?>
                 <div>
-                    <h6 class="mb-0"><?= $user['username'] ?? 'Guru' ?></h6>
+                    <h6 class="mb-0"><?= $user['nama'] ?? $user['username'] ?? 'Guru' ?></h6>
                         <small class="text-muted">Guru</small>
                 </div>
                 </a>
@@ -412,14 +412,8 @@ if (!isset($user)) {
 
             // Toggle sidebar
             sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-                mainContent.classList.toggle('expanded');
-                
-                // Save state to localStorage
-                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
-                
-                // Show overlay on mobile when sidebar is open
                 if (window.innerWidth <= 768) {
+                    // Mobile: show fullscreen sidebar
                     if (sidebar.classList.contains('show')) {
                         sidebar.classList.remove('show');
                         sidebarOverlay.classList.remove('show');
@@ -427,6 +421,11 @@ if (!isset($user)) {
                         sidebar.classList.add('show');
                         sidebarOverlay.classList.add('show');
                     }
+                } else {
+                    // Desktop: collapse/expand
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('expanded');
+                    localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
                 }
             });
 

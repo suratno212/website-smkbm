@@ -1,0 +1,12 @@
+
+%% Activity Diagram Laporan Akademik Kepala Sekolah
+flowchart TD
+    start([Start]) --> U1["Kepala Sekolah: Masuk ke menu laporan"]
+    U1 --> S1["Sistem: Menampilkan pilihan laporan (nilai, absensi, dsb)"]
+    U2["Kepala Sekolah: Memilih jenis laporan"] --> S2["Sistem: Menampilkan data laporan"]
+    U3["Kepala Sekolah: Cetak/unduh laporan"] --> S3["Sistem: Menghasilkan file laporan"]
+    S1 --> U2
+    S2 --> U3
+    S3 --> end([End])
+    U4["Kepala Sekolah: Data laporan tidak tersedia"] --> S4["Sistem: Menampilkan pesan error"]
+    S4 --> U2

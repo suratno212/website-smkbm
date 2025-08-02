@@ -7,20 +7,21 @@ use CodeIgniter\Model;
 class NilaiModel extends Model
 {
     protected $table            = 'nilai';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = ['nis', 'kd_mapel', 'kd_kelas', 'kd_jurusan', 'kd_tahun_akademik'];
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
-
     protected $allowedFields = [
-        'siswa_id',
-        'mapel_id',
-        'tahun_akademik_id',
+        'nis',
+        'kd_mapel',
+        'kd_kelas',
+        'kd_jurusan',
+        'kd_tahun_akademik',
         'semester',
-        'uts',
-        'uas',
-        'tugas',
-        'akhir'
+        'nilai_tugas',
+        'nilai_uts',
+        'nilai_uas',
+        'nilai_akhir'
     ];
 
     // Dates
@@ -30,180 +31,217 @@ class NilaiModel extends Model
     protected $updatedField  = 'updated_at';
 
     // Validation
-    protected $validationRules = [
-        'siswa_id' => 'required|integer',
-        'mapel_id' => 'required|integer',
-        'semester' => 'required|in_list[Ganjil,Genap]',
-        'uts'      => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]',
-        'uas'      => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]',
-        'tugas'    => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]',
-        'akhir'    => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]'
+    protected $validationRules      = [
+        'nis' => 'required',
+        'kd_mapel' => 'required',
+        'kd_kelas' => 'required',
+        'kd_jurusan' => 'required',
+        'kd_tahun_akademik' => 'required|numeric',
+        'semester' => 'required',
+        'nilai_tugas' => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]',
+        'nilai_uts' => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]',
+        'nilai_uas' => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]',
+        'nilai_akhir' => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[100]'
     ];
-
-    protected $validationMessages = [
-        'siswa_id' => [
-            'required' => 'ID Siswa harus diisi',
-            'integer'  => 'ID Siswa harus berupa angka'
-        ],
-        'mapel_id' => [
-            'required' => 'ID Mata Pelajaran harus diisi',
-            'integer'  => 'ID Mata Pelajaran harus berupa angka'
-        ],
-        'semester' => [
-            'required' => 'Semester harus diisi',
-            'in_list'  => 'Semester harus Ganjil atau Genap'
-        ],
-        'uts' => [
-            'numeric' => 'Nilai UTS harus berupa angka',
-            'greater_than_equal_to' => 'Nilai UTS minimal 0',
-            'less_than_equal_to' => 'Nilai UTS maksimal 100'
-        ],
-        'uas' => [
-            'numeric' => 'Nilai UAS harus berupa angka',
-            'greater_than_equal_to' => 'Nilai UAS minimal 0',
-            'less_than_equal_to' => 'Nilai UAS maksimal 100'
-        ],
-        'tugas' => [
-            'numeric' => 'Nilai Tugas harus berupa angka',
-            'greater_than_equal_to' => 'Nilai Tugas minimal 0',
-            'less_than_equal_to' => 'Nilai Tugas maksimal 100'
-        ],
-        'akhir' => [
-            'numeric' => 'Nilai Akhir harus berupa angka',
-            'greater_than_equal_to' => 'Nilai Akhir minimal 0',
-            'less_than_equal_to' => 'Nilai Akhir maksimal 100'
-        ]
-    ];
-
-    protected $skipValidation = false;
+    protected $validationMessages   = [];
+    protected $skipValidation       = false;
     protected $cleanValidationRules = true;
 
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert = ['calculateFinalScore'];
-    protected $beforeUpdate = ['calculateFinalScore'];
-
-    /**
-     * Calculate final score before insert/update
-     */
-    protected function calculateFinalScore(array $data)
+    public function getNilaiWithRelations($filters = [])
     {
-        if (isset($data['data']['uts']) && isset($data['data']['uas']) && isset($data['data']['tugas'])) {
-            $uts = floatval($data['data']['uts'] ?? 0);
-            $uas = floatval($data['data']['uas'] ?? 0);
-            $tugas = floatval($data['data']['tugas'] ?? 0);
-            
-            // Calculate final score (30% UTS + 40% UAS + 30% Tugas)
-            $akhir = ($uts * 0.3) + ($uas * 0.4) + ($tugas * 0.3);
-            
-            $data['data']['akhir'] = round($akhir, 2);
+        $builder = $this->db->table('nilai')
+            ->select('nilai.*, siswa.nama as nama_siswa, mapel.nama_mapel, kelas.nama_kelas, jurusan.nama_jurusan')
+            ->join('siswa', 'siswa.nis = nilai.nis')
+            ->join('mapel', 'mapel.kd_mapel = nilai.kd_mapel')
+            ->join('kelas', 'kelas.kd_kelas = nilai.kd_kelas')
+            ->join('jurusan', 'jurusan.kd_jurusan = nilai.kd_jurusan');
+
+        if (!empty($filters['nis'])) {
+            $builder->where('nilai.nis', $filters['nis']);
         }
-        
-        return $data;
+        if (!empty($filters['kd_kelas'])) {
+            $builder->where('nilai.kd_kelas', $filters['kd_kelas']);
+        }
+        if (!empty($filters['kd_mapel'])) {
+            $builder->where('nilai.kd_mapel', $filters['kd_mapel']);
+        }
+
+        return $builder->get()->getResultArray();
     }
 
-    /**
-     * Get nilai by siswa and mapel
-     */
-    public function getNilaiBySiswaMapel($siswaId, $mapelId, $semester = 1)
+    public function getNilaiSiswa($nis, $kdKelas, $kdMapel, $kdTahunAkademik, $semester)
     {
         return $this->where([
-            'siswa_id' => $siswaId,
-            'mapel_id' => $mapelId,
+            'nis' => $nis,
+            'kd_kelas' => $kdKelas,
+            'kd_mapel' => $kdMapel,
+            'kd_tahun_akademik' => $kdTahunAkademik,
             'semester' => $semester
         ])->first();
     }
 
-    /**
-     * Get nilai by kelas and mapel
-     */
-    public function getNilaiByKelasMapel($kelasId, $mapelId, $semester = 1)
+    public function getNilaiKelas($kdKelas, $kdMapel, $kdTahunAkademik, $semester)
     {
-        return $this->select('nilai.*, siswa.nama as nama_siswa, siswa.nisn')
-            ->join('siswa', 'siswa.id = nilai.siswa_id')
-            ->where('siswa.kelas_id', $kelasId)
-            ->where('nilai.mapel_id', $mapelId)
-            ->where('nilai.semester', $semester)
-            ->findAll();
+        $builder = $this->db->table('nilai')
+            ->select('nilai.*, siswa.nama as nama_siswa')
+            ->join('siswa', 'siswa.nis = nilai.nis')
+            ->where('siswa.kd_kelas', $kdKelas)
+            ->where('nilai.kd_mapel', $kdMapel)
+            ->where('nilai.kd_tahun_akademik', $kdTahunAkademik)
+            ->where('nilai.semester', $semester);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getRekapNilaiSiswa($nis, $kdTahunAkademik, $semester)
+    {
+        $builder = $this->db->table('nilai')
+            ->select('nilai.*, mapel.nama_mapel, mapel.kelompok')
+            ->join('mapel', 'mapel.kd_mapel = nilai.kd_mapel')
+            ->where('nilai.nis', $nis)
+            ->where('nilai.kd_tahun_akademik', $kdTahunAkademik)
+            ->where('nilai.semester', $semester);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getRekapNilaiKelas($kdKelas, $kdTahunAkademik, $semester)
+    {
+        $builder = $this->db->table('nilai')
+            ->select('nilai.*, siswa.nama as nama_siswa, mapel.nama_mapel')
+            ->join('siswa', 'siswa.nis = nilai.nis')
+            ->join('mapel', 'mapel.kd_mapel = nilai.kd_mapel')
+            ->where('siswa.kd_kelas', $kdKelas)
+            ->where('nilai.kd_tahun_akademik', $kdTahunAkademik)
+            ->where('nilai.semester', $semester);
+
+        return $builder->get()->getResultArray();
+    }
+
+    public function getRekapNilaiJurusan($kdJurusan, $kdTahunAkademik, $semester)
+    {
+        $builder = $this->db->table('nilai')
+            ->select('nilai.*, siswa.nama as nama_siswa, mapel.nama_mapel, kelas.nama_kelas')
+            ->join('siswa', 'siswa.nis = nilai.nis')
+            ->join('mapel', 'mapel.kd_mapel = nilai.kd_mapel')
+            ->join('kelas', 'kelas.kd_kelas = nilai.kd_kelas')
+            ->where('siswa.kd_jurusan', $kdJurusan)
+            ->where('nilai.kd_tahun_akademik', $kdTahunAkademik)
+            ->where('nilai.semester', $semester);
+
+        return $builder->get()->getResultArray();
     }
 
     /**
-     * Get nilai by kelas
+     * Mengembalikan array ranking siswa dalam kelas berdasarkan rata-rata nilai_akhir semester
+     * @param string $kd_kelas
+     * @param string $semester
+     * @return array
      */
-    public function getNilaiByKelas($kelasId, $semester = 1)
+    public function getRankingKelas($kd_kelas, $semester)
     {
-        return $this->select('nilai.*, siswa.nama as nama_siswa, siswa.nisn, mapel.nama_mapel')
-            ->join('siswa', 'siswa.id = nilai.siswa_id')
-            ->join('mapel', 'mapel.id = nilai.mapel_id')
-            ->where('siswa.kelas_id', $kelasId)
-            ->where('nilai.semester', $semester)
-            ->findAll();
+        // Ambil tahun akademik aktif
+        $tahunAkademikAktif = model('TahunAkademikModel')->where('status', 'Aktif')->first();
+        if (!$tahunAkademikAktif) return [];
+        $kd_tahun_akademik = $tahunAkademikAktif['kd_tahun_akademik'];
+
+        // Ambil semua siswa di kelas
+        $siswaModel = model('SiswaModel');
+        $siswaList = $siswaModel->where('kd_kelas', $kd_kelas)->findAll();
+        $ranking = [];
+        foreach ($siswaList as $siswa) {
+            // Hitung rata-rata nilai akhir untuk semester dan tahun akademik aktif
+            $nilaiList = $this->where([
+                'nis' => $siswa['nis'],
+                'kd_kelas' => $kd_kelas,
+                'semester' => $semester,
+                'kd_tahun_akademik' => $kd_tahun_akademik
+            ])->findAll();
+            $total = 0;
+            $count = 0;
+            foreach ($nilaiList as $n) {
+                if (isset($n['nilai_akhir'])) {
+                    $total += floatval($n['nilai_akhir']);
+                    $count++;
+                }
+            }
+            $rata_rata = $count > 0 ? round($total / $count, 2) : 0;
+            $ranking[] = [
+                'nis' => $siswa['nis'],
+                'nama' => $siswa['nama'],
+                'rata_rata' => $rata_rata
+            ];
+        }
+        // Urutkan ranking dari rata-rata tertinggi ke terendah
+        usort($ranking, function($a, $b) {
+            return $b['rata_rata'] <=> $a['rata_rata'];
+        });
+        return $ranking;
     }
 
     /**
-     * Get rata-rata nilai siswa
+     * Menghitung rata-rata nilai_akhir untuk siswa dan semester tertentu pada tahun akademik aktif
      */
-    public function getRataRataSiswa($siswaId, $semester = 1)
+    public function getRataRataSiswa($nis, $semester)
     {
-        $result = $this->select('AVG(akhir) as rata_rata, COUNT(*) as total_mapel')
-            ->where('siswa_id', $siswaId)
-            ->where('semester', $semester)
-            ->where('akhir >', 0)
-            ->first();
-            
-        return $result ? floatval($result['rata_rata']) : 0;
+        $tahunAkademikAktif = model('TahunAkademikModel')->where('status', 'Aktif')->first();
+        if (!$tahunAkademikAktif) return 0;
+        $kd_tahun_akademik = $tahunAkademikAktif['kd_tahun_akademik'];
+        $nilaiList = $this->where([
+            'nis' => $nis,
+            'semester' => $semester,
+            'kd_tahun_akademik' => $kd_tahun_akademik
+        ])->findAll();
+        $total = 0;
+        $count = 0;
+        foreach ($nilaiList as $n) {
+            if (isset($n['nilai_akhir'])) {
+                $total += floatval($n['nilai_akhir']);
+                $count++;
+            }
+        }
+        return $count > 0 ? round($total / $count, 2) : 0;
     }
 
     /**
-     * Get rata-rata kelas
+     * Mengembalikan statistik nilai untuk kelas dan semester tertentu pada tahun akademik aktif
+     * @param string $kd_kelas
+     * @param string $semester
+     * @return array
      */
-    public function getRataRataKelas($kelasId, $semester = 1)
+    public function getStatistikNilai($kd_kelas, $semester)
     {
-        $result = $this->select('AVG(nilai.akhir) as rata_rata')
-            ->join('siswa', 'siswa.id = nilai.siswa_id')
-            ->where('siswa.kelas_id', $kelasId)
-            ->where('nilai.semester', $semester)
-            ->where('nilai.akhir >', 0)
-            ->first();
-            
-        return $result ? floatval($result['rata_rata']) : 0;
-    }
-
-    /**
-     * Get ranking siswa dalam kelas
-     */
-    public function getRankingKelas($kelasId, $semester = 1)
-    {
-        return $this->select('siswa.id, siswa.nama, siswa.nisn, AVG(nilai.akhir) as rata_rata')
-            ->join('siswa', 'siswa.id = nilai.siswa_id')
-            ->where('siswa.kelas_id', $kelasId)
-            ->where('nilai.semester', $semester)
-            ->where('nilai.akhir >', 0)
-            ->groupBy('siswa.id, siswa.nama, siswa.nisn')
-            ->orderBy('rata_rata', 'DESC')
-            ->findAll();
-    }
-
-    /**
-     * Get statistik nilai
-     */
-    public function getStatistikNilai($kelasId, $semester = 1)
-    {
-        $result = $this->select('
-            COUNT(DISTINCT nilai.siswa_id) as total_siswa,
-            COUNT(nilai.id) as total_nilai,
-            AVG(nilai.akhir) as rata_rata,
-            MAX(nilai.akhir) as nilai_tertinggi,
-            MIN(nilai.akhir) as nilai_terendah,
-            COUNT(CASE WHEN nilai.akhir >= 70 THEN 1 END) as siswa_lulus,
-            COUNT(CASE WHEN nilai.akhir < 70 THEN 1 END) as siswa_tidak_lulus
-        ')
-        ->join('siswa', 'siswa.id = nilai.siswa_id')
-        ->where('siswa.kelas_id', $kelasId)
-        ->where('nilai.semester', $semester)
-        ->where('nilai.akhir >', 0)
-        ->first();
-        
-        return $result;
+        $tahunAkademikAktif = model('TahunAkademikModel')->where('status', 'Aktif')->first();
+        if (!$tahunAkademikAktif) return [
+            'total_siswa' => 0,
+            'rata_rata' => 0,
+            'distribusi_grade' => ['A'=>0,'B'=>0,'C'=>0,'D'=>0,'E'=>0]
+        ];
+        $kd_tahun_akademik = $tahunAkademikAktif['kd_tahun_akademik'];
+        $nilaiList = $this->where([
+            'kd_kelas' => $kd_kelas,
+            'semester' => $semester,
+            'kd_tahun_akademik' => $kd_tahun_akademik
+        ])->findAll();
+        $total = 0;
+        $count = 0;
+        $grade = ['A'=>0,'B'=>0,'C'=>0,'D'=>0,'E'=>0];
+        foreach ($nilaiList as $n) {
+            if (isset($n['nilai_akhir'])) {
+                $na = floatval($n['nilai_akhir']);
+                $total += $na;
+                $count++;
+                if ($na >= 90) $grade['A']++;
+                elseif ($na >= 80) $grade['B']++;
+                elseif ($na >= 70) $grade['C']++;
+                elseif ($na >= 60) $grade['D']++;
+                else $grade['E']++;
+            }
+        }
+        return [
+            'total_siswa' => $count,
+            'rata_rata' => $count > 0 ? round($total/$count,2) : 0,
+            'distribusi_grade' => $grade
+        ];
     }
 } 

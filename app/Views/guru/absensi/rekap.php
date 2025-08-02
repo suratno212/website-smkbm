@@ -53,7 +53,7 @@
                             <select name="kelas_id" id="kelas_id" class="form-control" required>
                                 <option value="">Pilih Kelas</option>
                                 <?php foreach ($kelas_diampu as $k) : ?>
-                                    <option value="<?= $k['id'] ?>" <?= $selected_kelas == $k['id'] ? 'selected' : '' ?>>
+                                    <option value="<?= $k['kd_kelas'] ?>" <?= $selected_kelas == $k['kd_kelas'] ? 'selected' : '' ?>>
                                         <?= $k['nama_kelas'] ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -187,14 +187,14 @@
                                     <?php foreach ($rekap_absensi as $index => $rekap) : ?>
                                         <tr>
                                             <td><?= $index + 1 ?></td>
-                                            <td><strong><?= $rekap['siswa']['nisn'] ?></strong></td>
+                                            <td><strong><?= $rekap['nis'] ?></strong></td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-sm me-3">
                                                         <i class="fas fa-user-circle fa-2x text-primary"></i>
                                                     </div>
                                                     <div>
-                                                        <strong><?= $rekap['siswa']['nama'] ?></strong>
+                                                        <strong><?= $rekap['nama'] ?></strong>
                                                     </div>
                                                 </div>
                                             </td>

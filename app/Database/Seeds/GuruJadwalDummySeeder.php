@@ -30,14 +30,14 @@ class GuruJadwalDummySeeder extends Seeder
                 'user_id' => $user_id,
                 'nama' => 'Guru Dummy',
                 'tanggal_lahir' => '1980-01-01',
-                'mapel_id' => 1,
+                'kd_mapel' => 1,
                 'alamat' => 'Alamat Dummy',
                 'no_hp' => '08123456789',
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
             $guru_id = $db->insertID();
         } else {
-            $guru_id = $guru['id'];
+            $guru_id = $guru['nik_nip'];
         }
         // Cari kelas, mapel, tahun_akademik
         $kelas = $db->table('kelas')->get()->getRowArray();
@@ -46,17 +46,17 @@ class GuruJadwalDummySeeder extends Seeder
         if ($kelas && $mapel && $tahun) {
             // Cek jadwal
             $jadwal = $db->table('jadwal')->where([
-                'kelas_id' => $kelas['id'],
-                'mapel_id' => $mapel['id'],
+                'kd_kelas' => $kelas['kd_kelas'],
+                'kd_mapel' => $mapel['kd_mapel'],
                 'guru_id' => $guru_id,
-                'tahun_akademik_id' => $tahun['id'],
+                'kd_tahun_akademik' => $tahun['kd_tahun_akademik'],
             ])->get()->getRowArray();
             if (!$jadwal) {
                 $db->table('jadwal')->insert([
-                    'kelas_id' => $kelas['id'],
-                    'mapel_id' => $mapel['id'],
+                    'kd_kelas' => $kelas['kd_kelas'],
+                    'kd_mapel' => $mapel['kd_mapel'],
                     'guru_id' => $guru_id,
-                    'tahun_akademik_id' => $tahun['id'],
+                    'kd_tahun_akademik' => $tahun['kd_tahun_akademik'],
                     'hari' => 'Senin',
                     'jam_mulai' => '07:00:00',
                     'jam_selesai' => '08:00:00',

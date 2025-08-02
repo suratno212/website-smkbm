@@ -27,8 +27,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="nis">NISN</label>
-                                    <input type="text" class="form-control" id="nis" name="nis" value="<?= $filters['nis'] ?? '' ?>" placeholder="Cari NISN...">
+                                    <label for="nis">NIS</label>
+                                    <input type="text" class="form-control" id="nis" name="nis" value="<?= $filters['nis'] ?? '' ?>" placeholder="Cari NIS...">
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -39,11 +39,11 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="kelas_id">Kelas</label>
-                                    <select class="form-control" id="kelas_id" name="kelas_id">
+                                    <label for="kd_kelas">Kelas</label>
+                                    <select class="form-control" id="kd_kelas" name="kd_kelas">
                                         <option value="">Semua Kelas</option>
                                         <?php foreach ($kelas as $k) : ?>
-                                            <option value="<?= $k['id'] ?>" <?= ($filters['kelas_id'] ?? '') == $k['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $k['kd_kelas'] ?>" <?= ($filters['kd_kelas'] ?? '') == $k['kd_kelas'] ? 'selected' : '' ?>>
                                                 <?= $k['nama_kelas'] ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -52,11 +52,11 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="jurusan_id">Jurusan</label>
-                                    <select class="form-control" id="jurusan_id" name="jurusan_id">
+                                    <label for="kd_jurusan">Jurusan</label>
+                                    <select class="form-control" id="kd_jurusan" name="kd_jurusan">
                                         <option value="">Semua Jurusan</option>
                                         <?php foreach ($jurusan as $j) : ?>
-                                            <option value="<?= $j['id'] ?>" <?= ($filters['jurusan_id'] ?? '') == $j['id'] ? 'selected' : '' ?>>
+                                            <option value="<?= $j['kd_jurusan'] ?>" <?= ($filters['kd_jurusan'] ?? '') == $j['kd_jurusan'] ? 'selected' : '' ?>>
                                                 <?= $j['nama_jurusan'] ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -72,7 +72,7 @@
                                 <a href="<?= base_url('admin/siswa') ?>" class="btn btn-secondary">
                                     <i class="fas fa-sync"></i> Reset
                                 </a>
-                                <a href="<?= base_url('admin/siswa/cetak?'.http_build_query($filters)) ?>" target="_blank" class="btn btn-success ms-auto"><i class="fas fa-print"></i> Cetak</a>
+                                <a href="<?= base_url('admin/siswa/cetak?' . http_build_query($filters)) ?>" target="_blank" class="btn btn-success ms-auto"><i class="fas fa-print"></i> Cetak</a>
                             </div>
                         </div>
                     </form>
@@ -82,8 +82,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>NISN</th>
+                                    <th>NIS</th>
                                     <th>Nama</th>
+                                    <th>Email</th>
                                     <th>Kelas</th>
                                     <th>Jurusan</th>
                                     <th>Jenis Kelamin</th>
@@ -98,8 +99,9 @@
                                 <?php foreach ($siswa as $s) : ?>
                                     <tr>
                                         <td><?= $i++; ?></td>
-                                        <td><?= $s['nisn']; ?></td>
+                                        <td><?= $s['nis']; ?></td>
                                         <td><?= $s['nama']; ?></td>
+                                        <td><?= $s['email'] ?? '-'; ?></td>
                                         <td><?= $s['nama_kelas']; ?></td>
                                         <td><?= $s['nama_jurusan']; ?></td>
                                         <td><?= $s['jenis_kelamin']; ?></td>
@@ -107,10 +109,10 @@
                                         <td><?= $s['alamat']; ?></td>
                                         <td><?= $s['no_hp']; ?></td>
                                         <td>
-                                            <a href="<?= base_url('admin/siswa/edit/' . $s['id']); ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('admin/siswa/edit/' . $s['nis']); ?>" class="btn btn-warning btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="<?= base_url('admin/siswa/delete/' . $s['id']); ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                            <form action="<?= base_url('admin/siswa/delete/' . $s['nis']); ?>" method="post" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                                 <?= csrf_field() ?>
                                                 <button type="submit" class="btn btn-danger btn-sm">
                                                     <i class="fas fa-trash"></i>
@@ -127,4 +129,4 @@
         </div>
     </div>
 </div>
-<?= $this->endSection() ?> 
+<?= $this->endSection() ?>
